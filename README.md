@@ -8,13 +8,11 @@ Dependencies
 	sudo apt-get install arduino python-pip picocom
 	sudo pip install ino pyserial
 
-Compile
-=======
-	make build
+Compile + Upload + Connect to serial
+====================================
+	make
 
-Upload
-======
-	make upload
+See Makefile for details.
 
 Further Documentation
 =====================
