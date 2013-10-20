@@ -25,7 +25,7 @@ void ads1231_init(void)
 }
 
 /*
- * Get the raw ADC value. Can block up to 100ms.
+ * Get the raw ADC value. Can block up to 100ms in normal operation.
  */
 long ads1231_get_value(void)
 {
@@ -76,7 +76,8 @@ long ads1231_get_value(void)
 }
 
 /*
- * Get the weight in milligrams. Can block up to 100ms.
+ * Get the weight in milligrams. Can block up to 100ms in normal
+ * operation.
  */
 long ads1231_get_milligrams()
 {
@@ -86,5 +87,5 @@ long ads1231_get_milligrams()
 	if(val>=ADS1231_ERR)
 		return val;
 	else
-		return val/ADS1231_SLOPE + ADS1231_OFFSET;
+		return val/ADS1231_DIVISOR + ADS1231_OFFSET;
 }
