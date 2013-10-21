@@ -18,10 +18,14 @@ void ads1231_init(void)
 {
 	// We send the clock
 	pinMode(ADS1231_CLK_PIN, OUTPUT);
+
 	// ADS1231 sends the data
 	pinMode(ADS1231_DATA_PIN, INPUT);
+	// Enable pullup to get a consistent state in case of disconnect
+	digitalWrite(ADS1231_DATA_PIN, HIGH);
+
 	// Set CLK low to get the ADS1231 out of suspend
-	digitalWrite(ADS1231_DATA_PIN, 0);
+	digitalWrite(ADS1231_CLK_PIN, 0);
 }
 
 /*
@@ -30,7 +34,7 @@ void ads1231_init(void)
 long ads1231_get_value(void)
 {
 	long val=0;
-	int i;
+	int i=0;
 	unsigned long start;
 
 	/* A high to low transition on the data pin means that the ADS1231
