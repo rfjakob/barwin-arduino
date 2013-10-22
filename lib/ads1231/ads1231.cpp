@@ -3,6 +3,9 @@
  * 
  * Written in plain C, but for some reason ino expects it to have .cpp
  * file extension, otherwise linking fails.
+ * 
+ * Originally written by lumbric, commmented and slightly modified by
+ * rfjakob
  */
 
 #include <Arduino.h>
