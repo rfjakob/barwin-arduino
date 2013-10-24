@@ -17,4 +17,15 @@
 // PWM pin for servo number 1
 #define SERVO1_PIN      11
 
+// Time to wait until cup is placed on scale (in seconds)
+#define CUP_TIMEOUT     180
+
+// Delay after cup placed on scale (before setting zero point for first ingridient)
+#define CUP_SETTELING_TIME 
+
+// When waiting for changes of weight on scale, ignore changes less than... (in milligrams)
+#define WEIGHT_EPSILON  1
+
+
+
 #endif
