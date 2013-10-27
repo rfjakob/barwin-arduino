@@ -16,6 +16,18 @@ void setup()
 	servo.attach(SERVO1_PIN);
 }
 
+
+int turn_until(int max_pos, long max_weight, int delay_ms) {
+    for (int i = SERVO_MIN(); i <= SERVO_MAX(); i++) {
+        if (delay_until(delay_ms, max_weight) < 0)
+            return -1;
+        servo.writeMicroseconds(i);
+        // see /usr/share/arduino/libraries/Servo/Servo.cpp
+    }
+    return 0;
+}
+
+
 void loop()
 {
 	long mg;

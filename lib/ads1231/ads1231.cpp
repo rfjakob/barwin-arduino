@@ -84,7 +84,7 @@ long ads1231_get_value(void)
 
 /*
  * Get the weight in milligrams. Can block up to 100ms in normal
- * operation.
+ * operation. Use WEIGHT_EPSILON 
  */
 long ads1231_get_milligrams()
 {
@@ -96,3 +96,18 @@ long ads1231_get_milligrams()
 	else
 		return val/ADS1231_DIVISOR + ADS1231_OFFSET;
 }
+
+/*
+ *
+ */
+int delay_until(unsigned long max_delay, long max_weight) {
+	unsigned long start = millis();
+    while((millis() - start) >= max_delay) {
+        // abort delay, max_weight reached
+        if (ads1231_get_milligrams() > (max_weight - WEIGHT_EPSILON))
+            return -1;
+    }
+    return 0;
+}
+
+
