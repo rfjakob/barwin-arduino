@@ -4,6 +4,25 @@
 
 #include "../config.h"
 
+
+// TODO find out correct values...
+#define SERVO_MIN 500
+#define SERVO_MAX 2500
+
+#define DEBUG 1
+#ifdef DEBUG
+    #define DEBUG_MSG(msg) Serial.print(msg)
+    #define DEBUG_MSG_LN(msg) Serial.println(msg)
+    #define DEBUG_VAL(val) do { Serial.print(#val); \
+                                Serial.print(": "); \
+                                Serial.print(val);  \
+                                Serial.print(", "); \
+                            } while (0)
+#else
+    #define DEBUG_MSG(msg) {}
+    #define DEBUG_MSG_LN(msg) {}
+#endif
+
 Servo servo;
 
 void setup()
