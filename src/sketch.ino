@@ -6,8 +6,8 @@
 
 
 // TODO find out correct values...
-#define SERVO_MIN 500
-#define SERVO_MAX 2500
+#define SERVO_MIN 544
+#define SERVO_MAX 2400
 
 #define POS_BOTTLE_DOWN SERVO_MIN
 #define POS_BOTTLE_UP   SERVO_MAX  // FIXME do we need SERVO_MIN here?
@@ -26,10 +26,11 @@
 
     #define DEBUG_VAL_LN(val) do { DEBUG_VAL(val); Serial.println();} while (0)
 #else
-    #define DEBUG_MSG(msg) 
-    #define DEBUG_MSG_LN(msg) 
-    #define DEBUG_VAL(val) 
-    #define DEBUG_VAL_LN(val) 
+    #define DEBUG_MSG(msg)
+    #define DEBUG_MSG_LN(msg)
+
+    #define DEBUG_VAL(val)
+    #define DEBUG_VAL_LN(val)
 #endif
 
 Servo servo;
@@ -113,9 +114,14 @@ void loop()
             turn_until(last_pour_pos, cup_weight, TURN_DOWN_FAST_DELAY);
 
             DEBUG_MSG_LN("Turning slow until pouring..");
-            turn_until(POS_BOTTLE_DOWN, cup_weight, TURN_DOWN_DELAY);
+            if (turn_until(POS_BOTTLE_DOWN, cup_weight, TURN_DOWN_DELAY) == 0) {
+                DEBUG_MSG("Bottle empty? Position POS_BOTTLE_DOWN reached, no weight gain.");
+                turn_until(POS_BOTTLE_UP, 10000, TURN_UP_DELAY);
+                return;
+            }
 
-            // TODO save last_pour_pos, maybe also before
+            // save current positon for next pouring
+            last_pour_pos = servo.readMicroseconds();
 
             // wait for requested weight
             // FIXME here we do not want WEIGHT_EPSILON and sharp >
@@ -125,9 +131,13 @@ void loop()
             // FIXME do not pass 10 000 as  +inf weight, but find better solution
             DEBUG_MSG_LN("Turn up again...");
             turn_until(POS_BOTTLE_UP, 10000, TURN_UP_DELAY);
+
+            // TODO measure real output
+            int measured_output = ads1231_get_milligrams() - cup_weight;
+            DEBUG_VAL_LN(measured_output);
         // }
 
-        // TODO measure real output
+
         // TODO send success
     }
 }
