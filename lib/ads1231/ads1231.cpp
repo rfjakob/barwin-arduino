@@ -115,7 +115,7 @@ long ads1231_get_milligrams()
 int delay_until(unsigned long max_delay, long max_weight) {
     unsigned long start = millis();
     while((millis() - start) <= max_delay) {
-        // abort delay, max_weight reached
+        // max_weight reached --> abort
         if (ads1231_get_milligrams() > (max_weight - WEIGHT_EPSILON))
             return -1;
     }
