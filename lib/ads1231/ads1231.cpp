@@ -14,6 +14,9 @@
 #include <ads1231.h>
 #include "../../config.h"
 
+// emulate a scale using a potentionmeter
+#define ADS1231_EMULATION 1
+
 /*
  * Initialize the interface pins
  */
@@ -36,6 +39,12 @@ void ads1231_init(void)
  */
 long ads1231_get_value(void)
 {
+    // a very, very primitive emulation... :)
+    #ifndef ADS1231_EMULATION
+    #else
+    return millis() / 1000;
+    #endif
+
     long val=0;
     int i=0;
     unsigned long start;
