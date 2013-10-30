@@ -98,11 +98,14 @@ long ads1231_get_milligrams()
 }
 
 /*
- *
+ * Pauses the program until weight is more than max_weight + WEIGHT_EPSILON
+ * but at maximum for 'max_delay' milliseconds. Returns 0 if full 'max_delay'
+ * passed or -1 otherwise.
+ * 'max_weight' might be current weight to detect any change of weight.
  */
 int delay_until(unsigned long max_delay, long max_weight) {
     unsigned long start = millis();
-    while((millis() - start) >= max_delay) {
+    while((millis() - start) <= max_delay) {
         // abort delay, max_weight reached
         if (ads1231_get_milligrams() > (max_weight - WEIGHT_EPSILON))
             return -1;
