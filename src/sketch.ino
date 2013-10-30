@@ -80,11 +80,6 @@ int turn_until(int pos, long max_weight, int delay_ms) {
 
         // turn servo one step
         servo.writeMicroseconds(i);
-
-        // Note: do not use, to slow!
-        //DEBUG_VAL(i);
-        //DEBUG_VAL(ads1231_get_milligrams());
-        //DEBUG_MSG_LN(" - servo moved one step");
     }
     DEBUG_MSG_LN("Finished turning.");
     return 0;
@@ -93,14 +88,6 @@ int turn_until(int pos, long max_weight, int delay_ms) {
 
 void loop()
 {
-    turn_until(2400, 20000, 0);
-    turn_until(544,  20000, 5);
-    turn_until(2400, 20000, 0);
-    turn_until(544,  20000, 10);
-    turn_until(2400, 20000, 0);
-    turn_until(544,  20000, 20);
-
-    /*
     if (Serial.available() > 0) {
         // where are the sources for Serial?
         // how to find out what parseInt does?
@@ -143,5 +130,4 @@ void loop()
         // TODO measure real output
         // TODO send success
     }
-    */
 }
