@@ -101,10 +101,19 @@ void loop()
 
         // TODO check if liquid_mg is significantly more than UPGRIGHT_OFFSET
 
-        // TODO wait for cup, wait until weight > WEIGHT_EPSILON or
+        if (ads1231_get_milligrams() > WEIGHT_EPSILON) {
+            DEBUG_MSG_LN("Remove weight from scale! Aborting.");
+            return;
+        }
+        // wait for cup, wait until weight > WEIGHT_EPSILON or
         // CUP_TIMEOUT reached
+        if (delay_until(CUP_TIMEOUT, WEIGHT_EPSILON) == 0) {
+            DEBUG_MSG_LN("CUP_TIMEOUT reached. Aborting.");
+            return;
+        }
 
-        // delay(CUP_SETTLING_TIME);
+        // wait a bit until cup weight can be measured safely
+        delay(CUP_SETTLING_TIME);
 
         long cup_weight = ads1231_get_milligrams();
 
