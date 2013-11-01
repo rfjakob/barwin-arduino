@@ -1,0 +1,8 @@
+ - it's not a good idea to go to last_pouring_pos fast, we should start a bit earlier moving slow.
+ - Problem: cup needs to be quite big probably.
+ - double for ads1231_get_milligrams()
+ - a better way to use something like threads? service interrupt?
+
+Hardware:
+ - make it Plug and Play
+ - longer cables
