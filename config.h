@@ -10,16 +10,16 @@
 #define ADS1231_CLK_PIN  6
 
 // ADC counts per milligram
-#define ADS1231_DIVISOR  1237
+#define ADS1231_DIVISOR  1355.2892385964383
 // Zero offset, milligrams
-#define ADS1231_OFFSET   126
+#define ADS1231_OFFSET   117.40595530926247
 
 // How to calibrate using a weight (in milligrams) and the measured raw value
 // as returned by ads1231_get_value():
-// raw1    = -155481.0
+// raw1    = -159119.02777777778
 // weight1 = 0.
-// raw2    = 646414.0
-// weight2 = 648.3
+// raw2    = 761393.42307692312
+// weight2 = 679.2
 // ADS1231_DIVISOR = (raw1 - raw2) / (weight1 - weight2)
 // ADS1231_OFFSET  = weight1 - (raw1 * (weight1 - weight2)) / (raw1 - raw2)
 
