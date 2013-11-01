@@ -74,10 +74,16 @@ int turn_until(int pos, long max_weight, int delay_ms) {
     DEBUG_VAL(pos);
     DEBUG_VAL(delay_ms);
     DEBUG_MSG_LN("  - start turning...");
+    long last_called = millis();
     for (int i = current_pos + step; i * step <= pos * step; i += step) {
-        // delay and abort if max_weight reached
-        if (delay_until(delay_ms, max_weight) < 0)
-            return -1;
+        // abort if max_weight reached
+        if (millis() > last_called + ADS1231_INTERVAL) {
+            last_called = millis();
+            if (ads1231_get_milligrams() > max_weight + WEIGHT_EPSILON) {
+                return -1;
+            }
+        }
+        delay(delay_ms);
 
         // turn servo one step
         servo.writeMicroseconds(i);

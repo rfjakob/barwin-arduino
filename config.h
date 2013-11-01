@@ -48,6 +48,10 @@
 // When waiting for changes of weight on scale, ignore changes less than... (in milligrams)
 #define WEIGHT_EPSILON  1
 
+// Wait at least x milliseconds before calling ads1231_get_milligrams() again
+// when turning servo, because it takes to long to call it always. Increasing
+// this value makes the servo faster but the reponse time to the scale slower.
+#define ADS1231_INTERVAL 100
 
 
 #endif
