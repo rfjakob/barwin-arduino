@@ -10,9 +10,18 @@
 #define ADS1231_CLK_PIN  6
 
 // ADC counts per milligram
-#define ADS1231_DIVISOR  1
+#define ADS1231_DIVISOR  1237
 // Zero offset, milligrams
-#define ADS1231_OFFSET   0
+#define ADS1231_OFFSET   126
+
+// How to calibrate using a weight (in milligrams) and the measured raw value
+// as returned by ads1231_get_value():
+// raw1    = -155481.0
+// weight1 = 0.
+// raw2    = 646414.0
+// weight2 = 648.3
+// ADS1231_DIVISOR = (raw1 - raw2) / (weight1 - weight2)
+// ADS1231_OFFSET  = weight1 - (raw1 * (weight1 - weight2)) / (raw1 - raw2)
 
 // PWM pin for servo number 1
 #define SERVO1_PIN      11
