@@ -28,15 +28,15 @@
 
 // Delay between single servo steps when turning bottle up/down
 #define TURN_DOWN_DELAY 10
-#define TURN_DOWN_FAST_DELAY 5
-#define TURN_UP_DELAY 2
+#define TURN_DOWN_FAST_DELAY 1
+#define TURN_UP_DELAY 1
 
 // Time to wait until cup is placed on scale (in seconds)
-#define CUP_TIMEOUT     180
+#define CUP_TIMEOUT     180*1000
 
 // Delay after cup placed on scale (before setting zero point for first
 // ingredient), in milliseconds
-#define CUP_SETTLING_TIME
+#define CUP_SETTLING_TIME 500
 
 // Time to wait until desired weight reached. If timeout is reached, probably
 // bottle is empty or screwed.
@@ -46,7 +46,7 @@
 #define UPGRIGHT_OFFSET  5
 
 // When waiting for changes of weight on scale, ignore changes less than... (in milligrams)
-#define WEIGHT_EPSILON  1
+#define WEIGHT_EPSILON  2
 
 // Wait at least x milliseconds before calling ads1231_get_milligrams() again
 // when turning servo, because it takes to long to call it always. Increasing
