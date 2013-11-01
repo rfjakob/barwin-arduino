@@ -15,7 +15,7 @@
 #include "../../config.h"
 
 // emulate a scale using a potentionmeter
-#define ADS1231_EMULATION 1
+//#define ADS1231_EMULATION 1
 
 /*
  * Initialize the interface pins
@@ -114,9 +114,9 @@ long ads1231_get_milligrams()
  */
 int delay_until(unsigned long max_delay, long max_weight) {
     unsigned long start = millis();
-    while((millis() - start) <= max_delay) {
+    while((millis() - start) < max_delay) {
         // max_weight reached --> abort
-        if (ads1231_get_milligrams() > (max_weight - WEIGHT_EPSILON))
+        if (ads1231_get_milligrams() > (max_weight + WEIGHT_EPSILON))
             return -1;
     }
     return 0;
