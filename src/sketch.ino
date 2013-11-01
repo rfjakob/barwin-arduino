@@ -95,6 +95,17 @@ int turn_until(int pos, long max_weight, int delay_ms) {
 
 void loop()
 {
+    /*
+    turn_until(POS_BOTTLE_DOWN, 100000, 0);
+    turn_until(POS_BOTTLE_UP, 100000, 1);
+    long weight = ads1231_get_milligrams();
+    long raw    = ads1231_get_value();
+    DEBUG_VAL(weight);
+    DEBUG_VAL(raw);
+    DEBUG_MSG_LN("");
+
+    delay(500);
+    */
     if (Serial.available() > 0) {
         // where are the sources for Serial?
         // how to find out what parseInt does?
@@ -113,6 +124,7 @@ void loop()
         }
         // wait for cup, wait until weight > WEIGHT_EPSILON or
         // CUP_TIMEOUT reached
+        DEBUG_MSG("Waiting for cup...");
         if (delay_until(CUP_TIMEOUT, WEIGHT_EPSILON) == 0) {
             DEBUG_MSG_LN("CUP_TIMEOUT reached. Aborting.");
             return;
@@ -122,6 +134,8 @@ void loop()
         delay(CUP_SETTLING_TIME);
 
         long cup_weight = ads1231_get_milligrams();
+
+        DEBUG_VAL_LN(cup_weight);
 
         // TODO for each bottle
         // for () {
