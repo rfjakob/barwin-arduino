@@ -2,6 +2,8 @@
  - Problem: cup needs to be quite big probably.
  - double for ads1231_get_milligrams()
  - a better way to use something like threads? service interrupt?
+        http://playground.arduino.cc/Deutsch/HalloWeltMitInterruptUndTimerlibrary
+        http://letsmakerobots.com/node/28278
 
 Hardware:
  - make it Plug and Play
