@@ -27,8 +27,8 @@
 #define SERVO1_PIN      5
 
 // Delay between single servo steps when turning bottle up/down
-#define TURN_DOWN_DELAY 10
-#define TURN_DOWN_FAST_DELAY 1
+#define TURN_DOWN_DELAY 20
+#define TURN_DOWN_FAST_DELAY 3
 #define TURN_UP_DELAY 1
 
 // Time to wait until cup is placed on scale (in seconds)
@@ -43,7 +43,7 @@
 #define POURING_TIMEOUT  20000
 
 // Amount of liquid in milligrams poured while turning the bottle up
-#define UPGRIGHT_OFFSET  5
+#define UPGRIGHT_OFFSET  15
 
 // When waiting for changes of weight on scale, ignore changes less than... (in milligrams)
 #define WEIGHT_EPSILON  2
