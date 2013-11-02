@@ -24,7 +24,7 @@
 // ADS1231_OFFSET  = weight1 - (raw1 * (weight1 - weight2)) / (raw1 - raw2)
 
 // PWM pin for servo number 1
-#define SERVO1_PIN      11
+#define SERVO1_PIN      5
 
 // Delay between single servo steps when turning bottle up/down
 #define TURN_DOWN_DELAY 10
