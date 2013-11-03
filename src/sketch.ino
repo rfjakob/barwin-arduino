@@ -138,7 +138,9 @@ void loop()
         // TODO for each bottle
         // for () {
             DEBUG_MSG_LN("Turning fast to last_pour_pos...");
-            turn_until(last_pour_pos, cup_weight, TURN_DOWN_FAST_DELAY);
+            turn_until(last_pour_pos + LAST_POUR_POS_OFFSET,
+                       cup_weight,
+                       TURN_DOWN_FAST_DELAY);
 
             DEBUG_MSG_LN("Turning slow until pouring..");
             if (turn_until(POS_BOTTLE_DOWN, cup_weight, TURN_DOWN_DELAY) == 0) {

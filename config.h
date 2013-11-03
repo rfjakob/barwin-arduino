@@ -53,5 +53,10 @@
 // this value makes the servo faster but the reponse time to the scale slower.
 #define ADS1231_INTERVAL 100
 
+// If x is the servo position when pouring, turn next time fast to last
+// pouring position - OFFSET and then slow.
+// WARNING: if POS_BOTTLE_DOWN > POS_BOTTLE_UP, then is
+// LAST_POUR_POS_OFFSET < 0!
+#define LAST_POUR_POS_OFFSET  70
 
 #endif
