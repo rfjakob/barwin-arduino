@@ -34,7 +34,6 @@
 #endif
 
 Servo servo;
-int last_pour_pos = POS_BOTTLE_UP;
 
 void setup()
 {
@@ -137,20 +136,8 @@ void loop()
 
         // TODO for each bottle
         // for () {
-            DEBUG_MSG_LN("Turning fast to last_pour_pos...");
-            turn_until(last_pour_pos + LAST_POUR_POS_OFFSET,
-                       cup_weight,
-                       TURN_DOWN_FAST_DELAY);
-
-            DEBUG_MSG_LN("Turning slow until pouring..");
-            if (turn_until(POS_BOTTLE_DOWN, cup_weight, TURN_DOWN_DELAY) == 0) {
-                DEBUG_MSG("Bottle empty? Position POS_BOTTLE_DOWN reached, no weight gain.");
-                turn_until(POS_BOTTLE_UP, 10000, TURN_UP_DELAY);
-                return;
-            }
-
-            // save current positon for next pouring
-            last_pour_pos = servo.readMicroseconds();
+            DEBUG_MSG_LN("Turning bottle down...");
+            turn_until(POS_BOTTLE_DOWN, 10000, TURN_DOWN_DELAY);
 
             // wait for requested weight
             // FIXME here we do not want WEIGHT_EPSILON and sharp >

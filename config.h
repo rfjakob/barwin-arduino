@@ -28,7 +28,6 @@
 
 // Delay between single servo steps when turning bottle up/down
 #define TURN_DOWN_DELAY 20
-#define TURN_DOWN_FAST_DELAY 3
 #define TURN_UP_DELAY 1
 
 // Time to wait until cup is placed on scale (in seconds)
