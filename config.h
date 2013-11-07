@@ -27,8 +27,8 @@
 #define SERVO1_PIN      5
 
 // Delay between single servo steps when turning bottle up/down
-#define TURN_DOWN_DELAY 20
-#define TURN_UP_DELAY 1
+#define TURN_DOWN_DELAY 1
+#define TURN_UP_DELAY 4
 
 // Time to wait until cup is placed on scale (in seconds)
 #define CUP_TIMEOUT     180*1000
@@ -42,7 +42,7 @@
 #define POURING_TIMEOUT  20000
 
 // Amount of liquid in milligrams poured while turning the bottle up
-#define UPGRIGHT_OFFSET  15
+#define UPGRIGHT_OFFSET  20
 
 // When waiting for changes of weight on scale, ignore changes less than... (in milligrams)
 #define WEIGHT_EPSILON  2
@@ -50,7 +50,7 @@
 // Wait at least x milliseconds before calling ads1231_get_milligrams() again
 // when turning servo, because it takes to long to call it always. Increasing
 // this value makes the servo faster but the reponse time to the scale slower.
-#define ADS1231_INTERVAL 100
+#define ADS1231_INTERVAL 200
 
 // If x is the servo position when pouring, turn next time fast to last
 // pouring position - OFFSET and then slow.

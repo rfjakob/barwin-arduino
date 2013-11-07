@@ -6,11 +6,11 @@
 
 
 // TODO find out correct values...
-#define SERVO_MIN 544
-#define SERVO_MAX 2400
+#define SERVO_MIN 750
+#define SERVO_MAX 2100
 
-#define POS_BOTTLE_DOWN SERVO_MIN
-#define POS_BOTTLE_UP   SERVO_MAX  // FIXME do we need SERVO_MIN here?
+#define POS_BOTTLE_DOWN SERVO_MAX // must be > SERVO_MIN
+#define POS_BOTTLE_UP   SERVO_MIN// FIXME do we need SERVO_MIN here?
                                    // depends on how the servo is mounted!
 
 
@@ -76,14 +76,14 @@ int turn_until(int pos, long max_weight, int delay_ms) {
     unsigned long last_called = millis();
     for (int i = current_pos + step; i * step <= pos * step; i += step) {
         // abort if max_weight reached
-        if (millis() > last_called + ADS1231_INTERVAL) {
-            DEBUG_VAL_LN(i);
-            last_called = millis();
-            if (ads1231_get_milligrams() > max_weight + WEIGHT_EPSILON) {
-                DEBUG_MSG_LN("Max weight reached. Aborting servo rotation.");
-                return -1;
-            }
-        }
+        //if (millis() > last_called + ADS1231_INTERVAL) {
+            //DEBUG_VAL_LN(i);
+            //last_called = millis();
+            //if (ads1231_get_milligrams() > max_weight + WEIGHT_EPSILON) {
+                //DEBUG_MSG_LN("Max weight reached. Aborting servo rotation.");
+                //return -1;
+            //}
+        //}
         delay(delay_ms);
 
         // turn servo one step
