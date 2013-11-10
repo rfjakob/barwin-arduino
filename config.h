@@ -6,13 +6,13 @@
 #define CONFIG_H
 
 
-#define ADS1231_DATA_PIN 7
-#define ADS1231_CLK_PIN  6
+#define ADS1231_DATA_PIN A0
+#define ADS1231_CLK_PIN  A1
 
 // ADC counts per milligram
 #define ADS1231_DIVISOR  1355.2892385964383
 // Zero offset, milligrams
-#define ADS1231_OFFSET   117.40595530926247
+#define ADS1231_OFFSET   117.40595530926247 + 76.0
 
 // How to calibrate using a weight (in milligrams) and the measured raw value
 // as returned by ads1231_get_value():
