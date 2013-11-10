@@ -6,10 +6,10 @@
 
 
 // TODO find out correct values...
-#define SERVO_MIN 750
-#define SERVO_MAX 2100
+#define SERVO_MIN 700
+#define SERVO_MAX 2000
 
-#define POS_BOTTLE_DOWN SERVO_MAX // must be > SERVO_MIN
+#define POS_BOTTLE_DOWN 1820// must be > SERVO_MIN
 #define POS_BOTTLE_UP   SERVO_MIN// FIXME do we need SERVO_MIN here?
                                    // depends on how the servo is mounted!
 
@@ -33,7 +33,17 @@
     #define DEBUG_VAL_LN(val)
 #endif
 
-Servo servo;
+
+// number of bottles (and therefore also servos)
+#define BOTTLES_CNT 2
+
+struct bottle {
+    char name[50];
+    Servo servo;
+    char pin;
+    // calibration values (max, min) go here
+};
+struct bottle bottles[BOTTLES_CNT];
 
 void setup()
 {
@@ -42,8 +52,13 @@ void setup()
 
     ads1231_init();
 
-    servo.attach(SERVO1_PIN);
-    servo.writeMicroseconds(POS_BOTTLE_UP);
+    bottles[0].pin = 6;
+    bottles[1].pin = 11;
+
+    for (int bottle = 0; bottle < BOTTLES_CNT; bottle++) {
+        bottles[bottle].servo.attach(bottles[bottle].pin);
+        bottles[bottle].servo.writeMicroseconds(POS_BOTTLE_UP);
+    }
 }
 
 
@@ -60,7 +75,7 @@ void setup()
  * TODO move this to a class method (class "Bottle", subclassing Servo?) for
  * more than one servo?
  */
-int turn_until(int pos, long max_weight, int delay_ms) {
+int turn_until(int pos, Servo &servo, long max_weight, int delay_ms) {
     // throw error if not between SERVO_MIN and SERVO_MAX?
     int current_pos = servo.readMicroseconds();
     if (pos == current_pos)
@@ -94,19 +109,23 @@ int turn_until(int pos, long max_weight, int delay_ms) {
 }
 
 
+int long lastweight =  millis();
+
+
 void loop()
 {
     /*
     turn_until(POS_BOTTLE_DOWN, 100000, 0);
     turn_until(POS_BOTTLE_UP, 100000, 1);
-    long weight = ads1231_get_milligrams();
-    long raw    = ads1231_get_value();
-    DEBUG_VAL(weight);
-    DEBUG_VAL(raw);
-    DEBUG_MSG_LN("");
-
-    delay(500);
     */
+    long weight = ads1231_get_milligrams();
+    //long raw    = ads1231_get_value();
+    if (millis() - lastweight > 500) {
+        DEBUG_VAL_LN(weight);
+        lastweight = millis();
+    }
+    //DEBUG_VAL(raw);
+
     if (Serial.available() > 0) {
         // where are the sources for Serial?
         // how to find out what parseInt does?
@@ -130,14 +149,16 @@ void loop()
         // wait a bit until cup weight can be measured safely
         delay(CUP_SETTLING_TIME);
 
-        long cup_weight = ads1231_get_milligrams();
-
-        DEBUG_VAL_LN(cup_weight);
 
         // TODO for each bottle
-        // for () {
+        for (int bottle = 0; bottle < BOTTLES_CNT; bottle++) {
+            DEBUG_VAL_LN(bottle);
+            long cup_weight = ads1231_get_milligrams();
+
+            DEBUG_VAL_LN(cup_weight);
+
             DEBUG_MSG_LN("Turning bottle down...");
-            turn_until(POS_BOTTLE_DOWN, 10000, TURN_DOWN_DELAY);
+            turn_until(POS_BOTTLE_DOWN, bottles[bottle].servo, 10000, TURN_DOWN_DELAY);
 
             // wait for requested weight
             // FIXME here we do not want WEIGHT_EPSILON and sharp >
@@ -146,12 +167,12 @@ void loop()
 
             // FIXME do not pass 10 000 as  +inf weight, but find better solution
             DEBUG_MSG_LN("Turn up again...");
-            turn_until(POS_BOTTLE_UP, 10000, TURN_UP_DELAY);
+            turn_until(POS_BOTTLE_UP, bottles[bottle].servo, 10000, TURN_UP_DELAY);
 
             // TODO measure real output
             int measured_output = ads1231_get_milligrams() - cup_weight;
             DEBUG_VAL_LN(measured_output);
-        // }
+        }
 
 
         // TODO send success
