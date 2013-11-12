@@ -15,7 +15,7 @@
 #include "../../config.h"
 
 // emulate a scale using a potentionmeter
-//#define ADS1231_EMULATION 1
+#define ADS1231_EMULATION 1
 
 /*
  * Initialize the interface pins

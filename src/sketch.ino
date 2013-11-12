@@ -35,16 +35,26 @@
 
 Servo servo;
 int last_pour_pos = POS_BOTTLE_UP;
+volatile bool abourt_pouring = false;
+
+void emergency_abourt_pouring() {
+    abourt_pouring = true;
+}
 
 void setup()
 {
-    Serial.begin(115200);
+    //Serial.begin(115200);
+    Serial.begin(9600);
     Serial.println("READY");
 
     ads1231_init();
 
     servo.attach(SERVO1_PIN);
     servo.writeMicroseconds(POS_BOTTLE_UP);
+
+    pinMode(0, INPUT);
+    digitalWrite(2, HIGH);
+    attachInterrupt(0, emergency_abourt_pouring, FALLING); // pin 2
 }
 
 
@@ -85,6 +95,9 @@ int turn_until(int pos, long max_weight, int delay_ms) {
                 return -1;
             }
         }
+        if (abourt_pouring) {
+            return -2;
+        }
         delay(delay_ms);
 
         // turn servo one step
@@ -97,17 +110,11 @@ int turn_until(int pos, long max_weight, int delay_ms) {
 
 void loop()
 {
-    /*
-    turn_until(POS_BOTTLE_DOWN, 100000, 0);
-    turn_until(POS_BOTTLE_UP, 100000, 1);
-    long weight = ads1231_get_milligrams();
-    long raw    = ads1231_get_value();
-    DEBUG_VAL(weight);
-    DEBUG_VAL(raw);
-    DEBUG_MSG_LN("");
-
-    delay(500);
-    */
+    if (abourt_pouring) {
+        delay(50);
+        DEBUG_MSG_LN("Reset abort");
+        abourt_pouring = false;
+    }
     if (Serial.available() > 0) {
         // where are the sources for Serial?
         // how to find out what parseInt does?
