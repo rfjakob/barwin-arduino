@@ -13,7 +13,11 @@ INIT_BOTTLES();
 
 void setup()
 {
+    #if defined(__AVR_ATmega328P__)
+    Serial.begin(9600);
+    #else
     Serial.begin(115200);
+    #endif
     Serial.println("READY");
 
     ads1231_init();
