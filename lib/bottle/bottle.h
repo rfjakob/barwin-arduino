@@ -1,5 +1,5 @@
 /*
- *
+ * Bottle class.
  */
 
 #ifndef BOTTLE_H
@@ -9,11 +9,19 @@
 
 // Macro initialising a array 'bottles' of Bottle instances as defined
 // in config.h by the comma separated list BOTTLES of constructor calls:
-#define INIT_BOTTLES() Bottle bottles[] = {BOTTLES}
+#define DEFINE_BOTTLES()  Bottle bottles[] = {BOTTLES};\
+                          int bottles_nr = sizeof(bottles)/sizeof(bottles[0]);
+
+
+class Bottle;
+
+void bottles_init(Bottle* bottles, int bottles_nr);
 
 
 class Bottle {
     public:
+        Bottle(int, int, int);
+
         char name[50];  // human readable name, e.g "Vodka"
         Servo servo;    // servo used for turning the bottle
         char pin;

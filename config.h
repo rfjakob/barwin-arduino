@@ -10,8 +10,9 @@
 #define ADS1231_CLK_PIN  A1
 
 // Define bottles (pin, name, up/down position for servo)
-#define BOTTLES Bottle(), \
-                Bottle()
+//                     pin,  pos_down,  pos_up
+#define BOTTLES Bottle(6,    1820,      700), \
+                Bottle(11,   1820,      700)
 
 // ADC counts per milligram
 #define ADS1231_DIVISOR  1355.2892385964383
@@ -28,7 +29,7 @@
 // ADS1231_OFFSET  = weight1 - (raw1 * (weight1 - weight2)) / (raw1 - raw2)
 
 // Delay between single servo steps when turning bottle up/down
-#define TURN_DOWN_DELAY 1
+#define TURN_DOWN_DELAY 13
 #define TURN_UP_DELAY 4
 
 // Time to wait until cup is placed on scale (in seconds)

@@ -4,12 +4,7 @@
 #include "../config.h"
 
 
-// number of bottles (and therefore also servos)
-#define BOTTLES_CNT 2
-
-//Bottle bottles[BOTTLES_CNT];
-
-INIT_BOTTLES();
+DEFINE_BOTTLES();
 
 void setup()
 {
@@ -21,16 +16,7 @@ void setup()
     Serial.println("READY");
 
     ads1231_init();
-
-    bottles[0].pin = 6;
-    bottles[1].pin = 11;
-
-    for (int bottle = 0; bottle < BOTTLES_CNT; bottle++) {
-        bottles[bottle].pos_down = POS_BOTTLE_DOWN;
-        bottles[bottle].pos_up   = POS_BOTTLE_UP;
-        bottles[bottle].servo.attach(bottles[bottle].pin);
-        bottles[bottle].servo.writeMicroseconds(bottles[bottle].pos_up);
-    }
+    bottles_init(bottles, bottles_nr);
 }
 
 int long lastweight =  millis();
@@ -70,7 +56,7 @@ void loop()
         delay(CUP_SETTLING_TIME);
 
         // Pour liquid for each bottle
-        for (int bottle = 0; bottle < BOTTLES_CNT; bottle++) {
+        for (int bottle = 0; bottle < bottles_nr; bottle++) {
             DEBUG_VAL_LN(bottle);
             long cup_weight = ads1231_get_milligrams();
 

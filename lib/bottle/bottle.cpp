@@ -1,5 +1,6 @@
-
-
+/*
+ * Bottle class.
+ */
 
 #include <Arduino.h>
 
@@ -7,6 +8,23 @@
 #include <utils.h>
 #include "../../config.h"
 
+/*
+ * Constructor
+ */
+Bottle::Bottle(int _pin, int _pos_down, int _pos_up) :
+    pin(_pin), pos_down(_pos_down), pos_up(_pos_up) {
+}
+
+
+/*
+ * Init bottles.
+ */
+void bottles_init(Bottle* bottles, int bottles_nr) {
+    for (int i=0; i < bottles_nr; i++) {
+        bottles[i].servo.attach(bottles[i].pin);
+        bottles[i].servo.writeMicroseconds(bottles[i].pos_up);
+    }
+}
 
 
 /*
@@ -35,7 +53,7 @@ int Bottle::turn_to(int pos, int delay_ms) {
     unsigned long last_called = millis();
     for (int i = current_pos + step; i * step <= pos * step; i += step) {
         // printing to serial delays turning!
-        //DEBUG_VAL_LN(i);
+        DEBUG_VAL_LN(i);
         delay(delay_ms);
 
         // turn servo one step
