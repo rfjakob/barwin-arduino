@@ -7,9 +7,9 @@
 
 #include <Servo.h>
 
-#define BOTTLE(name, pin)
-
-
+// Macro initialising a array 'bottles' of Bottle instances as defined
+// in config.h by the comma separated list BOTTLES of constructor calls:
+#define INIT_BOTTLES() Bottle bottles[] = {BOTTLES}
 
 
 class Bottle {

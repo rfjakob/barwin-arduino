@@ -9,6 +9,10 @@
 #define ADS1231_DATA_PIN A0
 #define ADS1231_CLK_PIN  A1
 
+// Define bottles (pin, name, up/down position for servo)
+#define BOTTLES Bottle(), \
+                Bottle()
+
 // ADC counts per milligram
 #define ADS1231_DIVISOR  1355.2892385964383
 // Zero offset, milligrams
@@ -22,9 +26,6 @@
 // weight2 = 679.2
 // ADS1231_DIVISOR = (raw1 - raw2) / (weight1 - weight2)
 // ADS1231_OFFSET  = weight1 - (raw1 * (weight1 - weight2)) / (raw1 - raw2)
-
-// PWM pin for servo number 1
-#define SERVO1_PIN      5
 
 // Delay between single servo steps when turning bottle up/down
 #define TURN_DOWN_DELAY 1
@@ -49,13 +50,7 @@
 
 // Wait at least x milliseconds before calling ads1231_get_milligrams() again
 // when turning servo, because it takes to long to call it always. Increasing
-// this value makes the servo faster but the reponse time to the scale slower.
+// this value makes the servo faster but the response time to the scale slower.
 #define ADS1231_INTERVAL 200
-
-// If x is the servo position when pouring, turn next time fast to last
-// pouring position - OFFSET and then slow.
-// WARNING: if POS_BOTTLE_DOWN > POS_BOTTLE_UP, then is
-// LAST_POUR_POS_OFFSET < 0!
-#define LAST_POUR_POS_OFFSET  70
 
 #endif

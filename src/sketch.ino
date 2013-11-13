@@ -7,7 +7,9 @@
 // number of bottles (and therefore also servos)
 #define BOTTLES_CNT 2
 
-Bottle bottles[BOTTLES_CNT];
+//Bottle bottles[BOTTLES_CNT];
+
+INIT_BOTTLES();
 
 void setup()
 {
@@ -20,8 +22,10 @@ void setup()
     bottles[1].pin = 11;
 
     for (int bottle = 0; bottle < BOTTLES_CNT; bottle++) {
+        bottles[bottle].pos_down = POS_BOTTLE_DOWN;
+        bottles[bottle].pos_up   = POS_BOTTLE_UP;
         bottles[bottle].servo.attach(bottles[bottle].pin);
-        bottles[bottle].servo.writeMicroseconds(POS_BOTTLE_UP);
+        bottles[bottle].servo.writeMicroseconds(bottles[bottle].pos_up);
     }
 }
 
@@ -30,10 +34,6 @@ int long lastweight =  millis();
 
 void loop()
 {
-    /*
-    turn_until(POS_BOTTLE_DOWN, 100000, 0);
-    turn_until(POS_BOTTLE_UP, 100000, 1);
-    */
     long weight = ads1231_get_milligrams();
     //long raw    = ads1231_get_value();
     if (millis() - lastweight > 500) {
@@ -65,8 +65,7 @@ void loop()
         // wait a bit until cup weight can be measured safely
         delay(CUP_SETTLING_TIME);
 
-
-        // TODO for each bottle
+        // Pour liquid for each bottle
         for (int bottle = 0; bottle < BOTTLES_CNT; bottle++) {
             DEBUG_VAL_LN(bottle);
             long cup_weight = ads1231_get_milligrams();
@@ -74,18 +73,16 @@ void loop()
             DEBUG_VAL_LN(cup_weight);
 
             DEBUG_MSG_LN("Turning bottle down...");
-            bottles[bottle].turn_to(POS_BOTTLE_DOWN, TURN_DOWN_DELAY);
+            bottles[bottle].turn_to(bottles[bottle].pos_down, TURN_DOWN_DELAY);
 
             // wait for requested weight
             // FIXME here we do not want WEIGHT_EPSILON and sharp >
             DEBUG_MSG_LN("Waiting for weight...");
             delay_until(POURING_TIMEOUT, cup_weight + liquid_mg - UPGRIGHT_OFFSET);
 
-            // FIXME do not pass 10 000 as  +inf weight, but find better solution
             DEBUG_MSG_LN("Turn up again...");
-            bottles[bottle].turn_to(POS_BOTTLE_UP, TURN_UP_DELAY);
+            bottles[bottle].turn_to(bottles[bottle].pos_up, TURN_UP_DELAY);
 
-            // TODO measure real output
             int measured_output = ads1231_get_milligrams() - cup_weight;
             DEBUG_VAL_LN(measured_output);
         }
