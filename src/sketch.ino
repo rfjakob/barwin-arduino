@@ -64,6 +64,7 @@ void loop() {
  */
 int parse_int_params(int* params, int size) {
     for (int i = 0; i < size; i++) {
+        // see /usr/share/arduino/hardware/arduino/cores/arduino/Stream.cpp:138
         params[i] = Serial.parseInt();
     }
     return 0;
@@ -100,7 +101,10 @@ void pouring_procedure(int* liquid_mg) {
 
     // Pour liquid for each bottle
     for (int bottle = 0; bottle < bottles_nr; bottle++) {
-        DEBUG_VAL_LN(bottle);
+        DEBUG_START();
+        DEBUG_VAL(liquid_mg[bottle]);
+        DEBUG_VAL(bottle);
+        DEBUG_END();
         long cup_weight = ads1231_get_milligrams();
 
         DEBUG_VAL_LN(cup_weight);
