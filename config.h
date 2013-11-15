@@ -36,14 +36,14 @@
 // Delay between single servo steps when turning bottle up/down
 #define TURN_DOWN_DELAY 13
 #define TURN_UP_DELAY 4
-#define FAST_TURN_UP_DELAY 4 // used for abort and init
+#define FAST_TURN_UP_DELAY 2 // used for abort and init
 
 // Time to wait until cup is placed on scale (in seconds)
 #define CUP_TIMEOUT     180*1000
 
 // Delay after cup placed on scale (before setting zero point for first
 // ingredient), in milliseconds
-#define CUP_SETTLING_TIME 500
+#define CUP_SETTLING_TIME 1500
 
 // Time to wait until desired weight reached. If timeout is reached, probably
 // bottle is empty or screwed.
@@ -59,5 +59,15 @@
 // when turning servo, because it takes to long to call it always. Increasing
 // this value makes the servo faster but the response time to the scale slower.
 #define ADS1231_INTERVAL 200
+
+// Commands must be sent faster than SERIAL_TIMEOUT milliseconds.
+#define SERIAL_TIMEOUT 50
+
+// max length of serial commands, number of characters
+#define MAX_COMMAND_LENGTH 50
+
+// For safety: we will never pour more than this amount at once (in milligrams)
+// (not per bottle, but per pouring procedure)
+#define MAX_DRINK_SIZE 400
 
 #endif

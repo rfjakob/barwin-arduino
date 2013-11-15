@@ -22,11 +22,11 @@
                                 Serial.print(": "); \
                                 Serial.print(val);  \
                                 Serial.print(", "); \
-                            } while (0)
+                              } while (0)
 
     #define DEBUG_MSG_LN(msg) do { DEBUG_START(); \
-                                Serial.print(msg); \
-                              } while (0)
+                                   Serial.println(msg); \
+                                 } while (0)
     #define DEBUG_VAL_LN(val) do { DEBUG_START(); \
                                    DEBUG_VAL(val); \
                                    DEBUG_END(); \
@@ -40,5 +40,15 @@
     #define DEBUG_VAL(val)
     #define DEBUG_VAL_LN(val)
 #endif
+
+
+// add space at the end and make things shorter
+// TODO add space at the end?
+#define MSG(msg) Serial.println(msg)
+
+#define ERROR(msg) do { Serial.print("ERROR "); \
+                        Serial.print(msg); \
+                        Serial.println(" "); \
+                      } while (0)
 
 #endif
