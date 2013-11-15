@@ -1,4 +1,4 @@
-/*
+/**
  * Configuration file for the evobot Arduino code
  */
 
@@ -11,8 +11,13 @@
 
 // Define bottles (pin, name, up/down position for servo)
 //                     pin,  pos_down,  pos_up
-#define BOTTLES Bottle(6,    1820,      700), \
-                Bottle(11,   1820,      700)
+#define BOTTLES Bottle("Vodka", 6,    1820,      1100), \
+                Bottle("Orange", 11,   1820,      1100)//, \
+                //Bottle(5,    1820,      700), \
+                //Bottle(10,   1820,      700), \
+                //Bottle(9,    1820,      700), \
+                //Bottle(3,    1820,      700), \
+                //Bottle(13,   1820,      700)
 
 // ADC counts per milligram
 #define ADS1231_DIVISOR  1355.2892385964383
@@ -31,6 +36,7 @@
 // Delay between single servo steps when turning bottle up/down
 #define TURN_DOWN_DELAY 13
 #define TURN_UP_DELAY 4
+#define FAST_TURN_UP_DELAY 4 // used for abort and init
 
 // Time to wait until cup is placed on scale (in seconds)
 #define CUP_TIMEOUT     180*1000

@@ -16,7 +16,7 @@ void setup()
     Serial.println("READY");
 
     ads1231_init();
-    bottles_init(bottles, bottles_nr);
+    Bottle::init(bottles, bottles_nr);
 }
 
 int long lastweight =  millis();
@@ -46,7 +46,7 @@ void loop()
 
         // wait for cup, wait until weight > WEIGHT_EPSILON or
         // CUP_TIMEOUT reached
-        DEBUG_MSG("Waiting for cup...");
+        DEBUG_MSG_LN("Waiting for cup...");
         if (delay_until(CUP_TIMEOUT, WEIGHT_EPSILON) == 0) {
             DEBUG_MSG_LN("CUP_TIMEOUT reached. Aborting.");
             return;
@@ -63,7 +63,7 @@ void loop()
             DEBUG_VAL_LN(cup_weight);
 
             DEBUG_MSG_LN("Turning bottle down...");
-            bottles[bottle].turn_to(bottles[bottle].pos_down, TURN_DOWN_DELAY);
+            bottles[bottle].turn_down(TURN_DOWN_DELAY);
 
             // wait for requested weight
             // FIXME here we do not want WEIGHT_EPSILON and sharp >
@@ -71,7 +71,7 @@ void loop()
             delay_until(POURING_TIMEOUT, cup_weight + liquid_mg - UPGRIGHT_OFFSET);
 
             DEBUG_MSG_LN("Turn up again...");
-            bottles[bottle].turn_to(bottles[bottle].pos_up, TURN_UP_DELAY);
+            bottles[bottle].turn_up(TURN_UP_DELAY);
 
             int measured_output = ads1231_get_milligrams() - cup_weight;
             DEBUG_VAL_LN(measured_output);
