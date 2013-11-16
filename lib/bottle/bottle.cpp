@@ -65,9 +65,9 @@ int Bottle::turn_to(int pos, int delay_ms) {
     unsigned long last_called = millis();
     for (int i = current_pos + step; i * step <= pos * step; i += step) {
         // Warning: printing to serial delays turning!
-        if (i % 100 == 0 || i % 100 == 50) {
-            DEBUG_VAL_LN(i);
-        }
+        //if (i % 100 == 0 || i % 100 == 50) {
+        //    DEBUG_VAL_LN(i);
+        //}
         delay(delay_ms);
 
         // turn servo one step
