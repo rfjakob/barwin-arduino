@@ -12,11 +12,28 @@ Compile + Upload + Connect to serial
 ====================================
 	make
 
-See Makefile for details.
+See Makefile for details. Tested with Arduino Duemilanove and Arduino Leonardo.
+
+Serial Interface
+=====================
+TODO: describe this better!
+
+Serial -> A:
+    POUR x1 x2 x3 ... x_n
+
+A -> Serial:
+    READY
+    ERROR error_desc
+        CUP_TIMEOUT_REACHED
+        INVALID_COMMAND
+    WAITING_FOR_CUP
+    ENJOY x1 x2 x3 ... x_n
+
 
 Further Documentation
 =====================
 In the Documentation folder
+
 
 Useful links
 ============
