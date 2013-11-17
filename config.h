@@ -11,18 +11,18 @@
 
 // Define bottles (pin, name, up/down position for servo)
 //                     pin,  pos_down,  pos_up
-#define BOTTLES Bottle("Vodka", 6,    1820,      1100), \
-                Bottle("Orange", 11,   1820,      1100)//, \
-                //Bottle(5,    1820,      700), \
-                //Bottle(10,   1820,      700), \
-                //Bottle(9,    1820,      700), \
-                //Bottle(3,    1820,      700), \
-                //Bottle(13,   1820,      700)
+#define BOTTLES Bottle("Vodka",   3,    2700,   244), \
+                Bottle("Orange",  5,    2700,   244), \
+                Bottle("Blubb",   6,    2700,   244), \
+                Bottle("Bla",     9,    2700,   244), \
+                Bottle("Bla2",   10,    1820,   700), \
+                Bottle("asdf",   11,    1820,   700), \
+                Bottle("",       13,    1820,   700)
 
 // ADC counts per milligram
 #define ADS1231_DIVISOR  1355.2892385964383
 // Zero offset, milligrams
-#define ADS1231_OFFSET   117.40595530926247 + 76.0
+#define ADS1231_OFFSET   (117.40595530926247 + 76.0)
 
 // How to calibrate using a weight (in milligrams) and the measured raw value
 // as returned by ads1231_get_value():
