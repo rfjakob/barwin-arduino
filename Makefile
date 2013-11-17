@@ -1,4 +1,4 @@
-IS_LEONARDO:=$(shell [ -e /dev/ttyACM ] && echo 1)
+IS_LEONARDO:=$(shell [ -e /dev/ttyACM0 ] && echo 1)
 ifdef IS_LEONARDO
 	BOARD=leonardo
 	BAUDRATE=115200
