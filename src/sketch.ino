@@ -52,6 +52,13 @@ void loop() {
             else if (cmd_str.equals("CALIBRATE_BOTTLE_POS")) {
                 calibrate_bottle_pos();
             }
+            else if (cmd_str.equals("TURN_BOTTLE")) {
+                // turn bottle to specific position
+                DEBUG_MSG_LN("turn bottle...");
+                int params[2];
+                parse_int_params(params, bottles_nr);
+                bottles[params[0]].turn_to(params[1], TURN_DOWN_DELAY);
+            }
             else if (cmd_str.equals("NOTHING")) {
                 // dummy command, for testing
                 MSG("DOING_NOTHING");
