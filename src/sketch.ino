@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include <ads1231.h>
 #include <bottle.h>
 #include <utils.h>
@@ -22,20 +23,19 @@ void setup() {
     Bottle::init(bottles, bottles_nr);
 }
 
-int long lastweight =  millis();
-
 
 void loop() {
     // print some stuff every 500ms while idle
-    // TODO this needs cleanup (use timedAction library?)
-    long weight = ads1231_get_milligrams();
-    //long raw    = ads1231_get_value();
-    if (millis() - lastweight > 500) {
-        DEBUG_VAL_LN(weight);
-        lastweight = millis();
+    IF_HAS_TIME_PASSED(SEND_READY_INTERVAL)  {
+        long weight = ads1231_get_milligrams();
+        if (weight >= ADS1231_ERR) {
+            // TODO print specific error code / msg
+            ERROR("SCALE_ERROR");
+            return;
+        }
+        String msg = String("READY ") + String(weight);
+        MSG(msg);
     }
-    //DEBUG_VAL(raw);
-
 
     // Parse commands from Serial
     if (Serial.available() > 0) {
@@ -139,6 +139,6 @@ void pouring_procedure(int* requested_output) {
     // Send success message, measured_output as params
     String msg = "ENJOY ";
     for (int bottle = 0; bottle < bottles_nr; bottle++)
-        msg += measured_output[bottle] + " ";
+        msg += String(measured_output[bottle]) + " ";
     MSG(msg);
 }

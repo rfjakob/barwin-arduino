@@ -52,3 +52,21 @@
                       } while (0)
 
 #endif
+
+
+bool has_time_passed(long time_period, long& last_passed);
+
+/**
+ * A quite dangerous macro, to simplify usage of has_time_passed().
+ *
+ * Example usage:
+ * loop() {
+ *      IF_HAS_TIME_PASSED(500) {
+ *          do_something_every_500ms();
+ *      }
+ * }
+ */
+#define IF_HAS_TIME_PASSED(time_period) \
+        static long HAS_TIME_PASSED_last_passed = millis();\
+        if (has_time_passed(time_period, HAS_TIME_PASSED_last_passed))
+
