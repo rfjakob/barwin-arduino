@@ -11,13 +11,15 @@
 
 // Define bottles (pin, name, up/down position for servo)
 //                     pin,  pos_down,  pos_up
-#define BOTTLES Bottle("Vodka",   3,    2700,   244), \
-                Bottle("Orange",  5,    2700,   244), \
-                Bottle("Blubb",   6,    2700,   244), \
-                Bottle("Bla",     9,    2700,   244), \
-                Bottle("Bla2",   10,    1820,   700), \
-                Bottle("asdf",   11,    1820,   700), \
-                Bottle("",       13,    1820,   700)
+#define BOTTLES Bottle("Vodka",   3,    920,    2100), \
+                Bottle("Orange",  5,   1140,    2320), \
+                Bottle("Blubb",   6,    920,    2100), \
+                Bottle("Bla",     9,    920,    2100), \
+                Bottle("asdf",   11,    920,    2100)
+
+
+//                Bottle("",       13,    700,    2100)
+//                Bottle("Bla2",   10,    700,    2100), \
 
 // ADC counts per milligram
 #define ADS1231_DIVISOR  1355.2892385964383
