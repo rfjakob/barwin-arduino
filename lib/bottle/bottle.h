@@ -26,9 +26,9 @@ class Bottle {
     public:
         Bottle(String, int, int, int);
         static void init(Bottle* bottles, int bottles_nr);
-        int turn_to(int pos,int delay_ms);
-        int turn_up(int delay_ms);
-        int turn_down(int delay_ms);
+        int turn_to(int pos, int delay_ms, bool print_steps=false);
+        int turn_up(int delay_ms, bool print_steps=false);
+        int turn_down(int delay_ms, bool print_steps=false);
         Servo servo;          // servo used for turning the bottle
         const String name;    // human readable name, e.g "Vodka"
         const char pin;       // pin to attach the servo

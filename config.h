@@ -34,9 +34,10 @@
 // ADS1231_OFFSET  = weight1 - (raw1 * (weight1 - weight2)) / (raw1 - raw2)
 
 // Delay between single servo steps when turning bottle up/down
-#define TURN_DOWN_DELAY 13
+#define TURN_DOWN_DELAY 4
 #define TURN_UP_DELAY 4
-#define FAST_TURN_UP_DELAY 2 // used for abort and init
+#define FAST_TURN_UP_DELAY 2      // used for abort and init
+#define CALIBRATION_TURN_DELAY 8  // used for calibrate_bottle_pos()
 
 // Time to wait until cup is placed on scale (in seconds)
 #define CUP_TIMEOUT     180*1000

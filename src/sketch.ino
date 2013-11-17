@@ -31,6 +31,8 @@ void loop() {
         if (weight >= ADS1231_ERR) {
             // TODO print specific error code / msg
             ERROR("SCALE_ERROR");
+            // FIXME this is wrong, return does not suffice if commands
+            // should not be processed!
             return;
         }
         String msg = String("READY ") + String(weight);
@@ -47,12 +49,16 @@ void loop() {
                 parse_int_params(requested_output, bottles_nr);
                 pouring_procedure(requested_output);
             }
+            else if (cmd_str.equals("CALIBRATE_BOTTLE_POS")) {
+                calibrate_bottle_pos();
+            }
             else if (cmd_str.equals("NOTHING")) {
                 // dummy command, for testing
                 MSG("DOING_NOTHING");
             }
             else {
                 ERROR("INVALID_COMMAND");
+                DEBUG_MSG_LN(String("Got string '") + String(cmd) + String("'"));
             }
         }
     }
@@ -141,4 +147,27 @@ void pouring_procedure(int* requested_output) {
     for (int bottle = 0; bottle < bottles_nr; bottle++)
         msg += String(measured_output[bottle]) + " ";
     MSG(msg);
+}
+
+
+
+/**
+ * Pouring procedure.
+ * Waits for cup and turns each bottle in the order they were defined.
+ * 'requested_output' is the amount of liquid in milligrams to be poured from
+ * each bottle(int array of size bottles_nr).
+ */
+void calibrate_bottle_pos() {
+    for (int bottle = 0; bottle < bottles_nr; bottle++) {
+        DEBUG_START();
+        DEBUG_VAL(bottle);
+        DEBUG_VAL(bottles[bottle].name);
+        // FIXME private members...
+        //DEBUG_VAL(bottles[bottle].pos_down);
+        //DEBUG_VAL(bottles[bottle].pos_up);
+        DEBUG_END();
+        bottles[bottle].turn_down(CALIBRATION_TURN_DELAY, true);
+        bottles[bottle].turn_up(CALIBRATION_TURN_DELAY, true);
+    }
+    DEBUG_MSG_LN("Calibration procedure for bottle position finished.");
 }

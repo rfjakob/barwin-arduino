@@ -42,7 +42,7 @@ Bottle::Bottle(String _name, int _pin, int _pos_down, int _pos_up) :
  *     /usr/share/arduino/libraries/Servo/Servo.cpp
  *
  */
-int Bottle::turn_to(int pos, int delay_ms) {
+int Bottle::turn_to(int pos, int delay_ms, bool print_steps) {
     if (pos < SERVO_MIN || pos > SERVO_MAX) {
         DEBUG_MSG_LN("Error turning bottle, wrong servo pos!");
         return -1;
@@ -65,9 +65,9 @@ int Bottle::turn_to(int pos, int delay_ms) {
     unsigned long last_called = millis();
     for (int i = current_pos + step; i * step <= pos * step; i += step) {
         // Warning: printing to serial delays turning!
-        //if (i % 100 == 0 || i % 100 == 50) {
-        //    DEBUG_VAL_LN(i);
-        //}
+        if (print_steps && i % 10 == 0) {
+            DEBUG_VAL_LN(i);
+        }
         delay(delay_ms);
 
         // turn servo one step
@@ -84,13 +84,13 @@ int Bottle::turn_to(int pos, int delay_ms) {
 /**
  * Turn bottle to upright position.
  */
-int Bottle::turn_up(int delay_ms) {
-    return turn_to(pos_up, delay_ms);
+int Bottle::turn_up(int delay_ms, bool print_steps) {
+    return turn_to(pos_up, delay_ms, print_steps);
 }
 
 /**
  * Turn bottle to pouring position.
  */
-int Bottle::turn_down(int delay_ms) {
-    return turn_to(pos_down, delay_ms);
+int Bottle::turn_down(int delay_ms, bool print_steps) {
+    return turn_to(pos_down, delay_ms, print_steps);
 }
