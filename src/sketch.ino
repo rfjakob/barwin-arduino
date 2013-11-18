@@ -1,179 +1,180 @@
-#include <Servo.h> 
-
+#include <Arduino.h>
 #include <ads1231.h>
-
+#include <bottle.h>
+#include <utils.h>
 #include "../config.h"
 
 
-// TODO find out correct values...
-#define SERVO_MIN 544
-#define SERVO_MAX 2400
+DEFINE_BOTTLES();
 
-#define POS_BOTTLE_DOWN SERVO_MIN
-#define POS_BOTTLE_UP   SERVO_MAX  // FIXME do we need SERVO_MIN here?
-                                   // depends on how the servo is mounted!
+void pouring_procedure(int* requested_output);
+int parse_int_params(int* params, int size);
 
-
-#define DEBUG
-#ifdef DEBUG
-    #define DEBUG_MSG(msg) Serial.print(msg)
-    #define DEBUG_MSG_LN(msg) Serial.println(msg)
-    #define DEBUG_VAL(val) do { Serial.print(#val); \
-                                Serial.print(": "); \
-                                Serial.print(val);  \
-                                Serial.print(", "); \
-                            } while (0)
-
-    #define DEBUG_VAL_LN(val) do { DEBUG_VAL(val); Serial.println();} while (0)
-#else
-    #define DEBUG_MSG(msg)
-    #define DEBUG_MSG_LN(msg)
-
-    #define DEBUG_VAL(val)
-    #define DEBUG_VAL_LN(val)
-#endif
-
-Servo servo;
-int last_pour_pos = POS_BOTTLE_UP;
-volatile bool abourt_pouring = false;
-
-void emergency_abourt_pouring() {
-    abourt_pouring = true;
-}
-
-void setup()
-{
-    //Serial.begin(115200);
+void setup() {
+    #if defined(__AVR_ATmega328P__)
     Serial.begin(9600);
-    Serial.println("READY");
+    #else
+    Serial.begin(115200);
+    #endif
+    Serial.setTimeout(SERIAL_TIMEOUT);
+    MSG("READY");
 
     ads1231_init();
-
-    servo.attach(SERVO1_PIN);
-    servo.writeMicroseconds(POS_BOTTLE_UP);
-
-    pinMode(0, INPUT);
-    digitalWrite(2, HIGH);
-    attachInterrupt(0, emergency_abourt_pouring, FALLING); // pin 2
+    Bottle::init(bottles, bottles_nr);
 }
 
 
-/*
- * Turn servo towards 'pos' and stop if servo is at position 'pos' or if weight
- * is more than max_weight WEIGHT_EPSILON.
- * Returns 0 if 'pos' was reached or -1 if 'max_weight' was measured. Use
- * 'delay_ms' to set the speed of rotation (delay between two rotation steps,
- * i.e. speed = 1/delay).
- *
- * For details about the built-in Servo class see:
- *     /usr/share/arduino/libraries/Servo/Servo.cpp
- *
- * TODO move this to a class method (class "Bottle", subclassing Servo?) for
- * more than one servo?
- */
-int turn_until(int pos, long max_weight, int delay_ms) {
-    // throw error if not between SERVO_MIN and SERVO_MAX?
-    int current_pos = servo.readMicroseconds();
-    if (pos == current_pos)
-        return 0;
-    int step = (current_pos < pos) ? 1 : -1;
+void loop() {
+    // print some stuff every 500ms while idle
+    IF_HAS_TIME_PASSED(SEND_READY_INTERVAL)  {
+        long weight = ads1231_get_milligrams();
+        if (weight >= ADS1231_ERR) {
+            // TODO print specific error code / msg
+            ERROR("SCALE_ERROR");
+            // FIXME this is wrong, return does not suffice if commands
+            // should not be processed!
+            return;
+        }
+        String msg = String("READY ") + String(weight);
+        MSG(msg);
+    }
 
-    DEBUG_VAL(current_pos);
-    DEBUG_VAL(step);
-    DEBUG_VAL(max_weight);
-    DEBUG_VAL(pos);
-    DEBUG_VAL(delay_ms);
-    DEBUG_MSG_LN("  - start turning...");
-    unsigned long last_called = millis();
-    for (int i = current_pos + step; i * step <= pos * step; i += step) {
-        // abort if max_weight reached
-        if (millis() > last_called + ADS1231_INTERVAL) {
-            DEBUG_VAL_LN(i);
-            last_called = millis();
-            if (ads1231_get_milligrams() > max_weight + WEIGHT_EPSILON) {
-                DEBUG_MSG_LN("Max weight reached. Aborting servo rotation.");
-                return -1;
+    // Parse commands from Serial
+    if (Serial.available() > 0) {
+        char cmd[MAX_COMMAND_LENGTH] = "";
+        if(Serial.readBytesUntil(' ', cmd, MAX_COMMAND_LENGTH)) {
+            String cmd_str = String(cmd);
+            if (cmd_str.equals("POUR")) {
+                int requested_output[bottles_nr];
+                parse_int_params(requested_output, bottles_nr);
+                pouring_procedure(requested_output);
+            }
+            else if (cmd_str.equals("CALIBRATE_BOTTLE_POS")) {
+                calibrate_bottle_pos();
+            }
+            else if (cmd_str.equals("TURN_BOTTLE")) {
+                // turn bottle to specific position
+                DEBUG_MSG_LN("turn bottle...");
+                int params[2];
+                parse_int_params(params, bottles_nr);
+                bottles[params[0]].turn_to(params[1], TURN_DOWN_DELAY);
+            }
+            else if (cmd_str.equals("NOTHING")) {
+                // dummy command, for testing
+                MSG("DOING_NOTHING");
+            }
+            else {
+                ERROR("INVALID_COMMAND");
+                DEBUG_MSG_LN(String("Got string '") + String(cmd) + String("'"));
             }
         }
-        if (abourt_pouring) {
-            return -2;
-        }
-        delay(delay_ms);
-
-        // turn servo one step
-        servo.writeMicroseconds(i);
     }
-    DEBUG_MSG_LN("Finished turning.");
+}
+
+
+/**
+ * Parse space separated int values from Serial to array.
+ */
+int parse_int_params(int* params, int size) {
+    for (int i = 0; i < size; i++) {
+        // see /usr/share/arduino/hardware/arduino/cores/arduino/Stream.cpp:138
+        params[i] = Serial.parseInt();
+    }
     return 0;
 }
 
 
-void loop()
-{
-    if (abourt_pouring) {
-        delay(50);
-        DEBUG_MSG_LN("Reset abort");
-        abourt_pouring = false;
-    }
-    if (Serial.available() > 0) {
-        // where are the sources for Serial?
-        // how to find out what parseInt does?
-        int liquid_mg = Serial.parseInt();
-        DEBUG_VAL_LN(liquid_mg);
-        if (!liquid_mg > 0) {
-            DEBUG_MSG_LN("Error. Please provide integer > 0.");
-            return;
-        }
+/**
+ * Pouring procedure.
+ * Waits for cup and turns each bottle in the order they were defined.
+ * 'requested_output' is the amount of liquid in milligrams to be poured from
+ * each bottle(int array of size bottles_nr).
+ */
+void pouring_procedure(int* requested_output) {
+    /*DEBUG_VAL_LN(requested_output);                               */
+    /*if (!requested_output > 0) {                                  */
+    /*    DEBUG_MSG_LN("Error. Please provide integer > 0.");*/
+    /*    return;                                            */
+    /*}                                                      */
+    // TODO check MAX_DRINK_SIZE
 
-        // TODO check if liquid_mg is significantly more than UPGRIGHT_OFFSET
+    // TODO check if requested_output is significantly more than UPGRIGHT_OFFSET
 
-        // wait for cup, wait until weight > WEIGHT_EPSILON or
-        // CUP_TIMEOUT reached
-        DEBUG_MSG("Waiting for cup...");
+    // wait for cup, wait until weight > WEIGHT_EPSILON or
+    // CUP_TIMEOUT reached
+    if (ads1231_get_milligrams() < WEIGHT_EPSILON) {
+        MSG("WAITING_FOR_CUP");
         if (delay_until(CUP_TIMEOUT, WEIGHT_EPSILON) == 0) {
             DEBUG_MSG_LN("CUP_TIMEOUT reached. Aborting.");
+            ERROR("CUP_TIMEOUT_REACHED");
             return;
         }
+    }
 
-        // wait a bit until cup weight can be measured safely
-        delay(CUP_SETTLING_TIME);
+    // wait a bit until cup weight can be measured safely
+    delay(CUP_SETTLING_TIME);
 
+    // Pour liquid for each bottle
+    int measured_output[bottles_nr];
+    for (int bottle = 0; bottle < bottles_nr; bottle++) {
+        DEBUG_START();
+        DEBUG_MSG("Start pouring bottle: ");
+        DEBUG_VAL(bottles[bottle].name);
+        DEBUG_VAL(requested_output[bottle]);
+        DEBUG_VAL(bottle);
+        DEBUG_END();
+        // cup_weight is weight including ingredients poured until now
         long cup_weight = ads1231_get_milligrams();
 
         DEBUG_VAL_LN(cup_weight);
 
-        // TODO for each bottle
-        // for () {
-            DEBUG_MSG_LN("Turning fast to last_pour_pos...");
-            turn_until(last_pour_pos + LAST_POUR_POS_OFFSET,
-                       cup_weight,
-                       TURN_DOWN_FAST_DELAY);
+        DEBUG_MSG_LN("Turning bottle down...");
+        bottles[bottle].turn_down(TURN_DOWN_DELAY);
 
-            DEBUG_MSG_LN("Turning slow until pouring..");
-            if (turn_until(POS_BOTTLE_DOWN, cup_weight, TURN_DOWN_DELAY) == 0) {
-                DEBUG_MSG("Bottle empty? Position POS_BOTTLE_DOWN reached, no weight gain.");
-                turn_until(POS_BOTTLE_UP, 10000, TURN_UP_DELAY);
-                return;
-            }
+        // wait for requested weight
+        // FIXME here we do not want WEIGHT_EPSILON and sharp >
+        DEBUG_MSG_LN("Waiting for weight...");
+        delay_until(POURING_TIMEOUT, cup_weight + requested_output[bottle] - UPGRIGHT_OFFSET);
 
-            // save current positon for next pouring
-            last_pour_pos = servo.readMicroseconds();
+        DEBUG_MSG_LN("Turn up again...");
+        bottles[bottle].turn_up(TURN_UP_DELAY);
 
-            // wait for requested weight
-            // FIXME here we do not want WEIGHT_EPSILON and sharp >
-            DEBUG_MSG_LN("Waiting for weight...");
-            delay_until(POURING_TIMEOUT, cup_weight + liquid_mg - UPGRIGHT_OFFSET);
+        measured_output[bottle] = ads1231_get_milligrams() - cup_weight;
 
-            // FIXME do not pass 10 000 as  +inf weight, but find better solution
-            DEBUG_MSG_LN("Turn up again...");
-            turn_until(POS_BOTTLE_UP, 10000, TURN_UP_DELAY);
-
-            // TODO measure real output
-            int measured_output = ads1231_get_milligrams() - cup_weight;
-            DEBUG_VAL_LN(measured_output);
-        // }
-
-
-        // TODO send success
+        DEBUG_START();
+        DEBUG_MSG("Bottle statistics: ");
+        DEBUG_VAL(bottle);
+        DEBUG_VAL(requested_output[bottle]);
+        DEBUG_VAL(measured_output[bottle]);
+        DEBUG_END();
     }
+
+    // Send success message, measured_output as params
+    String msg = "ENJOY ";
+    for (int bottle = 0; bottle < bottles_nr; bottle++)
+        msg += String(measured_output[bottle]) + " ";
+    MSG(msg);
+}
+
+
+
+/**
+ * Pouring procedure.
+ * Waits for cup and turns each bottle in the order they were defined.
+ * 'requested_output' is the amount of liquid in milligrams to be poured from
+ * each bottle(int array of size bottles_nr).
+ */
+void calibrate_bottle_pos() {
+    for (int bottle = 0; bottle < bottles_nr; bottle++) {
+        DEBUG_START();
+        DEBUG_VAL(bottle);
+        DEBUG_VAL(bottles[bottle].name);
+        // FIXME private members...
+        //DEBUG_VAL(bottles[bottle].pos_down);
+        //DEBUG_VAL(bottles[bottle].pos_up);
+        DEBUG_END();
+        bottles[bottle].turn_down(CALIBRATION_TURN_DELAY, true);
+        bottles[bottle].turn_up(CALIBRATION_TURN_DELAY, true);
+    }
+    DEBUG_MSG_LN("Calibration procedure for bottle position finished.");
 }
