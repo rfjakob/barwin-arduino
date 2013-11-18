@@ -42,6 +42,8 @@ void loop() {
     // Parse commands from Serial
     if (Serial.available() > 0) {
         char cmd[MAX_COMMAND_LENGTH] = "";
+        // Note that readBytesUntil() will block until SERIAL_TIMEOUT is reached
+        // or a space is read from serial input.
         if(Serial.readBytesUntil(' ', cmd, MAX_COMMAND_LENGTH)) {
             String cmd_str = String(cmd);
             if (cmd_str.equals("POUR")) {
@@ -54,9 +56,11 @@ void loop() {
             }
             else if (cmd_str.equals("TURN_BOTTLE")) {
                 // turn bottle to specific position
-                DEBUG_MSG_LN("turn bottle...");
+                DEBUG_MSG_LN("Turn bottle...");
                 int params[2];
                 parse_int_params(params, bottles_nr);
+                // bottle number (int starting at 0) first parameter, position
+                // as microseconds second parameter
                 bottles[params[0]].turn_to(params[1], TURN_DOWN_DELAY);
             }
             else if (cmd_str.equals("NOTHING")) {
@@ -78,6 +82,7 @@ void loop() {
 int parse_int_params(int* params, int size) {
     for (int i = 0; i < size; i++) {
         // see /usr/share/arduino/hardware/arduino/cores/arduino/Stream.cpp:138
+        // Note: parseInt returns 0 in case of an parsing error... (uargh!)
         params[i] = Serial.parseInt();
     }
     return 0;
