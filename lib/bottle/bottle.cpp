@@ -32,12 +32,10 @@ Bottle::Bottle(String _name, int _pin, int _pos_down, int _pos_up) :
 }
 
 /**
- * Turn servo towards 'pos' and stop if servo is at position 'pos' or if weight
- * is more than max_weight WEIGHT_EPSILON.
- * Returns 0 if 'pos' was reached or -1 if 'max_weight' was measured. Use
- * 'delay_ms' to set the speed of rotation (delay between two rotation steps,
- * i.e. speed = 1/delay).
- *
+ * Turn servo towards 'pos' in 1 microsecond steps, waiting delay_ms
+ * milliseconds between steps (speed = 1/delay).
+ * Returns 0 when the position is reached or -1 on error.
+ * 
  * For details about the built-in Servo class see:
  *     /usr/share/arduino/libraries/Servo/Servo.cpp
  *
@@ -64,6 +62,9 @@ int Bottle::turn_to(int pos, int delay_ms, bool print_steps) {
     DEBUG_END();
     unsigned long last_called = millis();
     for (int i = current_pos + step; i * step <= pos * step; i += step) {
+        //                             ˆˆˆˆˆˆ        ˆˆˆˆˆˆ
+        //                             this inverts the relation if turning down
+
         // Warning: printing to serial delays turning!
         if (print_steps && i % 10 == 0) {
             DEBUG_VAL_LN(i);
