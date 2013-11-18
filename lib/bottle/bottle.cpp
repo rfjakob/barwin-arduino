@@ -16,7 +16,7 @@
 void Bottle::init(Bottle* bottles, int bottles_nr) {
     for (int i=0; i < bottles_nr; i++) {
         bottles[i].servo.attach(bottles[i].pin);
-        bottles[i].turn_up(FAST_TURN_UP_DELAY);
+        bottles[i].servo.writeMicroseconds(bottles[i].pos_up); // Make sure bottle is pointing up
     }
 }
 
