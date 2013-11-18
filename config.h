@@ -48,7 +48,7 @@
 // ingredient), in milliseconds
 #define CUP_SETTLING_TIME 1500
 
-// Time to wait until desired weight reached. If timeout is reached, probably
+// Milliseconds to wait until desired weight reached. If timeout is reached, probably
 // bottle is empty or screwed.
 #define POURING_TIMEOUT  20000
 
