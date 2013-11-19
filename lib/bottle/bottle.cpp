@@ -17,6 +17,7 @@ void Bottle::init(Bottle* bottles, int bottles_nr) {
     for (int i=0; i < bottles_nr; i++) {
         bottles[i].servo.attach(bottles[i].pin);
         bottles[i].servo.writeMicroseconds(bottles[i].pos_up); // Make sure bottle is pointing up
+        delay(500);
     }
 }
 
@@ -35,7 +36,7 @@ Bottle::Bottle(String _name, int _pin, int _pos_down, int _pos_up) :
  * Turn servo towards 'pos' in 1 microsecond steps, waiting delay_ms
  * milliseconds between steps (speed = 1/delay).
  * Returns 0 when the position is reached or -1 on error.
- * 
+ *
  * For details about the built-in Servo class see:
  *     /usr/share/arduino/libraries/Servo/Servo.cpp
  *

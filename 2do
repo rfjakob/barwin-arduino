@@ -12,7 +12,7 @@ Hardware:
 
 Bugs:
     - serial reconnect --> reset arduino?
-    - 
+    - do we check the number of params?
 
 Commands:
     - SET_OFFSET (tare)
