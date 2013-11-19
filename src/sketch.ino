@@ -122,6 +122,9 @@ void pouring_procedure(int* requested_output) {
     // Pour liquid for each bottle
     int measured_output[bottles_nr];
     for (int bottle = 0; bottle < bottles_nr; bottle++) {
+        if (requested_output[bottle] < UPGRIGHT_OFFSET)
+            continue;
+
         DEBUG_START();
         DEBUG_MSG("Start pouring bottle: ");
         DEBUG_VAL(bottles[bottle].name);
