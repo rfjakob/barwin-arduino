@@ -11,7 +11,7 @@
 
 // Define bottles (pin, name, up/down position for servo)
 //                     pin,  pos_down,  pos_up
-#define BOTTLES Bottle("Vodka",   3,    920,    2100), \
+#define BOTTLES Bottle("Vodka",   3,   1200,    2380), \
                 Bottle("Orange",  5,    920,    2100), \
                 Bottle("Blubb",   6,    920,    2100), \
                 Bottle("Bla",     9,   1140,    2320), \
@@ -51,7 +51,7 @@
 #define POURING_TIMEOUT  20000
 
 // Amount of liquid in milligrams poured while turning the bottle up
-#define UPGRIGHT_OFFSET  20
+#define UPGRIGHT_OFFSET  17
 
 // When waiting for changes of weight on scale, ignore changes less than... (in milligrams)
 #define WEIGHT_EPSILON  2
