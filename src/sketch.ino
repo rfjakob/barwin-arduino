@@ -122,8 +122,14 @@ void pouring_procedure(int* requested_output) {
     // Pour liquid for each bottle
     int measured_output[bottles_nr];
     for (int bottle = 0; bottle < bottles_nr; bottle++) {
-        if (requested_output[bottle] < UPGRIGHT_OFFSET)
+        measured_output[bottle] = 0;
+
+        if (requested_output[bottle] < UPGRIGHT_OFFSET) {
+            if (requested_output[bottle] > 0) {
+                DEBUG_MSG_LN("Warning! Requested UPGRIGHT_OFFSET > outpout > 0 passed");
+            }
             continue;
+        }
 
         DEBUG_START();
         DEBUG_MSG("Start pouring bottle: ");
@@ -160,7 +166,7 @@ void pouring_procedure(int* requested_output) {
     // Send success message, measured_output as params
     String msg = "ENJOY ";
     for (int bottle = 0; bottle < bottles_nr; bottle++)
-        msg += String(measured_output[bottle]) + " ";
+        msg += String(measured_output[bottle]) + String(" ");
     MSG(msg);
 }
 
