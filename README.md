@@ -18,6 +18,9 @@ Serial Interface
 =====================
 TODO: describe this better!
 
+timeout: 100milliseconds
+terminating using space and \r\n
+
 Serial -> A:
     POUR x1 x2 x3 ... x_n
 
