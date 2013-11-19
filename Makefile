@@ -9,6 +9,8 @@ else
 	TTY=/dev/ttyUSB
 endif
 
+#BOARD=uno
+#TTY=/dev/ttyACM
 
 all: build upload serial
 
