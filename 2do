@@ -14,6 +14,11 @@ Bugs:
     - serial reconnect --> reset arduino?
     - 
 
+Commands:
+    - SET_OFFSET (tare)
+    - all to pos_up
+
+dancing bottles!
 
  Protothreads:
  https://github.com/daijo/ArduinoLibraries/blob/master/ProtoThreads/examples/pt_led_example/pt_led_example.pde
