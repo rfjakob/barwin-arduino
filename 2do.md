@@ -16,6 +16,8 @@
  - [ ] Serial commands for different speed?
  - [x] UPRIGHT_OFFSET / 2.0 (if less, don't do anything if more pour)
  - [ ] dancing bottles!
+ - [ ] move bottles at the same time?
+
 
  
  - a better way to use something like threads? service interrupt?
