@@ -12,7 +12,7 @@
  - [ ] Error handling? (scale?)
  - [ ] READY: add 0/1 if cup or not
  - [ ] Serial commands for different speed?
- - [ ] UPRIGHT_OFFSET / 2.0 (if less, don't do anything if more pour)
+ - [x] UPRIGHT_OFFSET / 2.0 (if less, don't do anything if more pour)
  - [ ] dancing bottles!
 
  

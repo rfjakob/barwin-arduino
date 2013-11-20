@@ -124,11 +124,17 @@ void pouring_procedure(int* requested_output) {
     for (int bottle = 0; bottle < bottles_nr; bottle++) {
         measured_output[bottle] = 0;
 
+        // we cannot pour less than UPGRIGHT_OFFSET --> do not pour if it is 
+        // less than UPGRIGHT_OFFSET/2.0 and print warning...
         if (requested_output[bottle] < UPGRIGHT_OFFSET) {
-            if (requested_output[bottle] > 0) {
-                DEBUG_MSG_LN("Warning! Requested UPGRIGHT_OFFSET > outpout > 0 passed");
+            if (UPGRIGHT_OFFSET / 2. > requested_output[bottle]) {
+                if (requested_output[bottle] > 0 ) {
+                    DEBUG_MSG_LN("Warning! Requested output is between: UPGRIGHT_OFFSET/2 > outpout > 0 --> will not pour!");
+                }
+                continue;
+            } else {
+                DEBUG_MSG_LN("Warning! Requested output is between: UPGRIGHT_OFFSET > outpout >= UPGRIGHT_OFFSET/2 --> will pour too much!");
             }
-            continue;
         }
 
         DEBUG_START();
