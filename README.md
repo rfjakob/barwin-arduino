@@ -25,13 +25,23 @@ Serial -> A:
     POUR x1 x2 x3 ... x_n
 
 A -> Serial:
-    READY
-    ERROR error_desc
-        CUP_TIMEOUT_REACHED
-        INVALID_COMMAND
-    WAITING_FOR_CUP
-    ENJOY x1 x2 x3 ... x_n
-
+<dl>
+    <dt>READY</dt>
+    <dd>TODO</dd>
+    <dt>ERROR error_desc</dt>
+    <dd>
+    	<dl>
+    		<dt>CUP_TIMEOUT_REACHED</dt>
+    		<dd>TODO</dd>
+        	<dt>INVALID_COMMAND</dt>
+        	<dd>TODO</dd>
+        </dl>
+    </dd>
+    <dt>WAITING_FOR_CUP</dt>
+    <dd>TODO</dd>
+    <dt>ENJOY x1 x2 x3 ... x_n</dt>
+    <dd>TODO</dd>
+</dl>
 
 Further Documentation
 =====================
