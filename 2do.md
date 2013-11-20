@@ -1,20 +1,19 @@
-[ ] Protothreads?
-[ ] when cup is not there while pouring, abort pouring procedure (check if weight gets less between bottles)
-[ ] fix Makefile for Arduino One
-[ ] serial reconnect --> reset arduino?
-[ ] problems with pin 13
-[ ] do we check the number of params?
-[ ] Serial command: calibrate scale, SET_OFFSET (tare)
-[ ] Serial command: all to pos_up
-[ ] auto calibration for UPRIGHT_OFFSET
-[ ] abort button
-[ ] abort command
-[ ] Error handling? (scale?)
-[ ] READY: add 0/1 if cup or not
-[ ] Serial commands for different speed?
-[ ] UPRIGHT_OFFSET / 2.0 (if less, don't do anything if more pour)
-
-dancing bottles!
+- [ ] Protothreads?
+- [ ] when cup is not there while pouring, abort pouring procedure (check if weight gets less between bottles)
+- [ ] fix Makefile for Arduino One
+- [ ] serial reconnect --> reset arduino?
+- [ ] problems with pin 13
+- [ ] do we check the number of params?
+- [ ] Serial command: calibrate scale, SET_OFFSET (tare)
+- [ ] Serial command: all to pos_up
+- [ ] auto calibration for UPRIGHT_OFFSET
+- [ ] abort button
+- [ ] abort command
+- [ ] Error handling? (scale?)
+- [ ] READY: add 0/1 if cup or not
+- [ ] Serial commands for different speed?
+- [ ] UPRIGHT_OFFSET / 2.0 (if less, don't do anything if more pour)
+- [ ] dancing bottles!
 
  
  - a better way to use something like threads? service interrupt?
