@@ -12,17 +12,17 @@
 // Define bottles (pin, name, up/down position for servo)
 //                     pin,  pos_down,  pos_up
 #define BOTTLES Bottle("Vodka",   3,   1200,    2380), \
-                Bottle("Orange",  5,    920,    2100), \
-                Bottle("Blubb",   6,    920,    2100), \
+                Bottle("Orange",  5,   1220,    2400), \
+                Bottle("Blubb",   6,   1220,    2400), \
                 Bottle("Bla",     9,   1140,    2320), \
-                Bottle("Bla2",   10,    920,    2100), \
-                Bottle("asdf",   11,    920,    2100), \
+                Bottle("Bla2",   10,    950,    2100), \
+                Bottle("asdf",   11,   1240,    2420), \
                 Bottle("",       13,    920,    2100)
 
 // ADC counts per milligram
 #define ADS1231_DIVISOR  1355.2892385964383
 // Zero offset, grams
-#define ADS1231_OFFSET   (117.40595530926247 + 76.0)
+#define ADS1231_OFFSET   (117.40595530926247 + 76.0 - 51.0)
 
 // How to calibrate using a weight (in grams) and the measured raw value
 // as returned by ads1231_get_value():
@@ -50,7 +50,8 @@
 // bottle is empty or screwed.
 #define POURING_TIMEOUT  20000
 
-// Amount of liquid in grams poured while turning the bottle up
+// Stop pouring early in grams to account for the liquid poured while turning
+// the bottle up
 #define UPGRIGHT_OFFSET  17
 
 // When waiting for changes of weight on scale, ignore changes less than... (in grams)
@@ -72,6 +73,6 @@
 
 // For safety: we will never pour more than this amount at once (in grams)
 // (not per bottle, but per pouring procedure)
-#define MAX_DRINK_SIZE 400
+#define MAX_DRINK_GRAMS 250
 
 #endif
