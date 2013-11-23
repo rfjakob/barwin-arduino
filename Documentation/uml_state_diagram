@@ -1,0 +1,15 @@
+// Cool Class Diagram
+// http://yuml.me/diagram/scruffy/class/draw
+[READY]->[POURING]
+[READY]->[WAITING_FOR_CUP]
+[WAITING_FOR_CUP]->[ERROR CUP_TIMEOUT_REACHED]
+[ERROR CUP_TIMEOUT_REACHED]->[ERROR]
+[WAITING_FOR_CUP]->[POURING]
+[POURING]-next bottle>[POURING]
+[POURING]-finished pouring>[ENJOY]
+[ENJOY]-no timeout>[READY] // arduino waits for weight lt WEIGHT_EPSILON
+[POURING]->[ERROR BOTTLE_TIMEOUT]
+[ERROR BOTTLE_TIMEOUT]->[ERROR]
+[POURING]-cup taken away>[ERROR WHERE_THE_FUCK_IS_THE_CUP]
+[ERROR WHERE_THE_FUCK_IS_THE_CUP]->[ERROR]
+[ERROR]->[READY]
