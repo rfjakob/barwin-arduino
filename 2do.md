@@ -1,17 +1,20 @@
 
 
+ - [ ] Error handling? (scale?)
+ - [ ] when cup is not there while pouring, abort pouring procedure (check if weight gets less between bottles)
+ - [ ] empty bottle error handling
+ - [ ] MAX_DRINK_SIZE implement!
+ - [ ] rename UPRIGHT_OFFSET --> STOP_EARLY_GRAMS
+ - [ ] do we check the number of params?
+ - [ ] auto calibration for UPRIGHT_OFFSET
  - [ ] Serial commands for different speed?
  - [ ] move bottle according to non-linear predefined function
  - [ ] Serial command: calibrate scale, SET_OFFSET (tare)
  - [ ] Serial command: all to pos_up, all down
- - [ ] auto calibration for UPRIGHT_OFFSET
- - [ ] Error handling? (scale?)
- - [ ] do we check the number of params?
  - [ ] abort button
  - [ ] abort command
  - [ ] pause/command switch
  - [ ] move bottles at the same time?
- - [ ] when cup is not there while pouring, abort pouring procedure (check if weight gets less between bottles)
  - [ ] Protothreads?
  - [ ] fix Makefile for Arduino One
  - [ ] serial reconnect --> reset arduino?
