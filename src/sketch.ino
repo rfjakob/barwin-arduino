@@ -186,10 +186,7 @@ void pouring_procedure(int* requested_output) {
 
 
 /**
- * Pouring procedure.
- * Waits for cup and turns each bottle in the order they were defined.
- * 'requested_output' is the amount of liquid in grams to be poured from
- * each bottle(int array of size bottles_nr).
+ * 
  */
 void calibrate_bottle_pos() {
     for (int bottle = 0; bottle < bottles_nr; bottle++) {

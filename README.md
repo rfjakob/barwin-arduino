@@ -21,10 +21,24 @@ TODO: describe this better!
 timeout: 100milliseconds
 terminating using space and \r\n
 
-Serial -> A:
-    POUR x1 x2 x3 ... x_n
+Serial -> Arduino:
+------------------
+Messages received by Arduino.
 
-A -> Serial:
+<dl>
+    <dt>POUR x1 x2 x3 ... x_n</dt>
+    <dd>will skip bottle if x_n &lt; UPRIGHT_OFFSET</dd>
+    <dt>NOTHING</dt>
+    <dd>
+        Arduino will do nothing and send message "DOING_NOTHING".
+        This is a dummy message, for testing only.
+    </dd>
+</dl>
+
+Arduino -> Serial:
+------------------
+Messages sent by Arduino.
+
 <dl>
     <dt>READY current_weight is_cup_there</dt>
     <dd>
@@ -35,8 +49,6 @@ A -> Serial:
         	<dd>0 if no cup, 1 if cup on scale (Arduino assumes cup is there if weight > WEIGHT_EPSILON)</dd>
         </dl>
     </dd>
-    <dt>POUR x1 x2 x3 ... x_n</dt>
-    <dd>will skip bottle if x_n &lt; UPRIGHT_OFFSET</dd>
     <dt>WAITING_FOR_CUP</dt>
     <dd>...if Arduino wants to pour something, but there is no cup.</dd>
     <dt>POURING bottle weight</dt>
@@ -51,6 +63,8 @@ A -> Serial:
     </dd>
     <dt>ENJOY x1 x2 x3 ... x_n</dt>
     <dd>TODO</dd>
+    <dt>TURN_BOTTLE bottle microseconds</dt>
+    <dd>turn a specific bottle for debugging porpuses</dd>
     <dt>ERROR error_desc</dt>
     <dd>
     	<dl>
@@ -63,6 +77,11 @@ A -> Serial:
                 </ul>
             </dd>
         </dl>
+    </dd>
+    <dt>DOING_NOTHING</dt>
+    <dd>
+        If Arduino gets command "NOTHING", it does nothing.
+        This is a dummy message, for testing only.
     </dd>
 
 </dl>
