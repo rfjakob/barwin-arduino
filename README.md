@@ -26,15 +26,24 @@ Serial -> A:
 
 A -> Serial:
 <dl>
-    <dt>READY</dt>
-    <dd>TODO</dd>
+    <dt>READY current_weight is_cup_there</dt>
+    <dd>
+        <dl>
+    		<dt>current_weight: int</dt>
+    		<dd>current weight on scale in grams</dd>
+        	<dt>is_cup_there: int</dt>
+        	<dd>0 if no cup, 1 if cup on scale (Arduino assumes cup is there if weight > WEIGHT_EPSILON)</dd>
+        </dl>
+</dd>
     <dt>ERROR error_desc</dt>
     <dd>
     	<dl>
-    		<dt>CUP_TIMEOUT_REACHED</dt>
-    		<dd>TODO</dd>
-        	<dt>INVALID_COMMAND</dt>
-        	<dd>TODO</dd>
+    		<dt>error_desc: str</dt>
+            <dd>
+One of the following strings:
+ - CUP_TIMEOUT_REACHED
+ - INVALID_COMMAND
+            </dd>
         </dl>
     </dd>
     <dt>WAITING_FOR_CUP</dt>
