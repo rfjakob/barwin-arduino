@@ -1,23 +1,24 @@
 
 
- - [ ] Protothreads?
+ - [ ] Serial commands for different speed?
+ - [ ] move bottle according to non-linear predefined function
+ - [ ] Serial command: calibrate scale, SET_OFFSET (tare)
+ - [ ] Serial command: all to pos_up, all down
+ - [ ] auto calibration for UPRIGHT_OFFSET
+ - [ ] Error handling? (scale?)
+ - [ ] do we check the number of params?
+ - [ ] abort button
+ - [ ] abort command
+ - [ ] pause/command switch
+ - [ ] move bottles at the same time?
  - [ ] when cup is not there while pouring, abort pouring procedure (check if weight gets less between bottles)
+ - [ ] Protothreads?
  - [ ] fix Makefile for Arduino One
  - [ ] serial reconnect --> reset arduino?
  - [ ] problems with pin 13
- - [ ] do we check the number of params?
- - [ ] Serial command: calibrate scale, SET_OFFSET (tare)
- - [ ] Serial command: all to pos_up
- - [ ] auto calibration for UPRIGHT_OFFSET
- - [ ] abort button
- - [ ] abort command
- - [ ] Error handling? (scale?)
  - [x] READY: add 0/1 if cup or not
- - [ ] Serial commands for different speed?
  - [x] UPRIGHT_OFFSET / 2.0 (if less, don't do anything if more pour)
  - [ ] dancing bottles!
- - [ ] move bottles at the same time?
- - [ ] move bottle according to non-linear predefined function
 
 
  
