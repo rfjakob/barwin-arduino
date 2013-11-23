@@ -17,10 +17,11 @@ void setup() {
     Serial.begin(115200);
     #endif
     Serial.setTimeout(SERIAL_TIMEOUT);
-    MSG("READY");
 
     ads1231_init();
     Bottle::init(bottles, bottles_nr);
+
+    DEBUG_MSG_LN("setup() finished.");
 }
 
 
@@ -35,7 +36,11 @@ void loop() {
             // should not be processed!
             return;
         }
-        String msg = String("READY ") + String(weight);
+
+        // send message: READY weight is_cup_there
+        String msg = String("READY ")
+            + String(weight) + String(" ")
+            + String(weight > WEIGHT_EPSILON ? 1 : 0);
         MSG(msg);
     }
 
@@ -137,16 +142,18 @@ void pouring_procedure(int* requested_output) {
             }
         }
 
+        // cup_weight is weight including ingredients poured until now
+        long cup_weight = ads1231_get_grams();
+
+        MSG(String("POURING ") + String(bottle) + String(" ") + String(cup_weight));
+
         DEBUG_START();
         DEBUG_MSG("Start pouring bottle: ");
         DEBUG_VAL(bottles[bottle].name);
         DEBUG_VAL(requested_output[bottle]);
         DEBUG_VAL(bottle);
+        DEBUG_VAL(cup_weight);
         DEBUG_END();
-        // cup_weight is weight including ingredients poured until now
-        long cup_weight = ads1231_get_grams();
-
-        DEBUG_VAL_LN(cup_weight);
 
         DEBUG_MSG_LN("Turning bottle down...");
         bottles[bottle].turn_down(TURN_DOWN_DELAY);
