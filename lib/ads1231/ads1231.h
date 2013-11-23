@@ -14,7 +14,7 @@
 
 void ads1231_init(void);
 long ads1231_get_value(void);
-long ads1231_get_milligrams();
+long ads1231_get_grams();
 
 int delay_until(unsigned long max_delay, long max_weight);
 

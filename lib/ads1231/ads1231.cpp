@@ -92,10 +92,10 @@ long ads1231_get_value(void)
 }
 
 /*
- * Get the weight in milligrams. Can block up to 100ms in normal
+ * Get the weight in grams. Can block up to 100ms in normal
  * operation. Use WEIGHT_EPSILON
  */
-long ads1231_get_milligrams()
+long ads1231_get_grams()
 {
     long val;
 
@@ -116,7 +116,7 @@ int delay_until(unsigned long max_delay, long max_weight) {
     unsigned long start = millis();
     while((millis() - start) < max_delay) {
         // max_weight reached --> abort
-        if (ads1231_get_milligrams() > (max_weight + WEIGHT_EPSILON))
+        if (ads1231_get_grams() > (max_weight + WEIGHT_EPSILON))
             return -1;
     }
     return 0;

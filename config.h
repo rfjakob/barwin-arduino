@@ -21,10 +21,10 @@
 
 // ADC counts per milligram
 #define ADS1231_DIVISOR  1355.2892385964383
-// Zero offset, milligrams
+// Zero offset, grams
 #define ADS1231_OFFSET   (117.40595530926247 + 76.0)
 
-// How to calibrate using a weight (in milligrams) and the measured raw value
+// How to calibrate using a weight (in grams) and the measured raw value
 // as returned by ads1231_get_value():
 // raw1    = -159119.02777777778
 // weight1 = 0.
@@ -50,16 +50,16 @@
 // bottle is empty or screwed.
 #define POURING_TIMEOUT  20000
 
-// Amount of liquid in milligrams poured while turning the bottle up
+// Amount of liquid in grams poured while turning the bottle up
 #define UPGRIGHT_OFFSET  17
 
-// When waiting for changes of weight on scale, ignore changes less than... (in milligrams)
+// When waiting for changes of weight on scale, ignore changes less than... (in grams)
 #define WEIGHT_EPSILON  2
 
 // If ready, send READY message every x milliseconds
 #define SEND_READY_INTERVAL 500
 
-// Wait at least x milliseconds before calling ads1231_get_milligrams() again
+// Wait at least x milliseconds before calling ads1231_get_grams() again
 // when turning servo, because it takes to long to call it always. Increasing
 // this value makes the servo faster but the response time to the scale slower.
 #define ADS1231_INTERVAL 200
@@ -70,7 +70,7 @@
 // max length of serial commands, number of characters
 #define MAX_COMMAND_LENGTH 50
 
-// For safety: we will never pour more than this amount at once (in milligrams)
+// For safety: we will never pour more than this amount at once (in grams)
 // (not per bottle, but per pouring procedure)
 #define MAX_DRINK_SIZE 400
 

@@ -27,7 +27,7 @@ void setup() {
 void loop() {
     // print some stuff every 500ms while idle
     IF_HAS_TIME_PASSED(SEND_READY_INTERVAL)  {
-        long weight = ads1231_get_milligrams();
+        long weight = ads1231_get_grams();
         if (weight >= ADS1231_ERR) {
             // TODO print specific error code / msg
             ERROR("SCALE_ERROR");
@@ -92,7 +92,7 @@ int parse_int_params(int* params, int size) {
 /**
  * Pouring procedure.
  * Waits for cup and turns each bottle in the order they were defined.
- * 'requested_output' is the amount of liquid in milligrams to be poured from
+ * 'requested_output' is the amount of liquid in grams to be poured from
  * each bottle(int array of size bottles_nr).
  */
 void pouring_procedure(int* requested_output) {
@@ -107,7 +107,7 @@ void pouring_procedure(int* requested_output) {
 
     // wait for cup, wait until weight > WEIGHT_EPSILON or
     // CUP_TIMEOUT reached
-    if (ads1231_get_milligrams() < WEIGHT_EPSILON) {
+    if (ads1231_get_grams() < WEIGHT_EPSILON) {
         MSG("WAITING_FOR_CUP");
         if (delay_until(CUP_TIMEOUT, WEIGHT_EPSILON) == 0) {
             DEBUG_MSG_LN("CUP_TIMEOUT reached. Aborting.");
@@ -144,7 +144,7 @@ void pouring_procedure(int* requested_output) {
         DEBUG_VAL(bottle);
         DEBUG_END();
         // cup_weight is weight including ingredients poured until now
-        long cup_weight = ads1231_get_milligrams();
+        long cup_weight = ads1231_get_grams();
 
         DEBUG_VAL_LN(cup_weight);
 
@@ -159,7 +159,7 @@ void pouring_procedure(int* requested_output) {
         DEBUG_MSG_LN("Turn up again...");
         bottles[bottle].turn_up(TURN_UP_DELAY);
 
-        measured_output[bottle] = ads1231_get_milligrams() - cup_weight;
+        measured_output[bottle] = ads1231_get_grams() - cup_weight;
 
         DEBUG_START();
         DEBUG_MSG("Bottle statistics: ");
@@ -181,7 +181,7 @@ void pouring_procedure(int* requested_output) {
 /**
  * Pouring procedure.
  * Waits for cup and turns each bottle in the order they were defined.
- * 'requested_output' is the amount of liquid in milligrams to be poured from
+ * 'requested_output' is the amount of liquid in grams to be poured from
  * each bottle(int array of size bottles_nr).
  */
 void calibrate_bottle_pos() {
