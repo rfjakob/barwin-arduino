@@ -17,6 +17,7 @@
  - [x] UPRIGHT_OFFSET / 2.0 (if less, don't do anything if more pour)
  - [ ] dancing bottles!
  - [ ] move bottles at the same time?
+ - [ ] move bottle according to non-linear predefined function
 
 
  
