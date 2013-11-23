@@ -10,8 +10,8 @@
 // The constants might be used to initialize pos_down and pos_up (in config.h).
 // See also:
 // http://arduino.cc/en/Reference/ServoWriteMicroseconds
-#define SERVO_MIN 800
-#define SERVO_MAX 2400
+#define SERVO_MIN 500
+#define SERVO_MAX 2500
 
 #include <Servo.h>
 
