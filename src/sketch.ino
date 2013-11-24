@@ -7,7 +7,7 @@
 
 DEFINE_BOTTLES();
 
-void pouring_procedure(int* requested_output);
+void pour_cocktail(int* requested_output);
 int parse_int_params(int* params, int size);
 
 void setup() {
@@ -54,7 +54,7 @@ void loop() {
             if (cmd_str.equals("POUR")) {
                 int requested_output[bottles_nr];
                 parse_int_params(requested_output, bottles_nr);
-                pouring_procedure(requested_output);
+                pour_cocktail(requested_output);
             }
             else if (cmd_str.equals("CALIBRATE_BOTTLE_POS")) {
                 calibrate_bottle_pos();
@@ -100,7 +100,7 @@ int parse_int_params(int* params, int size) {
  * 'requested_output' is the amount of liquid in grams to be poured from
  * each bottle(int array of size bottles_nr).
  */
-void pouring_procedure(int* requested_output) {
+void pour_cocktail(int* requested_output) {
     /*DEBUG_VAL_LN(requested_output);                               */
     /*if (!requested_output > 0) {                                  */
     /*    DEBUG_MSG_LN("Error. Please provide integer > 0.");*/
