@@ -29,6 +29,7 @@ class Bottle {
         int turn_to(int pos, int delay_ms, bool print_steps=false);
         int turn_up(int delay_ms, bool print_steps=false);
         int turn_down(int delay_ms, bool print_steps=false);
+        int pour(int requested_amount, int& measured_amount);
         Servo servo;          // servo used for turning the bottle
         const String name;    // human readable name, e.g "Vodka"
         const char pin;       // pin to attach the servo
