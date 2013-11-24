@@ -126,10 +126,11 @@ void pouring_procedure(int* requested_output) {
 
     // Pour liquid for each bottle
     int measured_output[bottles_nr];
-    for (int bottle = 0; bottle < bottles_nr; bottle++) {
-        measured_output[bottle] = 0;
+    // initializing array with 0
+    memset(measured_output, 0, sizeof(int) * bottles_nr);
 
-        // we cannot pour less than UPGRIGHT_OFFSET --> do not pour if it is 
+    for (int bottle = 0; bottle < bottles_nr; bottle++) {
+        // we cannot pour less than UPGRIGHT_OFFSET --> do not pour if it is
         // less than UPGRIGHT_OFFSET/2.0 and print warning...
         if (requested_output[bottle] < UPGRIGHT_OFFSET) {
             if (UPGRIGHT_OFFSET / 2. > requested_output[bottle]) {
@@ -142,17 +143,16 @@ void pouring_procedure(int* requested_output) {
             }
         }
 
-        // cup_weight is weight including ingredients poured until now
-        long cup_weight = ads1231_get_grams();
-
-        MSG(String("POURING ") + String(bottle) + String(" ") + String(cup_weight));
+        // orig_weight is weight including ingredients poured until now
+        long orig_weight = ads1231_get_grams();
+        MSG(String("POURING ") + String(bottle) + String(" ") + String(orig_weight));
 
         DEBUG_START();
         DEBUG_MSG("Start pouring bottle: ");
         DEBUG_VAL(bottles[bottle].name);
         DEBUG_VAL(requested_output[bottle]);
         DEBUG_VAL(bottle);
-        DEBUG_VAL(cup_weight);
+        DEBUG_VAL(orig_weight);
         DEBUG_END();
 
         DEBUG_MSG_LN("Turning bottle down...");
@@ -161,12 +161,12 @@ void pouring_procedure(int* requested_output) {
         // wait for requested weight
         // FIXME here we do not want WEIGHT_EPSILON and sharp >
         DEBUG_MSG_LN("Waiting for weight...");
-        delay_until(POURING_TIMEOUT, cup_weight + requested_output[bottle] - UPGRIGHT_OFFSET);
+        delay_until(POURING_TIMEOUT, orig_weight + requested_output[bottle] - UPGRIGHT_OFFSET
 
         DEBUG_MSG_LN("Turn up again...");
         bottles[bottle].turn_up(TURN_UP_DELAY);
 
-        measured_output[bottle] = ads1231_get_grams() - cup_weight;
+        measured_output[bottle] = ads1231_get_grams() - orig_weight;
 
         DEBUG_START();
         DEBUG_MSG("Bottle statistics: ");
@@ -186,7 +186,7 @@ void pouring_procedure(int* requested_output) {
 
 
 /**
- * 
+ *
  */
 void calibrate_bottle_pos() {
     for (int bottle = 0; bottle < bottles_nr; bottle++) {
