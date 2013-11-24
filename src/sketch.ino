@@ -12,7 +12,7 @@
  */
 DEFINE_BOTTLES();
 
-void pour_cocktail(int* requested_output);
+void pour_cocktail(int* requested_amount);
 int parse_int_params(int* params, int size);
 
 void setup() {
@@ -57,9 +57,9 @@ void loop() {
         if(Serial.readBytesUntil(' ', cmd, MAX_COMMAND_LENGTH)) {
             String cmd_str = String(cmd);
             if (cmd_str.equals("POUR")) {
-                int requested_output[bottles_nr];
-                parse_int_params(requested_output, bottles_nr);
-                pour_cocktail(requested_output);
+                int requested_amount[bottles_nr];
+                parse_int_params(requested_amount, bottles_nr);
+                pour_cocktail(requested_amount);
             }
             else if (cmd_str.equals("CALIBRATE_BOTTLE_POS")) {
                 calibrate_bottle_pos();
@@ -102,18 +102,18 @@ int parse_int_params(int* params, int size) {
 /**
  * Pouring procedure.
  * Waits for cup and turns each bottle in the order they were defined.
- * 'requested_output' is the amount of liquid in grams to be poured from
+ * 'requested_amount' is the amount of liquid in grams to be poured from
  * each bottle(int array of size bottles_nr).
  */
-void pour_cocktail(int* requested_output) {
-    /*DEBUG_VAL_LN(requested_output);                               */
-    /*if (!requested_output > 0) {                                  */
+void pour_cocktail(int* requested_amount) {
+    /*DEBUG_VAL_LN(requested_amount);                               */
+    /*if (!requested_amount > 0) {                                  */
     /*    DEBUG_MSG_LN("Error. Please provide integer > 0.");*/
     /*    return;                                            */
     /*}                                                      */
     // TODO check MAX_DRINK_SIZE
 
-    // TODO check if requested_output is significantly more than UPGRIGHT_OFFSET
+    // TODO check if requested_amount is significantly more than UPGRIGHT_OFFSET
 
     // wait for cup, wait until weight > WEIGHT_EPSILON or
     // CUP_TIMEOUT reached
@@ -130,70 +130,36 @@ void pour_cocktail(int* requested_output) {
     delay(CUP_SETTLING_TIME);
 
     // Pour liquid for each bottle
-    int measured_output[bottles_nr];
+    int measured_amount[bottles_nr];
     // initializing array with 0
-    memset(measured_output, 0, sizeof(int) * bottles_nr);
+    memset(measured_amount, 0, sizeof(int) * bottles_nr);
 
     for (int i = 0; i < bottles_nr; i++) {
+
+        if(requested_amount[i] == 0)
+            continue;
+
         // we cannot pour less than UPGRIGHT_OFFSET --> do not pour if it is
         // less than UPGRIGHT_OFFSET/2.0 and print warning...
-        if (requested_output[i] < UPGRIGHT_OFFSET) {
-            if (UPGRIGHT_OFFSET / 2.0 > requested_output[i]) {
-                if (requested_output[i] > 0 ) {
-                    DEBUG_MSG_LN("Warning! Requested output is between: UPGRIGHT_OFFSET/2 > outpout > 0 --> will not pour!");
-                }
+        if (requested_amount[i] < UPGRIGHT_OFFSET) {
+            if (UPGRIGHT_OFFSET / 2.0 > requested_amount[i]) {
+                DEBUG_MSG_LN("Warning! Requested output is between: "
+                     "UPGRIGHT_OFFSET/2 > outpout > 0 --> will not pour!");
                 continue;
             } else {
-                DEBUG_MSG_LN("Warning! Requested output is between: UPGRIGHT_OFFSET > outpout >= UPGRIGHT_OFFSET/2 --> will pour too much!");
+                DEBUG_MSG_LN("Warning! Requested output is between: "
+                    "UPGRIGHT_OFFSET > outpout >= UPGRIGHT_OFFSET/2 --> will pour too much!");
             }
         }
 
-        pour_bottle(requested_output[i], bottles[i], measured_output[i]);
+        bottles[i].pour(requested_amount[i], measured_amount[i]);
     }
 
-    // Send success message, measured_output as params
+    // Send success message, measured_amount as params
     String msg = "ENJOY ";
     for (int i = 0; i < bottles_nr; i++)
-        msg += String(measured_output[i]) + String(" ");
+        msg += String(measured_amount[i]) + String(" ");
     MSG(msg);
-}
-
-
-/**
- * Pour requested_output for Bottle 'bottle'.
- * Return 0 on success, -1 on POURING_TIMEOUT.
- */
-int pour_bottle(int requested_output, Bottle bottle, int& measured_output) {
-    // orig_weight is weight including ingredients poured until now
-    long orig_weight = ads1231_get_grams();
-    MSG(String("POURING ") + bottle.name + String(" ") + String(orig_weight));
-
-    DEBUG_START();
-    DEBUG_MSG("Start pouring bottle: ");
-    DEBUG_VAL(bottle.name);
-    DEBUG_VAL(requested_output);
-    DEBUG_VAL(orig_weight);
-    DEBUG_END();
-
-    DEBUG_MSG_LN("Turning bottle down...");
-    bottle.turn_down(TURN_DOWN_DELAY);
-
-    // wait for requested weight
-    // FIXME here we do not want WEIGHT_EPSILON and sharp >
-    DEBUG_MSG_LN("Waiting for weight...");
-    delay_until(POURING_TIMEOUT, orig_weight + requested_output - UPGRIGHT_OFFSET);
-
-    DEBUG_MSG_LN("Turn up again...");
-    bottle.turn_up(TURN_UP_DELAY);
-
-    measured_output = ads1231_get_grams() - orig_weight;
-
-    DEBUG_START();
-    DEBUG_MSG("Bottle statistics: ");
-    DEBUG_VAL(bottle.name);
-    DEBUG_VAL(requested_output);
-    DEBUG_VAL(measured_output);
-    DEBUG_END();
 }
 
 /**

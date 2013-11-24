@@ -4,6 +4,7 @@
 
 #include <Arduino.h>
 #include "bottle.h"
+#include "ads1231.h"
 #include <utils.h>
 #include "../../config.h"
 
@@ -95,4 +96,42 @@ int Bottle::turn_up(int delay_ms, bool print_steps) {
  */
 int Bottle::turn_down(int delay_ms, bool print_steps) {
     return turn_to(pos_down, delay_ms, print_steps);
+}
+
+
+/**
+ * Pour requested_amount grams from bottle..
+ * Return 0 on success, -1 on POURING_TIMEOUT.
+ */
+int Bottle::pour(int requested_amount, int& measured_amount) {
+    // orig_weight is weight including ingredients poured until now
+    long orig_weight = ads1231_get_grams();
+    MSG(String("POURING ") + name + String(" ") + String(orig_weight));
+
+    DEBUG_START();
+    DEBUG_MSG("Start pouring bottle: ");
+    DEBUG_VAL(name);
+    DEBUG_VAL(requested_amount);
+    DEBUG_VAL(orig_weight);
+    DEBUG_END();
+
+    DEBUG_MSG_LN("Turning bottle down...");
+    turn_down(TURN_DOWN_DELAY);
+
+    // wait for requested weight
+    // FIXME here we do not want WEIGHT_EPSILON and sharp >
+    DEBUG_MSG_LN("Waiting for weight...");
+    delay_until(POURING_TIMEOUT, orig_weight + requested_amount - UPGRIGHT_OFFSET);
+
+    DEBUG_MSG_LN("Turn up again...");
+    turn_up(TURN_UP_DELAY);
+
+    measured_amount = ads1231_get_grams() - orig_weight;
+
+    DEBUG_START();
+    DEBUG_MSG("Bottle statistics: ");
+    DEBUG_VAL(name);
+    DEBUG_VAL(requested_amount);
+    DEBUG_VAL(measured_amount);
+    DEBUG_END();
 }
