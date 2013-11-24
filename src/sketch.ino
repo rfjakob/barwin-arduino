@@ -177,7 +177,7 @@ int pour_bottle(int requested_output, Bottle bottle, int& measured_output) {
     // wait for requested weight
     // FIXME here we do not want WEIGHT_EPSILON and sharp >
     DEBUG_MSG_LN("Waiting for weight...");
-    delay_until(POURING_TIMEOUT, orig_weight + requested_output - UPGRIGHT_OFFSET
+    delay_until(POURING_TIMEOUT, orig_weight + requested_output - UPGRIGHT_OFFSET);
 
     DEBUG_MSG_LN("Turn up again...");
     bottle.turn_up(TURN_UP_DELAY);
