@@ -143,37 +143,7 @@ void pouring_procedure(int* requested_output) {
             }
         }
 
-        // orig_weight is weight including ingredients poured until now
-        long orig_weight = ads1231_get_grams();
-        MSG(String("POURING ") + String(bottle) + String(" ") + String(orig_weight));
-
-        DEBUG_START();
-        DEBUG_MSG("Start pouring bottle: ");
-        DEBUG_VAL(bottles[bottle].name);
-        DEBUG_VAL(requested_output[bottle]);
-        DEBUG_VAL(bottle);
-        DEBUG_VAL(orig_weight);
-        DEBUG_END();
-
-        DEBUG_MSG_LN("Turning bottle down...");
-        bottles[bottle].turn_down(TURN_DOWN_DELAY);
-
-        // wait for requested weight
-        // FIXME here we do not want WEIGHT_EPSILON and sharp >
-        DEBUG_MSG_LN("Waiting for weight...");
-        delay_until(POURING_TIMEOUT, orig_weight + requested_output[bottle] - UPGRIGHT_OFFSET
-
-        DEBUG_MSG_LN("Turn up again...");
-        bottles[bottle].turn_up(TURN_UP_DELAY);
-
-        measured_output[bottle] = ads1231_get_grams() - orig_weight;
-
-        DEBUG_START();
-        DEBUG_MSG("Bottle statistics: ");
-        DEBUG_VAL(bottle);
-        DEBUG_VAL(requested_output[bottle]);
-        DEBUG_VAL(measured_output[bottle]);
-        DEBUG_END();
+        pour_bottle(requested_output[bottle], bottles[bottle]);
     }
 
     // Send success message, measured_output as params
@@ -184,6 +154,43 @@ void pouring_procedure(int* requested_output) {
 }
 
 
+/**
+ * Pour requested_output for Bottle 'bottle'.
+ * Return 0 on success, -1 on POURING_TIMEOUT.
+ */
+int pour_bottle(int requested_output, Bottle bottle, int& measured_output) {
+    // orig_weight is weight including ingredients poured until now
+    long orig_weight = ads1231_get_grams();
+    MSG(String("POURING ") + String(bottle) + String(" ") + String(orig_weight));
+
+    DEBUG_START();
+    DEBUG_MSG("Start pouring bottle: ");
+    DEBUG_VAL(bottle.name);
+    DEBUG_VAL(requested_output);
+    DEBUG_VAL(bottle);
+    DEBUG_VAL(orig_weight);
+    DEBUG_END();
+
+    DEBUG_MSG_LN("Turning bottle down...");
+    bottle.turn_down(TURN_DOWN_DELAY);
+
+    // wait for requested weight
+    // FIXME here we do not want WEIGHT_EPSILON and sharp >
+    DEBUG_MSG_LN("Waiting for weight...");
+    delay_until(POURING_TIMEOUT, orig_weight + requested_output - UPGRIGHT_OFFSET
+
+    DEBUG_MSG_LN("Turn up again...");
+    bottle.turn_up(TURN_UP_DELAY);
+
+    measured_output = ads1231_get_grams() - orig_weight;
+
+    DEBUG_START();
+    DEBUG_MSG("Bottle statistics: ");
+    DEBUG_VAL(bottle);
+    DEBUG_VAL(requested_output);
+    DEBUG_VAL(measured_output);
+    DEBUG_END();
+}
 
 /**
  *
