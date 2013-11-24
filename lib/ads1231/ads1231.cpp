@@ -15,7 +15,7 @@
 #include "../../config.h"
 
 // emulate a scale
-// #define ADS1231_EMULATION 1
+#define ADS1231_EMULATION 1
 
 /*
  * Initialize the interface pins
@@ -32,6 +32,7 @@ void ads1231_init(void)
 
     // Set CLK low to get the ADS1231 out of suspend
     digitalWrite(ADS1231_CLK_PIN, 0);
+
 }
 
 /*
@@ -39,12 +40,6 @@ void ads1231_init(void)
  */
 long ads1231_get_value(void)
 {
-    // a very, very primitive emulation... :)
-    #ifndef ADS1231_EMULATION
-    #else
-    return millis() / 1000;
-    #endif
-
     long val=0;
     int i=0;
     unsigned long start;
@@ -97,6 +92,12 @@ long ads1231_get_value(void)
  */
 long ads1231_get_grams()
 {
+    // a primitive emulation using a potentiometer attached to pin A0
+    // returns a value between 0 and 150 grams
+    #ifdef ADS1231_EMULATION
+    return map(analogRead(A0) , 0, 1023, 0, 150);
+    #endif
+
     long val;
 
     val=ads1231_get_value();
