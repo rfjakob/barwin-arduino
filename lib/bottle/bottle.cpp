@@ -105,7 +105,9 @@ int Bottle::turn_down(int delay_ms, bool print_steps) {
  */
 int Bottle::pour(int requested_amount, int& measured_amount) {
     // orig_weight is weight including ingredients poured until now
-    long orig_weight = ads1231_get_grams();
+    int orig_weight;
+    ads1231_get_grams(orig_weight);
+
     MSG(String("POURING ") + name + String(" ") + String(orig_weight));
 
     DEBUG_START();
@@ -126,7 +128,8 @@ int Bottle::pour(int requested_amount, int& measured_amount) {
     DEBUG_MSG_LN("Turn up again...");
     turn_up(TURN_UP_DELAY);
 
-    measured_amount = ads1231_get_grams() - orig_weight;
+    ads1231_get_grams(measured_amount);
+    measured_amount -= orig_weight;
 
     DEBUG_START();
     DEBUG_MSG("Bottle statistics: ");

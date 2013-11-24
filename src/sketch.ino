@@ -33,8 +33,9 @@ void setup() {
 void loop() {
     // print some stuff every 500ms while idle
     IF_HAS_TIME_PASSED(SEND_READY_INTERVAL)  {
-        long weight = ads1231_get_grams();
-        if (weight >= ADS1231_ERR) {
+        int ret, weight = 0;
+        ret = ads1231_get_grams(weight);
+        if (ret != 0) {
             // TODO print specific error code / msg
             ERROR("SCALE_ERROR");
             // FIXME this is wrong, return does not suffice if commands
@@ -129,7 +130,9 @@ void pour_cocktail(int* requested_amount) {
 
     // wait for cup, wait until weight > WEIGHT_EPSILON or
     // CUP_TIMEOUT reached
-    if (ads1231_get_grams() < WEIGHT_EPSILON) {
+    int weight;
+    ads1231_get_grams(weight);
+    if ( weight < WEIGHT_EPSILON) {
         MSG("WAITING_FOR_CUP");
         if (delay_until(CUP_TIMEOUT, WEIGHT_EPSILON) == 0) {
             DEBUG_MSG_LN("CUP_TIMEOUT reached. Aborting.");

@@ -37,10 +37,10 @@ void ads1231_init(void)
 
 /*
  * Get the raw ADC value. Can block up to 100ms in normal operation.
+ * Returns 0 on success, an error code otherwise (see ads1231.h)
  */
-long ads1231_get_value(void)
+int ads1231_get_value(long& val)
 {
-    long val=0;
     int i=0;
     unsigned long start;
 
@@ -83,14 +83,15 @@ long ads1231_get_value(void)
     digitalWrite(ADS1231_CLK_PIN, HIGH);
     digitalWrite(ADS1231_CLK_PIN, LOW);
 
-    return val;
+    return 0; // Success
 }
 
 /*
  * Get the weight in grams. Can block up to 100ms in normal
- * operation. Use WEIGHT_EPSILON
+ * operation because the ADS1231 makes only 10 measurements per second.
+ * Returns 0 on sucess, an error code otherwise (see ads1231.h)
  */
-long ads1231_get_grams()
+int ads1231_get_grams(int& grams)
 {
     // a primitive emulation using a potentiometer attached to pin A0
     // returns a value between 0 and 150 grams
@@ -98,29 +99,52 @@ long ads1231_get_grams()
     return map(analogRead(A0) , 0, 1023, 0, 150);
     #endif
 
-    long val;
+    int ret;
+    long raw;
+    grams=0; // On error, grams should always be zero
 
-    val=ads1231_get_value();
-    if(val>=ADS1231_ERR)
-        return val;
-    else
-        return val/ADS1231_DIVISOR + ADS1231_OFFSET;
+    ret = ads1231_get_value(raw);
+    if(ret != 0)
+        return ret; // Scale error
+    
+    grams = raw/ADS1231_DIVISOR + ADS1231_OFFSET;
+    return 0; // Success
 }
 
 /*
- * Pauses the program until weight is more than max_weight + WEIGHT_EPSILON
- * but at maximum for 'max_delay' milliseconds. Returns 0 if full 'max_delay'
- * passed or -1 otherwise.
- * 'max_weight' might be current weight to detect any change of weight.
+ * Blocks until weight is more than max_weight + WEIGHT_EPSILON
+ * but at maximum for 'max_delay' milliseconds.
+ * max_weight might be current weight to detect any increase of weight.
+ * Return values:
+ *  0 weight was reached (success)
+ *  1 timeout (pouring too slow)
+ *  2 bottle empty (weight did not change)
+ *  3 cup removed (weight has decreased)
+ *  other values: scale error (see ads1231.h).
  */
 int delay_until(unsigned long max_delay, long max_weight) {
     unsigned long start = millis();
-    while((millis() - start) < max_delay) {
-        // max_weight reached --> abort
-        if (ads1231_get_grams() > (max_weight + WEIGHT_EPSILON))
-            return -1;
+    int cur, last, ret;
+
+    while(1) {
+        if(millis() - start > max_delay)
+            return 1; // Timeout
+    
+        ret = ads1231_get_grams(cur);
+        if(ret != 0)
+            return ret; // Scale error
+
+        if (cur > max_weight + WEIGHT_EPSILON)
+            return 0; // Success
+        
+        if(last == cur)
+            return 2; // Weight does not change means bottle is empty
+        
+        if(last > cur)
+            return 3; // Current weight is smaller than last measured
+
+        last = cur;
     }
-    return 0;
 }
 
 
