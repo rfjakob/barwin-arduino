@@ -111,9 +111,21 @@ void pour_cocktail(int* requested_amount) {
     /*    DEBUG_MSG_LN("Error. Please provide integer > 0.");*/
     /*    return;                                            */
     /*}                                                      */
-    // TODO check MAX_DRINK_SIZE
 
     // TODO check if requested_amount is significantly more than UPGRIGHT_OFFSET
+
+
+    // Sanity check: Never pour more than MAX_DRINK_GRAMS
+    long sum = 0; // Use long to rule out overflow
+    for (int i = 0; i < bottles_nr; i++) {
+        sum += requested_amount[i];
+    }
+    if(sum > MAX_DRINK_GRAMS)
+    {
+        DEBUG_MSG_LN("Total amount greater than MAX_DRINK_GRAMS");
+        ERROR("INVALID_COMMAND");
+        return;
+    }
 
     // wait for cup, wait until weight > WEIGHT_EPSILON or
     // CUP_TIMEOUT reached
