@@ -33,7 +33,7 @@
 // ADS1231_DIVISOR = (raw1 - raw2) / (weight1 - weight2)
 // ADS1231_OFFSET  = weight1 - (raw1 * (weight1 - weight2)) / (raw1 - raw2)
 
-// Delay between single servo steps when turning bottle up/down
+// Delay between single servo steps when turning bottle up/down, in milliseconds
 #define TURN_DOWN_DELAY 4
 #define TURN_UP_DELAY 4
 #define FAST_TURN_UP_DELAY 2      // used for abort and init
@@ -50,7 +50,7 @@
 // bottle is empty or screwed.
 #define POURING_TIMEOUT  20000
 
-// Stop pouring early in grams to account for the liquid poured while turning
+// Stop pouring early in grams to account for the liquid pouring out while turning
 // the bottle up
 #define UPGRIGHT_OFFSET  17
 
