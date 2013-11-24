@@ -134,12 +134,12 @@ void pour_cocktail(int* requested_output) {
     // initializing array with 0
     memset(measured_output, 0, sizeof(int) * bottles_nr);
 
-    for (int bottle = 0; bottle < bottles_nr; bottle++) {
+    for (int i = 0; i < bottles_nr; i++) {
         // we cannot pour less than UPGRIGHT_OFFSET --> do not pour if it is
         // less than UPGRIGHT_OFFSET/2.0 and print warning...
-        if (requested_output[bottle] < UPGRIGHT_OFFSET) {
-            if (UPGRIGHT_OFFSET / 2. > requested_output[bottle]) {
-                if (requested_output[bottle] > 0 ) {
+        if (requested_output[i] < UPGRIGHT_OFFSET) {
+            if (UPGRIGHT_OFFSET / 2.0 > requested_output[i]) {
+                if (requested_output[i] > 0 ) {
                     DEBUG_MSG_LN("Warning! Requested output is between: UPGRIGHT_OFFSET/2 > outpout > 0 --> will not pour!");
                 }
                 continue;
@@ -148,13 +148,13 @@ void pour_cocktail(int* requested_output) {
             }
         }
 
-        pour_bottle(requested_output[bottle], bottles[bottle]);
+        pour_bottle(requested_output[i], bottles[i], measured_output[i]);
     }
 
     // Send success message, measured_output as params
     String msg = "ENJOY ";
-    for (int bottle = 0; bottle < bottles_nr; bottle++)
-        msg += String(measured_output[bottle]) + String(" ");
+    for (int i = 0; i < bottles_nr; i++)
+        msg += String(measured_output[i]) + String(" ");
     MSG(msg);
 }
 
