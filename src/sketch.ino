@@ -166,13 +166,12 @@ void pour_cocktail(int* requested_output) {
 int pour_bottle(int requested_output, Bottle bottle, int& measured_output) {
     // orig_weight is weight including ingredients poured until now
     long orig_weight = ads1231_get_grams();
-    MSG(String("POURING ") + String(bottle) + String(" ") + String(orig_weight));
+    MSG(String("POURING ") + bottle.name + String(" ") + String(orig_weight));
 
     DEBUG_START();
     DEBUG_MSG("Start pouring bottle: ");
     DEBUG_VAL(bottle.name);
     DEBUG_VAL(requested_output);
-    DEBUG_VAL(bottle);
     DEBUG_VAL(orig_weight);
     DEBUG_END();
 
@@ -191,7 +190,7 @@ int pour_bottle(int requested_output, Bottle bottle, int& measured_output) {
 
     DEBUG_START();
     DEBUG_MSG("Bottle statistics: ");
-    DEBUG_VAL(bottle);
+    DEBUG_VAL(bottle.name);
     DEBUG_VAL(requested_output);
     DEBUG_VAL(measured_output);
     DEBUG_END();
