@@ -4,7 +4,12 @@
 #include <utils.h>
 #include "../config.h"
 
-
+/*
+ * Macro Magic that creates and initializes the variables
+ *     Bottle bottles[]
+ *     int bottles_nr
+ * Macro is defined in bottle.h.
+ */
 DEFINE_BOTTLES();
 
 void pour_cocktail(int* requested_output);
