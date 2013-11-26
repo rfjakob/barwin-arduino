@@ -12,6 +12,7 @@
 #include <limits.h>
 
 #include <ads1231.h>
+#include <utils.h>
 #include "../../config.h"
 
 // emulate a scale
@@ -125,24 +126,37 @@ int ads1231_get_grams(int& grams)
  */
 int delay_until(unsigned long max_delay, long max_weight) {
     unsigned long start = millis();
-    int cur, last, ret;
-
+    int cur, ret, i=0;
+    int last = -999; // just in case scale not tared
+    int last_old = -999; // just in case scale not tared
     while(1) {
         if(millis() - start > max_delay)
             return 1; // Timeout
 
+        // this blocks 100ms because ADS1231 runs at 10 samples per second
         ret = ads1231_get_grams(cur);
         if(ret != 0)
             return ret; // Scale error
-
-        if (cur > max_weight + WEIGHT_EPSILON)
+        DEBUG_VAL_LN(cur);
+        if(cur > max_weight + WEIGHT_EPSILON)
             return 0; // Success
 
-        if(last == cur)
-            return 2; // Weight does not change means bottle is empty
-
-        if(last > cur)
+        if(last > cur + WEIGHT_EPSILON)
             return 3; // Current weight is smaller than last measured
+
+        // Jakob does not like abs, so we check first for ERROR 3
+        // --> then we does not need abs(cur - last_old) < WEIGHT_EPSILON
+        //       |
+        // --|---|---|------------------------->
+        // -EPS      EPS
+        // TODO finish this nice ASCII graphic
+        if(i % 10 == 0) {
+            if (cur - last_old < WEIGHT_EPSILON) {
+                return 2; // Weight does not change means bottle is empty
+            }
+            last_old = cur;
+            i++;
+        }
 
         last = cur;
     }
