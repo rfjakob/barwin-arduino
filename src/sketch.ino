@@ -107,15 +107,6 @@ int parse_int_params(int* params, int size) {
  * each bottle(int array of size bottles_nr).
  */
 void pour_cocktail(int* requested_amount) {
-    /*DEBUG_VAL_LN(requested_amount);                               */
-    /*if (!requested_amount > 0) {                                  */
-    /*    DEBUG_MSG_LN("Error. Please provide integer > 0.");*/
-    /*    return;                                            */
-    /*}                                                      */
-
-    // TODO check if requested_amount is significantly more than UPGRIGHT_OFFSET
-
-
     // Sanity check: Never pour more than MAX_DRINK_GRAMS
     long sum = 0; // Use long to rule out overflow
     for (int i = 0; i < bottles_nr; i++) {
