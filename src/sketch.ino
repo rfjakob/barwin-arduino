@@ -27,6 +27,11 @@ void setup() {
     Bottle::init(bottles, bottles_nr);
 
     DEBUG_MSG_LN("setup() finished.");
+
+    // Warn users of emulation mode to avoid unnecessary debugging...
+    #ifdef ADS1231_EMULATION
+    DEBUG_MSG_LN("Warning! Scale emulation active!");
+    #endif
 }
 
 
@@ -48,6 +53,10 @@ void loop() {
             + String(weight) + String(" ")
             + String(weight > WEIGHT_EPSILON ? 1 : 0);
         MSG(msg);
+
+        long weight_raw;
+        ads1231_get_value(weight_raw);
+        DEBUG_VAL_LN(weight_raw);
     }
 
     // Parse commands from Serial

@@ -15,7 +15,7 @@
 #include "../../config.h"
 
 // emulate a scale
-#define ADS1231_EMULATION 1
+//#define ADS1231_EMULATION 1
 
 /*
  * Initialize the interface pins
@@ -96,7 +96,8 @@ int ads1231_get_grams(int& grams)
     // a primitive emulation using a potentiometer attached to pin A0
     // returns a value between 0 and 150 grams
     #ifdef ADS1231_EMULATION
-    return map(analogRead(A0) , 0, 1023, 0, 150);
+    grams = map(analogRead(A0) , 0, 1023, 0, 150);
+    return 0;
     #endif
 
     int ret;
@@ -106,7 +107,7 @@ int ads1231_get_grams(int& grams)
     ret = ads1231_get_value(raw);
     if(ret != 0)
         return ret; // Scale error
-    
+
     grams = raw/ADS1231_DIVISOR + ADS1231_OFFSET;
     return 0; // Success
 }
@@ -129,17 +130,17 @@ int delay_until(unsigned long max_delay, long max_weight) {
     while(1) {
         if(millis() - start > max_delay)
             return 1; // Timeout
-    
+
         ret = ads1231_get_grams(cur);
         if(ret != 0)
             return ret; // Scale error
 
         if (cur > max_weight + WEIGHT_EPSILON)
             return 0; // Success
-        
+
         if(last == cur)
             return 2; // Weight does not change means bottle is empty
-        
+
         if(last > cur)
             return 3; // Current weight is smaller than last measured
 
