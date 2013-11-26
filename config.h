@@ -20,9 +20,9 @@
                 Bottle("",       13,    920,    2100)
 
 // ADC counts per milligram
-#define ADS1231_DIVISOR  1355.2892385964383
+#define ADS1231_DIVISOR  1565.1671343537414
 // Zero offset, grams
-#define ADS1231_OFFSET   (117.40595530926247 + 76.0 - 51.0)
+#define ADS1231_OFFSET   127.97810572652163
 
 // How to calibrate using a weight (in grams) and the measured raw value
 // as returned by ads1231_get_value():
