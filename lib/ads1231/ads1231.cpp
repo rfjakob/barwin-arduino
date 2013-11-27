@@ -120,15 +120,15 @@ int ads1231_get_grams(int& grams)
  * Return values:
  *  0 weight was reached (success)
  *  1 timeout (pouring too slow)
- *  2 bottle empty (weight did not change for ~1 second)
+ *  2 bottle empty (weight did not change for BOTTLE_EMPTY_INTERVAL ms)
  *  3 cup removed (weight has decreased)
  *  other values: scale error (see ads1231.h).
  */
 int delay_until(unsigned long max_delay, long max_weight, bool pour_handling) {
     unsigned long start = millis();
     int cur, ret;
-    int last     = -32767; // == -inf, because the first time checks should
-    int last_old = -32767; // always pass until we have a valid last/last_old
+    int last     = -999; // == -inf, because the first time checks should
+    int last_old = -999; // always pass until we have a valid last/last_old
     long last_millis = 0;
     while(1) {
         if(millis() - start > max_delay)
