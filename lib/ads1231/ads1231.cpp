@@ -138,7 +138,8 @@ int delay_until(unsigned long max_delay, long max_weight, bool pour_handling) {
         ret = ads1231_get_grams(cur);
         if(ret != 0)
             return ret; // Scale error
-        DEBUG_VAL_LN(cur);
+        // this delays, we do not want it...
+        //DEBUG_VAL_LN(cur);
         if(cur > max_weight + WEIGHT_EPSILON)
             return 0; // Success
 
