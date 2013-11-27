@@ -128,25 +128,8 @@ void pour_cocktail(int* requested_amount) {
         return;
     }
 
-    // wait for cup, wait until weight > WEIGHT_EPSILON or
-    // CUP_TIMEOUT reached
-    int weight;
-    ads1231_get_grams(weight);
-    if ( weight < WEIGHT_EPSILON) {
-        MSG("WAITING_FOR_CUP");
-        int ret = delay_until(CUP_TIMEOUT, WEIGHT_EPSILON, false);
-        if (ret == 1) {
-            DEBUG_MSG_LN("CUP_TIMEOUT reached. Aborting.");
-            ERROR("CUP_TIMEOUT_REACHED");
-            return;
-        } else if (ret != 0) {
-            DEBUG_MSG_LN(
-                String("Scale error when waiting for cup. Error code: ")
-                + String(ret));
-            ERROR(String("SCALE_ERROR ") + String(ret));
-            return;
-        }
-    }
+    // wait until weight > WEIGHT_EPSILON or CUP_TIMEOUT reached
+    wait_for_cup();
 
     // wait a bit until cup weight can be measured safely
     delay(CUP_SETTLING_TIME);

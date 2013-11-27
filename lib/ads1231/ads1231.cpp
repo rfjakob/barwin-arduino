@@ -173,4 +173,25 @@ int delay_until(unsigned long max_delay, long max_weight, bool pour_handling) {
     }
 }
 
-
+/**
+ * Wait for the cup.
+ * Return error codes by delay_until.
+ */
+int wait_for_cup() {
+    int weight;
+    ads1231_get_grams(weight); // weight will be 0 in case of error
+    if ( weight < WEIGHT_EPSILON) {
+        MSG("WAITING_FOR_CUP");
+        int ret = delay_until(CUP_TIMEOUT, WEIGHT_EPSILON, false);
+        if (ret == 1) {
+            DEBUG_MSG_LN("CUP_TIMEOUT reached. Aborting.");
+            ERROR("CUP_TIMEOUT_REACHED");
+        } else if (ret != 0) {
+            DEBUG_MSG_LN(
+                String("Scale error when waiting for cup. Error code: ")
+                + String(ret));
+            ERROR(String("SCALE_ERROR ") + String(ret));
+        }
+        return ret;
+    }
+}
