@@ -182,7 +182,7 @@ int wait_for_cup() {
     ads1231_get_grams(weight); // weight will be 0 in case of error
     if ( weight < WEIGHT_EPSILON) {
         MSG("WAITING_FOR_CUP");
-        int ret = delay_until(CUP_TIMEOUT, WEIGHT_EPSILON, false);
+        int ret = delay_until(CUP_TIMEOUT, 0, false);
         if (ret == 1) {
             DEBUG_MSG_LN("CUP_TIMEOUT reached. Aborting.");
             ERROR("CUP_TIMEOUT_REACHED");
