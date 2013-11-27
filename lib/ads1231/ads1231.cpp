@@ -126,9 +126,10 @@ int ads1231_get_grams(int& grams)
  */
 int delay_until(unsigned long max_delay, long max_weight) {
     unsigned long start = millis();
-    int cur, ret, i=0;
+    int cur, ret;
     int last     = -32767; // == -inf, because the first time checks should
     int last_old = -32767; // always pass until we have a valid last/last_old
+    long last_millis = 0;
     while(1) {
         if(millis() - start > max_delay)
             return 1; // Timeout
@@ -150,16 +151,17 @@ int delay_until(unsigned long max_delay, long max_weight) {
         // --|---|---|------------------------->
         // -EPS      EPS
         // TODO finish this nice ASCII graphic
-        if(i % 10 == 0) {
-            // we check every 10 times, ads1231_get_grams() blocks ~100ms
-            // --> we check approx. every second if weight has changed.
-            // Note: first time check passes, then within 1sec liquid
-            // needs to be measured in cup.
+        if(millis() - last_millis > BOTTLE_EMPTY_INTERVAL) {
+            // note that ads1231_get_grams() blocks ~100ms, so
+            // BOTTLE_EMPTY_INTERVAL is not accurate.
+            // Note: first time the check always passes, then within
+            // BOTTLE_EMPTY_INTERVAL additional weight needs to be measured
+            // in the cup.
             if (cur - last_old < WEIGHT_EPSILON) {
                 return 2; // Weight does not change means bottle is empty
             }
             last_old = cur;
-            i++;
+            last_millis = millis();
         }
 
         last = cur;

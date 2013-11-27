@@ -48,7 +48,11 @@
 
 // Milliseconds to wait until desired weight reached. If timeout is reached, probably
 // bottle is empty or screwed.
-#define POURING_TIMEOUT  20000
+#define POURING_TIMEOUT  10000
+
+// Check if the bottle is empty (i.e. weight gain while pouring)
+// every x milliseconds
+#define BOTTLE_EMPTY_INTERVAL 1500
 
 // Stop pouring early in grams to account for the liquid pouring out while turning
 // the bottle up
