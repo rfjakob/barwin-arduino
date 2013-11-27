@@ -101,12 +101,17 @@ int Bottle::turn_down(int delay_ms, bool print_steps) {
 
 /**
  * Pour requested_amount grams from bottle..
- * Return 0 on success, -1 on POURING_TIMEOUT.
+ * Return 0 on success, other values are return values of
+ * delay_until (including scale error codes).
  */
 int Bottle::pour(int requested_amount, int& measured_amount) {
     // orig_weight is weight including ingredients poured until now
-    int orig_weight;
-    ads1231_get_grams(orig_weight);
+    int orig_weight, ret;
+    ret = ads1231_get_grams(orig_weight);
+    if (ret != 0) {
+        ERROR(String("SCALE_ERROR ") + String(ret));
+        return ret;
+    }
 
     MSG(String("POURING ") + name + String(" ") + String(orig_weight));
 
@@ -123,7 +128,7 @@ int Bottle::pour(int requested_amount, int& measured_amount) {
     // wait for requested weight
     // FIXME here we do not want WEIGHT_EPSILON and sharp >
     DEBUG_MSG_LN("Waiting for weight...");
-    int ret = delay_until(POURING_TIMEOUT,
+    ret = delay_until(POURING_TIMEOUT,
             orig_weight + requested_amount - UPGRIGHT_OFFSET, true);
     if (ret !=0) {
         ERROR(String("DELAY_UNTIL ") + String(ret));
