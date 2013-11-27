@@ -134,7 +134,7 @@ void pour_cocktail(int* requested_amount) {
     ads1231_get_grams(weight);
     if ( weight < WEIGHT_EPSILON) {
         MSG("WAITING_FOR_CUP");
-        if (delay_until(CUP_TIMEOUT, WEIGHT_EPSILON) == 0) {
+        if (delay_until(CUP_TIMEOUT, WEIGHT_EPSILON, false) == 0) {
             DEBUG_MSG_LN("CUP_TIMEOUT reached. Aborting.");
             ERROR("CUP_TIMEOUT_REACHED");
             return;

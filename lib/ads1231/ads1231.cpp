@@ -124,7 +124,7 @@ int ads1231_get_grams(int& grams)
  *  3 cup removed (weight has decreased)
  *  other values: scale error (see ads1231.h).
  */
-int delay_until(unsigned long max_delay, long max_weight) {
+int delay_until(unsigned long max_delay, long max_weight, bool pour_handling) {
     unsigned long start = millis();
     int cur, ret;
     int last     = -32767; // == -inf, because the first time checks should
@@ -141,6 +141,10 @@ int delay_until(unsigned long max_delay, long max_weight) {
         DEBUG_VAL_LN(cur);
         if(cur > max_weight + WEIGHT_EPSILON)
             return 0; // Success
+
+        // Just waiting for weight, no special pouring error detection
+        if (!pour_handling)
+            continue;
 
         if(last > cur + WEIGHT_EPSILON)
             return 3; // Current weight is smaller than last measured
