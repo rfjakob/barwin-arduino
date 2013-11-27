@@ -122,16 +122,37 @@ int Bottle::pour(int requested_amount, int& measured_amount) {
     DEBUG_VAL(orig_weight);
     DEBUG_END();
 
-    DEBUG_MSG_LN("Turning bottle down...");
-    turn_down(TURN_DOWN_DELAY);
+    while(1) {
+        DEBUG_MSG_LN("Turning bottle down...");
+        turn_down(TURN_DOWN_DELAY);
 
-    // wait for requested weight
-    // FIXME here we do not want WEIGHT_EPSILON and sharp >
-    DEBUG_MSG_LN("Waiting for weight...");
-    ret = delay_until(POURING_TIMEOUT,
-            orig_weight + requested_amount - UPGRIGHT_OFFSET, true);
-    if (ret !=0) {
+        // wait for requested weight
+        // FIXME here we do not want WEIGHT_EPSILON and sharp >
+        DEBUG_MSG_LN("Waiting for weight...");
+        ret = delay_until(POURING_TIMEOUT,
+                orig_weight + requested_amount - UPGRIGHT_OFFSET, true);
+        if (ret == 0)
+            break; // All good
+
         ERROR(String("DELAY_UNTIL ") + String(ret));
+        // move bottle to pause position (in the middle)
+
+        // Bottle empty
+        if(ret == 2) {
+            ERROR("BOTTE_EMPTY");
+            turn_to_pause();
+            wait_for_resume();
+        }
+
+        // Cup was removed early
+        if(ret == 3) {
+            int w = ads1231_get_grams(w);
+            turn_to_pause();
+            // delay_until should return last measured weight
+            int r2 = delay_until(CUP_TIMEOUT, w, false);
+        }
+        // waiting for resume
+        // waiting for abort??
     }
 
     DEBUG_MSG_LN("Turn up again...");
