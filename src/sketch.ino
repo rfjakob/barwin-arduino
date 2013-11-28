@@ -54,9 +54,9 @@ void loop() {
             + String(weight > WEIGHT_EPSILON ? 1 : 0);
         MSG(msg);
 
-        long weight_raw;
-        ads1231_get_value(weight_raw);
-        DEBUG_VAL_LN(weight_raw);
+        //long weight_raw;
+        //ads1231_get_value(weight_raw);
+        //DEBUG_VAL_LN(weight_raw);
     }
 
     // Parse commands from Serial

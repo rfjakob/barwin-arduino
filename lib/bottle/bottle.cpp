@@ -98,6 +98,14 @@ int Bottle::turn_down(int delay_ms, bool print_steps) {
     return turn_to(pos_down, delay_ms, print_steps);
 }
 
+/**
+ * Turn bottle to pause position.
+ * Used e.g. in case of WHERE_THE_FUCK_IS_THE_CUP error.
+ */
+int Bottle::turn_to_pause_pos(int delay_ms, bool print_steps) {
+    return turn_to((pos_down + pos_up) / 2.0, delay_ms, print_steps);
+}
+
 
 /**
  * Pour requested_amount grams from bottle..
@@ -140,16 +148,28 @@ int Bottle::pour(int requested_amount, int& measured_amount) {
         // Bottle empty
         if(ret == 2) {
             ERROR("BOTTE_EMPTY");
-            turn_to_pause();
-            wait_for_resume();
+            // TODO other speed here? it is empty already!
+            turn_up(TURN_UP_DELAY);
+            //wait_for_resume();
+            while(1) {
+                if (Serial.available() > 0) {
+                    char cmd[MAX_COMMAND_LENGTH] = "";
+                    if(Serial.readBytesUntil(' ', cmd, MAX_COMMAND_LENGTH)) {
+                        String cmd_str = String(cmd);
+                        if (cmd_str.equals("RESUME")) {
+                            break;
+                        } else if (cmd_str.equals("ABORT")) {
+                            //TODO abort: return some value
+                        }
+                    }
+                }
+            }
         }
 
         // Cup was removed early
         if(ret == 3) {
-            int w = ads1231_get_grams(w);
-            turn_to_pause();
-            // delay_until should return last measured weight
-            int r2 = delay_until(CUP_TIMEOUT, w, false);
+            turn_to_pause_pos(TURN_UP_DELAY);
+            RETURN_IFN_0(wait_for_cup());
         }
         // waiting for resume
         // waiting for abort??
