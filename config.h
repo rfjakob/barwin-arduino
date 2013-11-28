@@ -22,7 +22,7 @@
 // ADC counts per milligram
 #define ADS1231_DIVISOR  1565.1671343537414
 // Zero offset, grams
-#define ADS1231_OFFSET   127.97810572652163
+#define ADS1231_OFFSET   (127.97810572652163 - 3)
 
 // How to calibrate using a weight (in grams) and the measured raw value
 // as returned by ads1231_get_value():
@@ -62,7 +62,7 @@
 #define WEIGHT_EPSILON  2
 
 // If ready, send READY message every x milliseconds
-#define SEND_READY_INTERVAL 500
+#define SEND_READY_INTERVAL 2000
 
 // Wait at least x milliseconds before calling ads1231_get_grams() again
 // when turning servo, because it takes to long to call it always. Increasing
