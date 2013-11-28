@@ -143,6 +143,8 @@ int Bottle::pour(int requested_amount, int& measured_amount) {
         // move bottle to pause position (in the middle)
 
         // Bottle empty
+        // Note that this does not work if requested_amount is less than
+        // UPGRIGHT_OFFSET!
         if(ret == 2) {
             ERROR("BOTTE_EMPTY");
             // TODO other speed here? it is empty already!
