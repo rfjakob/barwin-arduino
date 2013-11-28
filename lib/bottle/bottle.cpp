@@ -150,29 +150,15 @@ int Bottle::pour(int requested_amount, int& measured_amount) {
             ERROR("BOTTE_EMPTY");
             // TODO other speed here? it is empty already!
             turn_up(TURN_UP_DELAY);
-            //wait_for_resume();
-            while(1) {
-                if (Serial.available() > 0) {
-                    char cmd[MAX_COMMAND_LENGTH] = "";
-                    if(Serial.readBytesUntil(' ', cmd, MAX_COMMAND_LENGTH)) {
-                        String cmd_str = String(cmd);
-                        if (cmd_str.equals("RESUME")) {
-                            break;
-                        } else if (cmd_str.equals("ABORT")) {
-                            //TODO abort: return some value
-                        }
-                    }
-                }
-            }
+            RETURN_IFN_0(wait_for_resume());
         }
 
         // Cup was removed early
         if(ret == 3) {
             turn_to_pause_pos(TURN_UP_DELAY);
+            // TODO abort command should be processed in waiting_for_cup()
             RETURN_IFN_0(wait_for_cup());
         }
-        // waiting for resume
-        // waiting for abort??
     }
 
     DEBUG_MSG_LN("Turn up again...");

@@ -63,6 +63,7 @@
 
 
 bool has_time_passed(long time_period, long& last_passed);
+int wait_for_resume();
 
 /**
  * A quite dangerous macro, to simplify usage of has_time_passed().
@@ -77,4 +78,8 @@ bool has_time_passed(long time_period, long& last_passed);
 #define IF_HAS_TIME_PASSED(time_period) \
         static long HAS_TIME_PASSED_last_passed = millis();\
         if (has_time_passed(time_period, HAS_TIME_PASSED_last_passed))
+
+
+// Error codes
+#define EABORT 57
 
