@@ -14,7 +14,7 @@
      *        DEBUG_MSG_LN(msg) adn DEBUG_VAL_LN(val) without DEBUG_START
      *        and DEBUG_END().
      */
-    #define DEBUG_START() Serial.print("DEBUG ")
+    #define DEBUG_START() Serial.print("DEBUG     ")
     #define DEBUG_END() Serial.println()
 
     #define DEBUG_MSG(msg) Serial.print(msg)
