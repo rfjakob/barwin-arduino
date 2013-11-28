@@ -194,4 +194,5 @@ int wait_for_cup() {
         }
         return ret;
     }
+    return 0;
 }
