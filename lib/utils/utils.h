@@ -53,6 +53,14 @@
 
 #endif
 
+// Call something and return error code if !=0
+// e.g.: RETURN_IFN_0(delay_until(...));
+#define RETURN_IFN_0(code) do { \
+                                int ret = code; \
+                                if (ret != 0)   \
+                                    return ret; \
+                              } while(0)
+
 
 bool has_time_passed(long time_period, long& last_passed);
 

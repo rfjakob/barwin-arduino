@@ -15,5 +15,6 @@ int ads1231_get_value(long& val);
 int ads1231_get_grams(int& grams);
 
 int delay_until(unsigned long max_delay, long max_weight, bool pour_handling);
+int wait_for_cup();
 
 #endif

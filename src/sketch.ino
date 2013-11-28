@@ -12,7 +12,7 @@
  */
 DEFINE_BOTTLES();
 
-void pour_cocktail(int* requested_amount);
+int pour_cocktail(int* requested_amount);
 int parse_int_params(int* params, int size);
 
 void setup() {
@@ -115,7 +115,7 @@ int parse_int_params(int* params, int size) {
  * 'requested_amount' is the amount of liquid in grams to be poured from
  * each bottle(int array of size bottles_nr).
  */
-void pour_cocktail(int* requested_amount) {
+int pour_cocktail(int* requested_amount) {
     // Sanity check: Never pour more than MAX_DRINK_GRAMS
     long sum = 0; // Use long to rule out overflow
     for (int i = 0; i < bottles_nr; i++) {
@@ -125,11 +125,11 @@ void pour_cocktail(int* requested_amount) {
     {
         DEBUG_MSG_LN("Total amount greater than MAX_DRINK_GRAMS");
         ERROR("INVALID_COMMAND");
-        return;
+        return -97;
     }
 
     // wait until weight > WEIGHT_EPSILON or CUP_TIMEOUT reached
-    wait_for_cup();
+    RETURN_IFN_0(wait_for_cup());
 
     // wait a bit until cup weight can be measured safely
     delay(CUP_SETTLING_TIME);
