@@ -28,6 +28,14 @@ Messages received by Arduino.
 <dl>
     <dt>POUR x1 x2 x3 ... x_n</dt>
     <dd>will skip bottle if x_n &lt; UPRIGHT_OFFSET</dd>
+    <dt>ABORT</dt>
+    <dd>abort current cocktail, currently only during bottle refill</dd>
+    <dt>RESUME</dt>
+    <dd>resume after bottle refill</dd>
+    <dt>PAUSE</dt>
+    <dd>not implemented yet, pause after next bottle</dd>
+    <dt>SET_SCALE_CALIB weight</dt>
+    <dd>not implemented yet</dd>
     <dt>NOTHING</dt>
     <dd>
         Arduino will do nothing and send message "DOING_NOTHING".
