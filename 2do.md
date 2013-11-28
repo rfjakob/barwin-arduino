@@ -2,8 +2,8 @@
 
  - [ ] Error handling? (scale?)
  - [ ] when cup is not there while pouring, abort pouring procedure (check if weight gets less between bottles)
- - [ ] empty bottle error handling
- - [ ] MAX_DRINK_SIZE implement!
+ - [x] empty bottle error handling
+ - [x] MAX_DRINK_SIZE implement!
  - [ ] rename UPRIGHT_OFFSET --> STOP_EARLY_GRAMS
  - [ ] do we check the number of params?
  - [ ] auto calibration for UPRIGHT_OFFSET
@@ -23,6 +23,12 @@
  - [x] UPRIGHT_OFFSET / 2.0 (if less, don't do anything if more pour)
  - [ ] dancing bottles!
 
+Testing:
+    - empty bottle
+    - cup away: between pouring, before, after
+    - max drink size
+    - scale timeout
+    - invalid commands
 
  
  - a better way to use something like threads? service interrupt?
