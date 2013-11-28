@@ -29,8 +29,8 @@ void Bottle::init(Bottle* bottles, int bottles_nr) {
  * This should be done in the setup function, not in the global scope using
  * bottles_init().
  */
-Bottle::Bottle(String _name, int _pin, int _pos_down, int _pos_up) :
-    name(_name), pin(_pin), pos_down(_pos_down), pos_up(_pos_up) {
+Bottle::Bottle(int _number, String _name, int _pin, int _pos_down, int _pos_up) :
+    number(_number), name(_name), pin(_pin), pos_down(_pos_down), pos_up(_pos_up) {
 }
 
 /**
@@ -121,7 +121,7 @@ int Bottle::pour(int requested_amount, int& measured_amount) {
         return ret;
     }
 
-    MSG(String("POURING ") + name + String(" ") + String(orig_weight));
+    MSG(String("POURING ") + String(number) + String(" ") + String(orig_weight));
 
     DEBUG_START();
     DEBUG_MSG("Start pouring bottle: ");

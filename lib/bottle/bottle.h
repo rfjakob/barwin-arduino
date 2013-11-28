@@ -24,7 +24,7 @@
 
 class Bottle {
     public:
-        Bottle(String, int, int, int);
+        Bottle(int, String, int, int, int);
         static void init(Bottle* bottles, int bottles_nr);
         int turn_to(int pos, int delay_ms, bool print_steps=false);
         int turn_up(int delay_ms, bool print_steps=false);
@@ -32,6 +32,7 @@ class Bottle {
         int turn_to_pause_pos(int delay_ms, bool print_steps=false);
         int pour(int requested_amount, int& measured_amount);
         Servo servo;          // servo used for turning the bottle
+        const int number;     // all bottles have a unique number (0-n)
         const String name;    // human readable name, e.g "Vodka"
         const char pin;       // pin to attach the servo
     private:
