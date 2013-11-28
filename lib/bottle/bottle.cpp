@@ -142,7 +142,7 @@ int Bottle::pour(int requested_amount, int& measured_amount) {
         if (ret == 0)
             break; // All good
 
-        ERROR(String("DELAY_UNTIL ") + String(ret));
+        DEBUG_MSG_LN(String("pour(): delay until returned ") + String(ret));
         // move bottle to pause position (in the middle)
 
         // Bottle empty
