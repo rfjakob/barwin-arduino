@@ -9,15 +9,15 @@
 #define ADS1231_DATA_PIN A0
 #define ADS1231_CLK_PIN  A1
 
-// Define bottles (pin, name, up/down position for servo)
-//                     pin,  pos_down,  pos_up
-#define BOTTLES Bottle(0, "Vodka",   3,   1200,    2380), \
-                Bottle(1, "Orange",  5,   1220,    2400), \
-                Bottle(2, "Blubb",   6,   1220,    2400), \
-                Bottle(3, "Bla",     9,   1140,    2320), \
-                Bottle(4, "Bla2",   10,    950,    2100), \
-                Bottle(5, "asdf",   11,   1240,    2420), \
-                Bottle(6, "",       13,    920,    2100)
+// Define bottles (number, pin, up/down position for servo)
+//                     nr,  pin,  pos_down,  pos_up
+#define BOTTLES Bottle(0,    3,   1200,    2380), \
+                Bottle(1,    5,   1220,    2400), \
+                Bottle(2,    6,   1220,    2400), \
+                Bottle(3,    9,   1140,    2320), \
+                Bottle(4,   10,    950,    2100), \
+                Bottle(5,   11,   1240,    2420), \
+                Bottle(6,   13,    920,    2100)
 
 // ADC counts per milligram
 #define ADS1231_DIVISOR  1565.1671343537414

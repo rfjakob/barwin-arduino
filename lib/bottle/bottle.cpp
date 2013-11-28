@@ -29,8 +29,8 @@ void Bottle::init(Bottle* bottles, int bottles_nr) {
  * This should be done in the setup function, not in the global scope using
  * bottles_init().
  */
-Bottle::Bottle(int _number, String _name, int _pin, int _pos_down, int _pos_up) :
-    number(_number), name(_name), pin(_pin), pos_down(_pos_down), pos_up(_pos_up) {
+Bottle::Bottle(int _number, int _pin, int _pos_down, int _pos_up) :
+    number(_number), pin(_pin), pos_down(_pos_down), pos_up(_pos_up) {
 }
 
 /**
@@ -55,7 +55,6 @@ int Bottle::turn_to(int pos, int delay_ms, bool print_steps) {
 
     DEBUG_START();
     DEBUG_MSG("Start turning bottle '");
-    DEBUG_MSG(name);
     DEBUG_MSG("' with params: ");
     DEBUG_VAL(current_pos);
     DEBUG_VAL(step);
@@ -78,7 +77,6 @@ int Bottle::turn_to(int pos, int delay_ms, bool print_steps) {
     }
     DEBUG_START();
     DEBUG_MSG("Finished turning bottle '");
-    DEBUG_MSG(name);
     DEBUG_MSG("'.");
     DEBUG_END();
     return 0;
@@ -125,7 +123,6 @@ int Bottle::pour(int requested_amount, int& measured_amount) {
 
     DEBUG_START();
     DEBUG_MSG("Start pouring bottle: ");
-    DEBUG_VAL(name);
     DEBUG_VAL(requested_amount);
     DEBUG_VAL(orig_weight);
     DEBUG_END();
@@ -169,7 +166,6 @@ int Bottle::pour(int requested_amount, int& measured_amount) {
 
     DEBUG_START();
     DEBUG_MSG("Bottle statistics: ");
-    DEBUG_VAL(name);
     DEBUG_VAL(requested_amount);
     DEBUG_VAL(measured_amount);
     DEBUG_END();

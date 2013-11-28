@@ -174,7 +174,6 @@ void calibrate_bottle_pos() {
     for (int bottle = 0; bottle < bottles_nr; bottle++) {
         DEBUG_START();
         DEBUG_VAL(bottle);
-        DEBUG_VAL(bottles[bottle].name);
         // FIXME private members...
         //DEBUG_VAL(bottles[bottle].pos_down);
         //DEBUG_VAL(bottles[bottle].pos_up);
