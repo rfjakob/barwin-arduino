@@ -71,9 +71,6 @@ void loop() {
                 parse_int_params(requested_amount, bottles_nr);
                 pour_cocktail(requested_amount);
             }
-            else if (cmd_str.equals("CALIBRATE_BOTTLE_POS")) {
-                calibrate_bottle_pos();
-            }
             else if (cmd_str.equals("TURN_BOTTLE")) {
                 // turn bottle to specific position
                 DEBUG_MSG_LN("Turn bottle...");
@@ -182,21 +179,4 @@ int pour_cocktail(int* requested_amount) {
     for (int i = 0; i < bottles_nr; i++)
         msg += String(measured_amount[i]) + String(" ");
     MSG(msg);
-}
-
-/**
- *
- */
-void calibrate_bottle_pos() {
-    for (int bottle = 0; bottle < bottles_nr; bottle++) {
-        DEBUG_START();
-        DEBUG_VAL(bottle);
-        // FIXME private members...
-        //DEBUG_VAL(bottles[bottle].pos_down);
-        //DEBUG_VAL(bottles[bottle].pos_up);
-        DEBUG_END();
-        bottles[bottle].turn_down(CALIBRATION_TURN_DELAY, true);
-        bottles[bottle].turn_up(CALIBRATION_TURN_DELAY, true);
-    }
-    DEBUG_MSG_LN("Calibration procedure for bottle position finished.");
 }
