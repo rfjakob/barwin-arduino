@@ -47,8 +47,10 @@
 #define CUP_SETTLING_TIME 1500
 
 // Milliseconds to wait until desired weight reached. If timeout is reached, probably
-// bottle is empty or screwed.
-#define POURING_TIMEOUT  10000
+// bottle is empty or screwed. This should never be reached because we should get a
+// BOTTLE_EMPTY error first. Only if something goes terribly wrong (unknown what)
+// this timeout will be reached.
+#define POURING_TIMEOUT  20000
 
 // Check if the bottle is empty (i.e. weight gain while pouring)
 // every x milliseconds
