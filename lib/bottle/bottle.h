@@ -35,7 +35,6 @@ class Bottle {
         Servo servo;          // servo used for turning the bottle
         const int number;     // all bottles have a unique number (0-n)
         const char pin;       // pin to attach the servo
-    private:
         const int pos_down;   // servo position for bottle down (pouring)
         const int pos_up;     // servo position for bottle up (not pouring)
 };
