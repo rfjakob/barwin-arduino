@@ -97,11 +97,19 @@ int Bottle::turn_down(int delay_ms, bool print_steps) {
 }
 
 /**
+ * Returns the pause position for this bottle (unit: microseconds)
+ */
+int Bottle::get_pause_pos()
+{
+	return (pos_down + pos_up) / 2;
+}
+
+/**
  * Turn bottle to pause position.
  * Used e.g. in case of WHERE_THE_FUCK_IS_THE_CUP error.
  */
 int Bottle::turn_to_pause_pos(int delay_ms, bool print_steps) {
-    return turn_to((pos_down + pos_up) / 2.0, delay_ms, print_steps);
+    return turn_to(get_pause_pos(), delay_ms, print_steps);
 }
 
 
