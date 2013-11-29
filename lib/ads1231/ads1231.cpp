@@ -138,12 +138,12 @@ void ads1231_error_msg(int error_code) {
  *  3 cup removed (weight has decreased)
  *  other values: scale error (see ads1231.h).
  */
-int delay_until(unsigned long max_delay, long max_weight, bool pour_handling) {
+int delay_until(long max_delay, int max_weight, bool pour_handling) {
     unsigned long start = millis();
     int cur, ret;
     int last     = -999; // == -inf, because the first time checks should
     int last_old = -999; // always pass until we have a valid last/last_old
-    long last_millis = 0;
+    unsigned long last_millis = 0;
     while(1) {
         if(millis() - start > max_delay)
             return DELAY_UNTIL_TIMEOUT; // Timeout
