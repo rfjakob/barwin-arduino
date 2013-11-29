@@ -6,6 +6,7 @@
 #include "bottle.h"
 #include "ads1231.h"
 #include <utils.h>
+#include "errors.h"
 #include "../../config.h"
 
 
@@ -123,7 +124,7 @@ int Bottle::pour(int requested_amount, int& measured_amount) {
     int orig_weight, ret;
     ret = ads1231_get_grams(orig_weight);
     if (ret != 0) {
-        ERROR(String("SCALE_ERROR ") + String(ret));
+        ads1231_error_msg(ret);
         return ret;
     }
 
@@ -153,15 +154,15 @@ int Bottle::pour(int requested_amount, int& measured_amount) {
         // Bottle empty
         // Note that this does not work if requested_amount is less than
         // UPGRIGHT_OFFSET!
-        if(ret == 2) {
+        if(ret == BOTTLE_EMPTY) {
             ERROR("BOTTE_EMPTY");
             // TODO other speed here? it is empty already!
             turn_up(TURN_UP_DELAY);
-            RETURN_IFN_0(wait_for_resume());
+            RETURN_IFN_0(wait_for_resume()); // might return ABORTED
         }
 
         // Cup was removed early
-        if(ret == 3) {
+        if(ret == WHERE_THE_FUCK_IS_THE_CUP) {
             turn_to_pause_pos(TURN_UP_DELAY);
             // TODO abort command should be processed in waiting_for_cup()
             RETURN_IFN_0(wait_for_cup());

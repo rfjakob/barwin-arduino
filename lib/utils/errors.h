@@ -20,6 +20,7 @@
 #define CUP_TIMEOUT_REACHED          11    // no cup placed after POUR received
 #define POURING_TIMEOUT_REACHED      11
 #define ABORTED                      12    // user abort
+#define MAX_DRINK_GRAMS_EXCEEDED     13    // sum of ingredients exceeds MAX_DRINK_GRAMS
 
 // Serial message parsing
 #define INVALID_COMMAND              21

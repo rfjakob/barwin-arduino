@@ -2,6 +2,7 @@
 #include <ads1231.h>
 #include <bottle.h>
 #include <utils.h>
+#include <errors.h>
 #include "../config.h"
 
 /*
@@ -41,10 +42,7 @@ void loop() {
         int ret, weight = 0;
         ret = ads1231_get_grams(weight);
         if (ret != 0) {
-            // TODO print specific error code / msg
-            ERROR("SCALE_ERROR");
-            // FIXME this is wrong, return does not suffice if commands
-            // should not be processed!
+            ads1231_error_msg(ret);
             return;
         }
 
@@ -119,11 +117,10 @@ int pour_cocktail(int* requested_amount) {
     for (int i = 0; i < bottles_nr; i++) {
         sum += requested_amount[i];
     }
-    if(sum > MAX_DRINK_GRAMS)
-    {
+    if(sum > MAX_DRINK_GRAMS) {
         DEBUG_MSG_LN("Total amount greater than MAX_DRINK_GRAMS");
-        ERROR("INVALID_COMMAND");
-        return -97;
+        ERROR("MAX_DRINK_GRAMS_EXCEEDED");
+        return MAX_DRINK_GRAMS_EXCEEDED;
     }
 
     // wait until weight > WEIGHT_EPSILON or CUP_TIMEOUT reached

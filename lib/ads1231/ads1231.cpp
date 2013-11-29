@@ -114,7 +114,20 @@ int ads1231_get_grams(int& grams)
     return 0; // Success
 }
 
-/*
+/**
+ * Send correct error message to serial for given error code.
+ */
+void ads1231_error_msg(int error_code) {
+    if (error_code == ADS1231_TIMEOUT_HIGH) {
+        ERROR("ADS1231_TIMEOUT_HIGH");
+    }
+    else if (error_code == ADS1231_TIMEOUT_LOW) {
+        ERROR("ADS1231_TIMEOUT_LOW");
+    }
+}
+
+
+/**
  * Blocks until weight is more than max_weight + WEIGHT_EPSILON
  * but at maximum for 'max_delay' milliseconds.
  * max_weight might be current weight to detect any increase of weight.
@@ -183,14 +196,12 @@ int wait_for_cup() {
     if ( weight < WEIGHT_EPSILON) {
         MSG("WAITING_FOR_CUP");
         int ret = delay_until(CUP_TIMEOUT, 0, false);
-        if (ret == 1) {
-            DEBUG_MSG_LN("CUP_TIMEOUT reached. Aborting.");
+        if (ret == DELAY_UNTIL_TIMEOUT) {
             ERROR("CUP_TIMEOUT_REACHED");
+            return CUP_TIMEOUT_REACHED;
         } else if (ret != 0) {
-            DEBUG_MSG_LN(
-                String("Scale error when waiting for cup. Error code: ")
-                + String(ret));
-            ERROR(String("SCALE_ERROR ") + String(ret));
+            DEBUG_MSG_LN("Scale error when waiting for cup.");
+            ads1231_error_msg(ret);
         }
         return ret;
     }
