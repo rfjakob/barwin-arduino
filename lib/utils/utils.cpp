@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "utils.h""
+#include "bottle.h"
 #include "../../config.h"
 
 /**
@@ -42,5 +43,47 @@ int wait_for_resume() {
                 }
             }
         }
+    }
+}
+
+/**
+ * Turns bottle 1 up while simultaneously turning bottle 2 down to
+ * pause position. Works best if bottle 1 is at pause position at start.
+ */
+void crossfade(Bottle b1, Bottle b2, int delay_ms)
+{
+    int i = 0;
+    int b1_start_pos = b1.servo.readMicroseconds();
+    int b2_start_pos = b2.servo.readMicroseconds();
+    int new_pos=0;
+    bool done_something;
+
+    while(1)
+    {
+        done_something=false;
+    
+        // Turn bottle 1 up
+        new_pos = b1_start_pos + i;
+        if(new_pos < b1.pos_up)
+        {
+            b1.servo.writeMicroseconds(new_pos);
+            done_something=true;
+        }
+        
+        delay(delay_ms/2); // Split delay in half so bottles move alternating
+        
+        // Turn bottle 2 down to pause position
+        new_pos = b2_start_pos - i;
+        if(new_pos > b2.get_pause_pos() )
+        {
+            b2.servo.writeMicroseconds(new_pos);
+            done_something=true;
+        }
+        
+        // Both bottles are already in position
+        if(done_something==false)
+            break;
+            
+        delay(delay_ms/2);
     }
 }
