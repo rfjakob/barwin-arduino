@@ -168,8 +168,9 @@ int Bottle::pour(int requested_amount, int& measured_amount) {
         }
     }
 
-    DEBUG_MSG_LN("Turn up again...");
-    turn_up(TURN_UP_DELAY);
+    // We turn to pause pos and not completely up so we can crossfade
+    DEBUG_MSG_LN("Bottle:pour(): Turining to pause pos");
+    turn_to_pause_pos(TURN_UP_DELAY);
 
     ads1231_get_grams(measured_amount);
     measured_amount -= orig_weight;

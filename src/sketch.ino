@@ -116,6 +116,7 @@ int parse_int_params(int* params, int size) {
  * each bottle(int array of size bottles_nr).
  */
 int pour_cocktail(int* requested_amount) {
+
     // Sanity check: Never pour more than MAX_DRINK_GRAMS
     long sum = 0; // Use long to rule out overflow
     for (int i = 0; i < bottles_nr; i++) {
@@ -139,10 +140,20 @@ int pour_cocktail(int* requested_amount) {
     // initializing array with 0
     memset(measured_amount, 0, sizeof(int) * bottles_nr);
 
+    Bottle *cur_bottle = NULL;
+    Bottle *last_bottle = NULL;
     for (int i = 0; i < bottles_nr; i++) {
 
         if(requested_amount[i] == 0)
             continue;
+
+        cur_bottle = &bottles[i];
+
+        if(last_bottle!=0) // On the first iteration last_bottle is NULL
+        {
+            DEBUG_MSG_LN("pour_cocktail: Crossfading...");
+            crossfade(last_bottle, cur_bottle, TURN_UP_DELAY);
+        }
 
         // we cannot pour less than UPGRIGHT_OFFSET --> do not pour if it is
         // less than UPGRIGHT_OFFSET/2.0 and print warning...
@@ -157,8 +168,14 @@ int pour_cocktail(int* requested_amount) {
             }
         }
 
-        bottles[i].pour(requested_amount[i], measured_amount[i]);
+        cur_bottle->pour(requested_amount[i], measured_amount[i]);
+
+        // Save bottle for next iteration
+        last_bottle=cur_bottle;
     }
+    
+    // Last bottle is hanging at pause position at this point. Turn up completely.
+    last_bottle->turn_up(TURN_UP_DELAY);
 
     // Send success message, measured_amount as params
     String msg = "ENJOY ";
