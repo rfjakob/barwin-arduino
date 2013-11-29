@@ -1,6 +1,8 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include "bottle.h"
+
 #define DEBUG
 #ifdef DEBUG
     /**
@@ -64,6 +66,7 @@
 
 bool has_time_passed(long time_period, long& last_passed);
 int wait_for_resume();
+void crossfade(Bottle * b1, Bottle * b2, int delay_ms);
 
 /**
  * A quite dangerous macro, to simplify usage of has_time_passed().
