@@ -14,6 +14,7 @@
 #include <ads1231.h>
 #include <utils.h>
 #include "../../config.h"
+#include "errors.h"
 
 // emulate a scale
 //#define ADS1231_EMULATION 1
@@ -55,13 +56,13 @@ int ads1231_get_value(long& val)
     while(digitalRead(ADS1231_DATA_PIN) != HIGH)
     {
         if(millis() > start+150)
-            return ADS1231_ERR_TIMEOUT_HIGH; // Timeout waiting for HIGH
+            return ADS1231_TIMEOUT_HIGH; // Timeout waiting for HIGH
     }
     start=millis();
     while(digitalRead(ADS1231_DATA_PIN) != LOW)
     {
         if(millis() > start+150)
-            return ADS1231_ERR_TIMEOUT_LOW; // Timeout waiting for LOW
+            return ADS1231_TIMEOUT_LOW; // Timeout waiting for LOW
     }
 
     // Read 24 bits
@@ -117,7 +118,7 @@ int ads1231_get_grams(int& grams)
  * Blocks until weight is more than max_weight + WEIGHT_EPSILON
  * but at maximum for 'max_delay' milliseconds.
  * max_weight might be current weight to detect any increase of weight.
- * Return values:
+ * Return values:   see also errors.h!
  *  0 weight was reached (success)
  *  1 timeout (pouring too slow)
  *  2 bottle empty (weight did not change for BOTTLE_EMPTY_INTERVAL ms)
@@ -132,30 +133,29 @@ int delay_until(unsigned long max_delay, long max_weight, bool pour_handling) {
     long last_millis = 0;
     while(1) {
         if(millis() - start > max_delay)
-            return 1; // Timeout
+            return DELAY_UNTIL_TIMEOUT; // Timeout
 
         // this blocks 100ms because ADS1231 runs at 10 samples per second
         ret = ads1231_get_grams(cur);
         if(ret != 0)
             return ret; // Scale error
+
         // this delays, we do not want it...
         //DEBUG_VAL_LN(cur);
+
         if(cur > max_weight + WEIGHT_EPSILON)
-            return 0; // Success
+            return SUCCESS;
 
         // Just waiting for weight, no special pouring error detection
         if (!pour_handling)
             continue;
 
         if(last > cur + WEIGHT_EPSILON)
-            return 3; // Current weight is smaller than last measured
+            return WHERE_THE_FUCK_IS_THE_CUP; // Current weight is smaller than last measured
 
-        // Jakob does not like abs, so we check first for ERROR 3
-        // --> then we does not need abs(cur - last_old) < WEIGHT_EPSILON
-        //       |
-        // --|---|---|------------------------->
-        // -EPS      EPS
-        // TODO finish this nice ASCII graphic
+        // Jakob does not like abs, so we check first for
+        // WHERE_THE_FUCK_IS_THE_CUP --> then we do not need
+        // abs(cur - last_old) < WEIGHT_EPSILON
         if(millis() - last_millis > BOTTLE_EMPTY_INTERVAL) {
             // note that ads1231_get_grams() blocks ~100ms, so
             // BOTTLE_EMPTY_INTERVAL is not accurate.
@@ -163,7 +163,7 @@ int delay_until(unsigned long max_delay, long max_weight, bool pour_handling) {
             // BOTTLE_EMPTY_INTERVAL additional weight needs to be measured
             // in the cup.
             if (cur - last_old < WEIGHT_EPSILON) {
-                return 2; // Weight does not change means bottle is empty
+                return BOTTLE_EMPTY; // Weight does not change means bottle is empty
             }
             last_old = cur;
             last_millis = millis();

@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "utils.h""
 #include "bottle.h"
+#include "errors.h"
 #include "../../config.h"
 
 /**
@@ -36,7 +37,7 @@ int wait_for_resume() {
                     break;
                 } else if (cmd_str.equals("ABORT")) {
                     DEBUG_MSG_LN("Aborted.");
-                    return 53;
+                    return ABORTED;
                 } else {
                     ERROR("INVALID_COMMAND");
                     DEBUG_MSG_LN(String("Got string '") + String(cmd) + String("'"));
@@ -61,7 +62,7 @@ void crossfade(Bottle * b1, Bottle * b2, int delay_ms)
     while(1)
     {
         done_something=false;
-    
+
         // Turn bottle 1 up
         new_pos = b1_start_pos + i;
         if(new_pos < b1->pos_up)
@@ -69,9 +70,9 @@ void crossfade(Bottle * b1, Bottle * b2, int delay_ms)
             b1->servo.writeMicroseconds(new_pos);
             done_something=true;
         }
-        
+
         delay(delay_ms/2); // Split delay in half so bottles move alternating
-        
+
         // Turn bottle 2 down to pause position
         new_pos = b2_start_pos - i;
         if(new_pos > b2->get_pause_pos() )
@@ -79,11 +80,11 @@ void crossfade(Bottle * b1, Bottle * b2, int delay_ms)
             b2->servo.writeMicroseconds(new_pos);
             done_something=true;
         }
-        
+
         // Both bottles are already in position
         if(done_something==false)
             break;
-            
+
         delay(delay_ms/2);
     }
 }
