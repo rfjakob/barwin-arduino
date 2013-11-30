@@ -60,22 +60,19 @@ int wait_for_resume() {
  *           / \
  * b1 ______/   \______ pause position
  */
-void crossfade(Bottle * b1, Bottle * b2, int delay_ms)
-{
+void crossfade(Bottle * b1, Bottle * b2, int delay_ms) {
     int step = 1;
     int b1_pos = b1->servo.readMicroseconds();
     int b2_pos = b2->servo.readMicroseconds();
     int new_pos=0;
     bool done_something;
 
-    while(1)
-    {
+    while(1) {
         done_something=false;
 
         // Turn bottle 1 up
         b1_pos += step;
-        if(b1_pos < b1->pos_up)
-        {
+        if(b1_pos < b1->pos_up) {
             b1->servo.writeMicroseconds(b1_pos);
             done_something=true;
         }
@@ -84,8 +81,7 @@ void crossfade(Bottle * b1, Bottle * b2, int delay_ms)
 
         // Turn bottle 2 down to pause position
         b2_pos -= step;
-        if(b2_pos > b2->get_pause_pos() )
-        {
+        if(b2_pos > b2->get_pause_pos() ) {
             b2->servo.writeMicroseconds(b2_pos);
             done_something=true;
         }
