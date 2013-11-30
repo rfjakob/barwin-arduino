@@ -148,8 +148,7 @@ int Bottle::pour(int requested_amount, int& measured_amount) {
         if (ret == 0)
             break; // All good
 
-        DEBUG_MSG_LN(String("pour(): delay until returned ") + String(ret));
-        // move bottle to pause position (in the middle)
+        DEBUG_MSG_LN(String("pour(): delay until returned error ") + String(ret));
 
         // Bottle empty
         // Note that this does not work if requested_amount is less than
@@ -160,12 +159,16 @@ int Bottle::pour(int requested_amount, int& measured_amount) {
             turn_up(TURN_UP_DELAY);
             RETURN_IFN_0(wait_for_resume()); // might return ABORTED
         }
-
         // Cup was removed early
-        if(ret == WHERE_THE_FUCK_IS_THE_CUP) {
+        else if(ret == WHERE_THE_FUCK_IS_THE_CUP) {
             turn_to_pause_pos(TURN_UP_DELAY);
             // TODO abort command should be processed in wait_for_cup()
             RETURN_IFN_0(wait_for_cup());
+        }
+        // Scale error - turn bottle up and return error code
+        else {
+            turn_up(TURN_UP_DELAY);
+            return ret;
         }
     }
 
