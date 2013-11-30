@@ -137,10 +137,6 @@ int pour_cocktail(int* requested_amount) {
     Bottle *cur_bottle = NULL;
     Bottle *last_bottle = NULL;
     for (int i = 0; i < bottles_nr; i++) {
-
-        if(requested_amount[i] == 0)
-            continue;
-
         // we cannot pour less than UPGRIGHT_OFFSET --> do not pour if it is
         // less than UPGRIGHT_OFFSET/2.0 and print warning...
         if (requested_amount[i] < UPGRIGHT_OFFSET) {
