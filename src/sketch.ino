@@ -163,9 +163,16 @@ int pour_cocktail(int* requested_amount) {
             // At this point, last_bottle is up and cur_bottle is at pause position
         }
 
-        cur_bottle->pour(requested_amount[i], measured_amount[i]);
+        int ret;
+        ret = cur_bottle->pour(requested_amount[i], measured_amount[i]);
         // At this point, cur_bottle is at pause position again. Next crossfade
         // will turn it up completely.
+
+        if(ret != 0)
+        {
+            DEBUG_MSG_LN(String("pour_cocktail: cur_bottle->pour returned error ") + String(ret));
+            ads1231_error_msg(ret);
+        }
 
         // Save bottle for next iteration
         last_bottle=cur_bottle;

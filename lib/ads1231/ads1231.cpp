@@ -124,6 +124,8 @@ void ads1231_error_msg(int error_code) {
     else if (error_code == ADS1231_TIMEOUT_LOW) {
         ERROR("ADS1231_TIMEOUT_LOW");
     }
+    else
+        ERROR("UNKNOWN_" + String(error_code));
 }
 
 
