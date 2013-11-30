@@ -128,9 +128,12 @@ void ads1231_error_msg(int error_code) {
 
 
 /**
- * Blocks until weight is more than max_weight + WEIGHT_EPSILON
- * but at maximum for 'max_delay' milliseconds.
- * max_weight might be current weight to detect any increase of weight.
+ * Blocks until weight is more than weight + WEIGHT_EPSILON
+ * but at maximum for 'max_delay' milliseconds. max_delay is ignored if it is
+ * negative.
+ * weight might be current weight to detect any increase of weight.
+ * If "reverse" is set to true, we wait until weight gets less than weight +
+ * WEIGHT_EPSILON.
  * Return values:   see also errors.h!
  *  0 weight was reached (success)
  *  1 timeout (pouring too slow)
@@ -138,14 +141,20 @@ void ads1231_error_msg(int error_code) {
  *  3 cup removed (weight has decreased)
  *  other values: scale error (see ads1231.h).
  */
-int delay_until(long max_delay, int max_weight, bool pour_handling) {
+int delay_until(long max_delay, int weight, bool pour_handling, bool reverse) {
     unsigned long start = millis();
     int cur, ret;
     int last     = -999; // == -inf, because the first time checks should
     int last_old = -999; // always pass until we have a valid last/last_old
     unsigned long last_millis = 0;
+
+    int one = 1;
+    if (reverse) {
+        one = -1;
+    }
+
     while(1) {
-        if(millis() - start > max_delay)
+        if(max_delay > 0 && millis() - start > max_delay)
             return DELAY_UNTIL_TIMEOUT; // Timeout
 
         // this blocks 100ms because ADS1231 runs at 10 samples per second
@@ -156,7 +165,8 @@ int delay_until(long max_delay, int max_weight, bool pour_handling) {
         // this delays, we do not want it...
         //DEBUG_VAL_LN(cur);
 
-        if(cur > max_weight + WEIGHT_EPSILON)
+        // "one" inverts the inequality
+        if(cur * one > (weight + WEIGHT_EPSILON) * one)
             return SUCCESS;
 
         // Just waiting for weight, no special pouring error detection

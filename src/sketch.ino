@@ -167,7 +167,7 @@ int pour_cocktail(int* requested_amount) {
         // Save bottle for next iteration
         last_bottle=cur_bottle;
     }
-    
+
     // Last bottle is hanging at pause position at this point. Turn up completely.
     last_bottle->turn_up(TURN_UP_DELAY);
 
@@ -176,4 +176,7 @@ int pour_cocktail(int* requested_amount) {
     for (int i = 0; i < bottles_nr; i++)
         msg += String(measured_amount[i]) + String(" ");
     MSG(msg);
+
+    DEBUG_MSG_LN("Please take cup!");
+    delay_until(-1, 0, false, true);
 }
