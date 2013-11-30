@@ -56,6 +56,7 @@ int Bottle::turn_to(int pos, int delay_ms, bool print_steps) {
 
     DEBUG_START();
     DEBUG_MSG("Start turning bottle '");
+    DEBUG_MSG(number);
     DEBUG_MSG("' with params: ");
     DEBUG_VAL(current_pos);
     DEBUG_VAL(step);
@@ -78,6 +79,7 @@ int Bottle::turn_to(int pos, int delay_ms, bool print_steps) {
     }
     DEBUG_START();
     DEBUG_MSG("Finished turning bottle '");
+    DEBUG_MSG(number);
     DEBUG_MSG("'.");
     DEBUG_END();
     return 0;
