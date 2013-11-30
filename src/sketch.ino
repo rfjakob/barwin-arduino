@@ -129,7 +129,7 @@ int pour_cocktail(int* requested_amount) {
     // wait a bit until cup weight can be measured safely
     delay(CUP_SETTLING_TIME);
 
-    // Pour liquid for each bottle
+    // Actually poured liquid for each bottle
     int measured_amount[bottles_nr];
     // initializing array with 0
     memset(measured_amount, 0, sizeof(int) * bottles_nr);
@@ -140,15 +140,7 @@ int pour_cocktail(int* requested_amount) {
 
         if(requested_amount[i] == 0)
             continue;
-
-        cur_bottle = &bottles[i];
-
-        if(last_bottle!=0) // On the first iteration last_bottle is NULL
-        {
-            DEBUG_MSG_LN("pour_cocktail: Crossfading...");
-            crossfade(last_bottle, cur_bottle, TURN_UP_DELAY);
-        }
-
+        
         // we cannot pour less than UPGRIGHT_OFFSET --> do not pour if it is
         // less than UPGRIGHT_OFFSET/2.0 and print warning...
         if (requested_amount[i] < UPGRIGHT_OFFSET) {
@@ -162,7 +154,18 @@ int pour_cocktail(int* requested_amount) {
             }
         }
 
+        cur_bottle = &bottles[i];
+
+        if(last_bottle != 0) // On the first iteration last_bottle is NULL
+        {
+            DEBUG_MSG_LN("pour_cocktail: Crossfading...");
+            crossfade(last_bottle, cur_bottle, TURN_UP_DELAY);
+            // At this point, last_bottle is up and cur_bottle is at pause position
+        }
+
         cur_bottle->pour(requested_amount[i], measured_amount[i]);
+        // At this point, cur_bottle is at pause position again. Next crossfade
+        // will turn it up completely.
 
         // Save bottle for next iteration
         last_bottle=cur_bottle;
