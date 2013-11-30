@@ -74,7 +74,6 @@ void crossfade(Bottle * b1, Bottle * b2, int delay_ms)
 
         // Turn bottle 1 up
         b1_pos += step;
-        DEBUG_VAL_LN(b1_pos);
         if(b1_pos < b1->pos_up)
         {
             b1->servo.writeMicroseconds(b1_pos);
