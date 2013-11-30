@@ -25,7 +25,7 @@ bool has_time_passed(long time_period, long& last_passed) {
 /**
  * Waits to get RESUME on the serial.
  * Returns 0 if it gets it,
- * EABORT if it gets ABORT.
+ * ABORTED if it gets ABORT.
  */
 int wait_for_resume() {
     while(1) {

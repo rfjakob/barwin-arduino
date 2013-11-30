@@ -83,6 +83,3 @@ void crossfade(Bottle * b1, Bottle * b2, int delay_ms);
         if (has_time_passed(time_period, HAS_TIME_PASSED_last_passed))
 
 
-// Error codes
-#define EABORT 57
-
