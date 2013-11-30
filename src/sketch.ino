@@ -156,8 +156,7 @@ int pour_cocktail(int* requested_amount) {
 
         cur_bottle = &bottles[i];
 
-        if(last_bottle != 0) // On the first iteration last_bottle is NULL
-        {
+        if (last_bottle != 0) { // On the first iteration last_bottle is NULL
             DEBUG_MSG_LN("pour_cocktail: Crossfading...");
             crossfade(last_bottle, cur_bottle, TURN_UP_DELAY);
             // At this point, last_bottle is up and cur_bottle is at pause position
@@ -168,8 +167,7 @@ int pour_cocktail(int* requested_amount) {
         // At this point, cur_bottle is at pause position again. Next crossfade
         // will turn it up completely.
 
-        if(ret != 0)
-        {
+        if (ret != 0) {
             DEBUG_MSG_LN(String("pour_cocktail: cur_bottle->pour returned error ") + String(ret));
             ads1231_error_msg(ret);
         }
