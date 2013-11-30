@@ -140,17 +140,17 @@ int pour_cocktail(int* requested_amount) {
 
         if(requested_amount[i] == 0)
             continue;
-        
+
         // we cannot pour less than UPGRIGHT_OFFSET --> do not pour if it is
         // less than UPGRIGHT_OFFSET/2.0 and print warning...
         if (requested_amount[i] < UPGRIGHT_OFFSET) {
             if (UPGRIGHT_OFFSET / 2.0 > requested_amount[i]) {
                 DEBUG_MSG_LN("Warning! Requested output is between: "
-                     "UPGRIGHT_OFFSET/2 > outpout > 0 --> will not pour!");
+                     "UPGRIGHT_OFFSET/2 > output > 0 --> will not pour!");
                 continue;
             } else {
                 DEBUG_MSG_LN("Warning! Requested output is between: "
-                    "UPGRIGHT_OFFSET > outpout >= UPGRIGHT_OFFSET/2 --> will pour too much!");
+                    "UPGRIGHT_OFFSET > output >= UPGRIGHT_OFFSET/2 --> will pour too much!");
             }
         }
 

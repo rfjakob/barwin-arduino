@@ -91,7 +91,7 @@ int ads1231_get_value(long& val)
 /*
  * Get the weight in grams. Can block up to 100ms in normal
  * operation because the ADS1231 makes only 10 measurements per second.
- * Returns 0 on sucess, an error code otherwise (see ads1231.h)
+ * Returns 0 on sucess, an error code otherwise (see errors.h)
  */
 int ads1231_get_grams(int& grams)
 {

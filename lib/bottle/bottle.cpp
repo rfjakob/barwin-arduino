@@ -164,7 +164,7 @@ int Bottle::pour(int requested_amount, int& measured_amount) {
         // Cup was removed early
         if(ret == WHERE_THE_FUCK_IS_THE_CUP) {
             turn_to_pause_pos(TURN_UP_DELAY);
-            // TODO abort command should be processed in waiting_for_cup()
+            // TODO abort command should be processed in wait_for_cup()
             RETURN_IFN_0(wait_for_cup());
         }
     }
