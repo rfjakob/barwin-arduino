@@ -50,6 +50,15 @@ int wait_for_resume() {
 /**
  * Turns bottle 1 up while simultaneously turning bottle 2 down to
  * pause position. Works best if bottle 1 is at pause position at start.
+ *
+ * In audio, this is called a crossfade:
+ *
+ * b2 ______     ______ up
+ *          \   /
+ *           \ /
+ *            x
+ *           / \
+ * b1 ______/   \______ pause position
  */
 void crossfade(Bottle * b1, Bottle * b2, int delay_ms)
 {
