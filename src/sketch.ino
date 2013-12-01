@@ -17,11 +17,10 @@ int pour_cocktail(int* requested_amount);
 void parse_int_params(int* params, int size);
 
 void setup() {
-    #if defined(__AVR_ATmega328P__)
+
+    // This is obligatory on the Uno, and a noop on the Leonardo.
+    // Means we can just do it unconditionally.
     Serial.begin(9600);
-    #else
-    Serial.begin(115200);
-    #endif
     Serial.setTimeout(SERIAL_TIMEOUT);
 
     ads1231_init();
