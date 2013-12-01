@@ -158,7 +158,7 @@ int Bottle::pour(int requested_amount, int& measured_amount) {
         if(ret == BOTTLE_EMPTY) {
             ERROR("BOTTE_EMPTY");
             // TODO other speed here? it is empty already!
-            turn_up(TURN_UP_DELAY);
+            turn_to(pos_up + BOTTLE_EMPTY_POS_OFFSET, TURN_UP_DELAY);
             RETURN_IFN_0(wait_for_resume()); // might return ABORTED
         }
         // Cup was removed early

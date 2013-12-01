@@ -34,7 +34,7 @@
 // ADS1231_OFFSET  = weight1 - (raw1 * (weight1 - weight2)) / (raw1 - raw2)
 
 // Delay between single servo steps when turning bottle up/down, in milliseconds
-#define TURN_DOWN_DELAY 4
+#define TURN_DOWN_DELAY 3
 #define TURN_UP_DELAY 4
 #define FAST_TURN_UP_DELAY 1      // used for abort and init
 #define CALIBRATION_TURN_DELAY 8  // used for calibrate_bottle_pos()
@@ -55,6 +55,11 @@
 // Check if the bottle is empty (i.e. weight gain while pouring)
 // every x milliseconds
 #define BOTTLE_EMPTY_INTERVAL 1500
+
+// On BOTTE_EMPTY error, move the bottle to pos_up and add following value.
+// This turns the bottle a bit back and makes the error visible.
+// Note that pos_up + BOTTLE_EMPTY_POS_OFFSET must be < 2400!
+#define BOTTLE_EMPTY_POS_OFFSET -200
 
 // Stop pouring early in grams to account for the liquid pouring out while turning
 // the bottle up
