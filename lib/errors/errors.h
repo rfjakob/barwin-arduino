@@ -9,6 +9,10 @@
 #ifndef ERRORS_H
 #define ERRORS_H
 
+// Helper function
+String strerror(int errno);
+
+// Actual error codes
 #define SUCCESS                      0
 
 // return values by delay_until()
