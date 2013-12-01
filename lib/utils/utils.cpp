@@ -23,6 +23,25 @@ bool has_time_passed(long time_period, long& last_passed) {
 }
 
 /**
+ * Get free memory (in bytes?).
+ * From: http://forum.pololu.com/viewtopic.php?f=10&t=989
+ */
+extern char __bss_end;
+extern char *__brkval;
+
+int get_free_memory()
+{
+  int free_memory;
+
+  if((int)__brkval == 0)
+    free_memory = ((int)&free_memory) - ((int)&__bss_end);
+  else
+    free_memory = ((int)&free_memory) - ((int)__brkval);
+
+  return free_memory;
+}
+
+/**
  * Waits to get RESUME on the serial.
  * Returns 0 if it gets it,
  * ABORTED if it gets ABORT.
@@ -37,6 +56,7 @@ int wait_for_resume() {
             if(Serial.readBytes(cmd, 8)) {
                 String cmd_str = String(cmd);
                 if (cmd_str.equals("RESUME\r\n")) {
+                    DEBUG_MSG(String("Free memory: ") + String(get_free_memory()));
                     break;
                 } else if (cmd_str.equals("ABORT\r\n")) {
                     DEBUG_MSG_LN("Aborted.");
