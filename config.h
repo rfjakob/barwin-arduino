@@ -36,7 +36,7 @@
 // Delay between single servo steps when turning bottle up/down, in milliseconds
 #define TURN_DOWN_DELAY 4
 #define TURN_UP_DELAY 4
-#define FAST_TURN_UP_DELAY 2      // used for abort and init
+#define FAST_TURN_UP_DELAY 1      // used for abort and init
 #define CALIBRATION_TURN_DELAY 8  // used for calibrate_bottle_pos()
 
 // Time to wait until cup is placed on scale (in seconds)

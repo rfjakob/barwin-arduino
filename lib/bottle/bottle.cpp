@@ -163,13 +163,13 @@ int Bottle::pour(int requested_amount, int& measured_amount) {
         }
         // Cup was removed early
         else if(ret == WHERE_THE_FUCK_IS_THE_CUP) {
-            turn_to_pause_pos(TURN_UP_DELAY);
+            turn_to_pause_pos(FAST_TURN_UP_DELAY);
             // TODO abort command should be processed in wait_for_cup()
             RETURN_IFN_0(wait_for_cup());
         }
         // Scale error - turn bottle up and return error code
         else {
-            turn_up(TURN_UP_DELAY);
+            turn_up(FAST_TURN_UP_DELAY);
             return ret;
         }
     }
