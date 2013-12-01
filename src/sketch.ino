@@ -69,9 +69,9 @@ void loop() {
         // read.
         if(Serial.readBytesUntil(' ', cmd, MAX_COMMAND_LENGTH) == 0)
             return; // Can that even happen??
-        
+
         String cmd_str = String(cmd);
-        
+
         // Example: POUR 0 20 10 30 10 0 40\r\n
         if (cmd_str.equals("POUR")) {
             int requested_amount[bottles_nr];
@@ -88,6 +88,10 @@ void loop() {
             // bottle number (int starting at 0) first parameter, position
             // as microseconds second parameter
             bottles[params[0]].turn_to(params[1], TURN_DOWN_DELAY);
+        }
+        // Example: DANCING_BOTTLES\r\n
+        else if (cmd_str.equals("DANCING_BOTTLES\n\r")) {
+            dancing_bottles();
         }
         // Example: NOTHING\r\n
         // readBytesUntil read the trailing "\r\n" because there was no " " to stop at
@@ -203,4 +207,26 @@ int pour_cocktail(int* requested_amount) {
 
     DEBUG_MSG_LN("Please take cup!");
     delay_until(-1, 0, false, true);
+}
+
+
+void dancing_bottles() {
+    Bottle *cur_bottle = NULL;
+    Bottle *last_bottle = NULL;
+    bottles[0].turn_to_pause_pos(DANCING_DELAY);
+    for (int i = 0; i < bottles_nr; i++) {
+        cur_bottle = &bottles[i];
+
+        if (last_bottle != 0) { // On the first iteration last_bottle is NULL
+            DEBUG_MSG_LN("pour_cocktail: Crossfading...");
+            crossfade(last_bottle, cur_bottle, DANCING_DELAY);
+            // At this point, last_bottle is up and cur_bottle is at pause position
+        }
+        // At this point, cur_bottle is at pause position again. Next crossfade
+        // will turn it up completely.
+
+        // Save bottle for next iteration
+        last_bottle=cur_bottle;
+    }
+    last_bottle->turn_up(DANCING_DELAY);
 }
