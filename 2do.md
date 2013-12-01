@@ -1,5 +1,10 @@
 
 
+ invalid commands, \n
+ resume funktioniert nicht mehr
+ unkonw_2
+
+
  - [ ] Error handling? (scale?)
  - [ ] when cup is not there while pouring, abort pouring procedure (check if weight gets less between bottles)
  - [x] empty bottle error handling
