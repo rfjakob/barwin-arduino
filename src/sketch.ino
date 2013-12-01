@@ -37,7 +37,7 @@ void setup() {
 
 
 void loop() {
-    // print some stuff every 500ms while idle
+    // print some stuff every SEND_READY_INTERVAL milliseconds while idle
     IF_HAS_TIME_PASSED(SEND_READY_INTERVAL)  {
         int ret, weight = 0;
         ret = ads1231_get_grams(weight);
@@ -73,7 +73,7 @@ void loop() {
                 // turn bottle to specific position
                 DEBUG_MSG_LN("Turn bottle...");
                 int params[2];
-                parse_int_params(params, bottles_nr);
+                parse_int_params(params, 2);
                 // bottle number (int starting at 0) first parameter, position
                 // as microseconds second parameter
                 bottles[params[0]].turn_to(params[1], TURN_DOWN_DELAY);
