@@ -18,7 +18,7 @@
 
 // misc pouring procedure related
 #define CUP_TIMEOUT_REACHED          11    // no cup placed after POUR received
-#define POURING_TIMEOUT_REACHED      11
+#define POURING_TIMEOUT_REACHED      14
 #define ABORTED                      12    // user abort
 #define MAX_DRINK_GRAMS_EXCEEDED     13    // sum of ingredients exceeds MAX_DRINK_GRAMS
 
