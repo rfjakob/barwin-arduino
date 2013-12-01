@@ -89,7 +89,7 @@ void loop() {
             bottles[params[0]].turn_to(params[1], TURN_DOWN_DELAY);
         }
         // Example: DANCING_BOTTLES\r\n
-        else if (cmd_str.equals("DANCING_BOTTLES\n\r")) {
+        else if (cmd_str.equals("DANCING_BOTTLES\r\n")) {
             dancing_bottles();
         }
         // Example: NOTHING\r\n
