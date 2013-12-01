@@ -14,7 +14,7 @@
 DEFINE_BOTTLES();
 
 int pour_cocktail(int* requested_amount);
-int parse_int_params(int* params, int size);
+void parse_int_params(int* params, int size);
 
 void setup() {
     #if defined(__AVR_ATmega328P__)
@@ -59,33 +59,45 @@ void loop() {
 
     // Parse commands from Serial
     if (Serial.available() > 0) {
-        char cmd[MAX_COMMAND_LENGTH] = "";
-        // Note that readBytesUntil() will block until SERIAL_TIMEOUT is reached
-        // or a space is read from serial input.
-        if(Serial.readBytesUntil(' ', cmd, MAX_COMMAND_LENGTH)) {
-            String cmd_str = String(cmd);
-            if (cmd_str.equals("POUR")) {
-                int requested_amount[bottles_nr];
-                parse_int_params(requested_amount, bottles_nr);
-                pour_cocktail(requested_amount);
-            }
-            else if (cmd_str.equals("TURN_BOTTLE")) {
-                // turn bottle to specific position
-                DEBUG_MSG_LN("Turn bottle...");
-                int params[2];
-                parse_int_params(params, 2);
-                // bottle number (int starting at 0) first parameter, position
-                // as microseconds second parameter
-                bottles[params[0]].turn_to(params[1], TURN_DOWN_DELAY);
-            }
-            else if (cmd_str.equals("NOTHING")) {
-                // dummy command, for testing
-                MSG("DOING_NOTHING");
-            }
-            else {
-                ERROR("INVALID_COMMAND");
-                DEBUG_MSG_LN(String("Got string '") + String(cmd) + String("'"));
-            }
+
+        char cmd[MAX_COMMAND_LENGTH + 1];
+        // The conversion to String depends on having a trailing NULL!
+        memset(cmd, 0, MAX_COMMAND_LENGTH + 1);
+
+        // readBytesUntil() will block until SERIAL_TIMEOUT is reached
+        // or a space is read from serial input. It returns the number of bytes
+        // read.
+        if(Serial.readBytesUntil(' ', cmd, MAX_COMMAND_LENGTH) == 0)
+            return; // Can that even happen??
+        
+        String cmd_str = String(cmd);
+        
+        // Example: POUR 0 20 10 30 10 0 40\r\n
+        if (cmd_str.equals("POUR")) {
+            int requested_amount[bottles_nr];
+            parse_int_params(requested_amount, bottles_nr); // Also handles the "\r\n"
+            pour_cocktail(requested_amount);
+        }
+        // Example: TURN_BOTTLE 3 2100\r\n
+        else if (cmd_str.equals("TURN_BOTTLE")) {
+            // turn bottle to specific position
+            DEBUG_MSG_LN("Turn bottle...");
+            int params[2];
+            parse_int_params(params, 2); // Also handles the "\r\n"
+
+            // bottle number (int starting at 0) first parameter, position
+            // as microseconds second parameter
+            bottles[params[0]].turn_to(params[1], TURN_DOWN_DELAY);
+        }
+        // Example: NOTHING\r\n
+        // readBytesUntil read the trailing "\r\n" because there was no " " to stop at
+        else if (cmd_str.equals("NOTHING\r\n")) {
+            // dummy command, for testing
+            MSG("DOING_NOTHING");
+        }
+        else {
+            ERROR("INVALID_COMMAND");
+            DEBUG_MSG_LN(String("Got string '") + String(cmd) + String("'"));
         }
     }
 }
@@ -94,15 +106,17 @@ void loop() {
 /**
  * Parse space separated int values from Serial to array.
  */
-int parse_int_params(int* params, int size) {
+void parse_int_params(int* params, int size) {
     for (int i = 0; i < size; i++) {
         // see /usr/share/arduino/hardware/arduino/cores/arduino/Stream.cpp:138
         // Note: parseInt returns 0 in case of an parsing error... (uargh!)
         params[i] = Serial.parseInt();
     }
-    return 0;
-}
 
+    // The line is terminated by \r\n - read two characters and throw them away.
+    char junk[2];
+    Serial.readBytes(junk, 2);
+}
 
 /**
  * Pouring procedure.

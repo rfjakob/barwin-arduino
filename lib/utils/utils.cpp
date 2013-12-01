@@ -30,16 +30,19 @@ bool has_time_passed(long time_period, long& last_passed) {
 int wait_for_resume() {
     while(1) {
         if (Serial.available() > 0) {
-            char cmd[MAX_COMMAND_LENGTH] = "";
-            if(Serial.readBytesUntil(' ', cmd, MAX_COMMAND_LENGTH)) {
+            char cmd[8+1];
+            // The conversion to String depends on having a trailing NULL!
+            memset(cmd, 0, 8+1);
+
+            if(Serial.readBytes(cmd, 8)) {
                 String cmd_str = String(cmd);
-                if (cmd_str.equals("RESUME")) {
+                if (cmd_str.equals("RESUME\r\n")) {
                     break;
-                } else if (cmd_str.equals("ABORT")) {
+                } else if (cmd_str.equals("ABORT\r\n")) {
                     DEBUG_MSG_LN("Aborted.");
                     return ABORTED;
                 } else {
-                    ERROR("INVALID_COMMAND");
+                    ERROR(strerror(INVALID_COMMAND));
                     DEBUG_MSG_LN(String("Got string '") + String(cmd) + String("'"));
                 }
             }
