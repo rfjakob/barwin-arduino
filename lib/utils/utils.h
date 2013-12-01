@@ -58,9 +58,9 @@
 // Call something and return error code if !=0
 // e.g.: RETURN_IFN_0(delay_until(...));
 #define RETURN_IFN_0(code) do { \
-                                int ret = code; \
-                                if (ret != 0)   \
-                                    return ret; \
+                                int ret_RETURN_IFN_0 = code; \
+                                if (ret_RETURN_IFN_0 != 0)   \
+                                    return ret_RETURN_IFN_0; \
                               } while(0)
 
 

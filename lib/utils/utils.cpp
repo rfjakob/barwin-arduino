@@ -45,6 +45,7 @@ int wait_for_resume() {
             }
         }
     }
+    return 0;
 }
 
 /**

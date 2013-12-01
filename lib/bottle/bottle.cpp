@@ -186,4 +186,5 @@ int Bottle::pour(int requested_amount, int& measured_amount) {
     DEBUG_VAL(requested_amount);
     DEBUG_VAL(measured_amount);
     DEBUG_END();
+    return 0;
 }
