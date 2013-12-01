@@ -1,15 +1,10 @@
 
 
- invalid commands, \n
- resume funktioniert nicht mehr
- unkonw_2
-
-
  - [ ] Error handling? (scale?)
  - [ ] when cup is not there while pouring, abort pouring procedure (check if weight gets less between bottles)
  - [x] empty bottle error handling
  - [x] MAX_DRINK_SIZE implement!
- - [ ] rename UPRIGHT_OFFSET --> STOP_EARLY_GRAMS
+ - [x] rename UPRIGHT_OFFSET --> STOP_EARLY_GRAMS <-- won't fix
  - [ ] do we check the number of params?
  - [ ] auto calibration for UPRIGHT_OFFSET
  - [ ] Serial commands for different speed?
@@ -19,7 +14,7 @@
  - [ ] abort button
  - [ ] abort command
  - [ ] pause/command switch
- - [ ] move bottles at the same time?
+ - [x] move bottles at the same time?
  - [ ] Protothreads?
  - [ ] fix Makefile for Arduino One
  - [ ] serial reconnect --> reset arduino?
