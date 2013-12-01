@@ -126,7 +126,7 @@ int Bottle::pour(int requested_amount, int& measured_amount) {
     int orig_weight, ret;
     ret = ads1231_get_grams(orig_weight);
     if (ret != 0) {
-        ads1231_error_msg(ret);
+        ERROR(strerror(ret));
         return ret;
     }
 

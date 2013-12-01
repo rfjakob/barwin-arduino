@@ -42,7 +42,7 @@ void loop() {
         int ret, weight = 0;
         ret = ads1231_get_grams(weight);
         if (ret != 0) {
-            ads1231_error_msg(ret);
+            ERROR(strerror(ret));
             return;
         }
 
@@ -171,7 +171,7 @@ int pour_cocktail(int* requested_amount) {
 
         if (ret != 0) {
             DEBUG_MSG_LN(String("pour_cocktail: cur_bottle->pour returned error ") + String(ret));
-            ads1231_error_msg(ret);
+            ERROR(strerror(ret));
         }
 
         // Save bottle for next iteration
