@@ -208,7 +208,9 @@ int pour_cocktail(int* requested_amount) {
     delay_until(-1, 0, false, true);
 }
 
-
+/**
+ * If the bot is bored it lets the bottles dance! :)
+ */
 void dancing_bottles() {
     Bottle *cur_bottle = NULL;
     Bottle *last_bottle = NULL;
