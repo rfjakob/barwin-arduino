@@ -32,5 +32,6 @@ String strerror(int errno);
 // errors when communicating with ADS1231
 #define ADS1231_TIMEOUT_HIGH         101   // Timeout waiting for HIGH
 #define ADS1231_TIMEOUT_LOW          100   // Timeout waiting for LOW
+#define ADS1231_WOULD_BLOCK          102   // weight not measured, measuring takes too long
 
 #endif

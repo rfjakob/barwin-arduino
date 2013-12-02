@@ -19,6 +19,8 @@
 // emulate a scale
 //#define ADS1231_EMULATION 1
 
+unsigned long ads1231_last_millis = 0;
+
 /*
  * Initialize the interface pins
  */
@@ -64,6 +66,7 @@ int ads1231_get_value(long& val)
         if(millis() > start+150)
             return ADS1231_TIMEOUT_LOW; // Timeout waiting for LOW
     }
+    ads1231_last_millis = millis();
 
     // Read 24 bits
     for(i=23 ; i >= 0; i--) {
@@ -112,6 +115,17 @@ int ads1231_get_grams(int& grams)
 
     grams = raw/ADS1231_DIVISOR + ADS1231_OFFSET;
     return 0; // Success
+}
+
+/**
+ *
+ */
+int ads1231_get_noblock(int& grams) {
+    unsigned long t = (millis() - ads1231_last_millis) % 100;
+    if (t < 90) {
+        return ADS1231_WOULD_BLOCK;
+    }
+    return ads1231_get_grams(grams);
 }
 
 /**
