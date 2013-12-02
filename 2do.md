@@ -1,5 +1,6 @@
 
-
+ - [ ] Problem: orig might be measured if there is no cup
+ - [ ] problem: when cup is away, bottle pours directly to scale and causes weight
  - [ ] Error handling? (scale?)
  - [ ] when cup is not there while pouring, abort pouring procedure (check if weight gets less between bottles)
  - [x] empty bottle error handling
