@@ -174,7 +174,7 @@ int delay_until(long max_delay, int weight, bool pour_handling, bool reverse) {
         if (!pour_handling)
             continue;
 
-        if(last > cur + WEIGHT_EPSILON)
+        if(last > cur + WEIGHT_EPSILON || cur < WEIGHT_EPSILON)
             return WHERE_THE_FUCK_IS_THE_CUP; // Current weight is smaller than last measured
 
         // Jakob does not like abs, so we check first for

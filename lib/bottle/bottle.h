@@ -26,9 +26,9 @@ class Bottle {
     public:
         Bottle(int, int, int, int);
         static void init(Bottle* bottles, int bottles_nr);
-        int turn_to(int pos, int delay_ms, bool print_steps=false);
+        int turn_to(int pos, int delay_ms, bool print_steps=false, bool check_weight=false);
         int turn_up(int delay_ms, bool print_steps=false);
-        int turn_down(int delay_ms, bool print_steps=false);
+        int turn_down(int delay_ms, bool print_steps=false, bool check_weight=false);
         int get_pause_pos();
         int turn_to_pause_pos(int delay_ms, bool print_steps=false);
         int pour(int requested_amount, int& measured_amount);

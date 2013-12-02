@@ -43,7 +43,7 @@ Bottle::Bottle(int _number, int _pin, int _pos_down, int _pos_up) :
  *     /usr/share/arduino/libraries/Servo/Servo.cpp
  *
  */
-int Bottle::turn_to(int pos, int delay_ms, bool print_steps) {
+int Bottle::turn_to(int pos, int delay_ms, bool print_steps, bool check_weight) {
     if (pos < SERVO_MIN || pos > SERVO_MAX) {
         DEBUG_MSG_LN("Error turning bottle, wrong servo pos!");
         return -1;
@@ -72,11 +72,21 @@ int Bottle::turn_to(int pos, int delay_ms, bool print_steps) {
         if (print_steps && i % 10 == 0) {
             DEBUG_VAL_LN(i);
         }
-        if (i % 300) {
+        if (check_weight) {
             int weight;
-            ads1231_get_grams(weight);
+            int ret = ads1231_get_noblock(weight);
+            if (ret != ADS1231_WOULD_BLOCK) {
+                //(weight);
+
+                if (weight < WEIGHT_EPSILON) {
+                    DEBUG_MSG_LN("while turning bottle: where is the cup?");
+                    return WHERE_THE_FUCK_IS_THE_CUP;
+                }
+            }
+            else delay(delay_ms);
+        } else {
+            delay(delay_ms);
         }
-        delay(delay_ms);
 
         // turn servo one step
         servo.writeMicroseconds(i);
@@ -99,8 +109,8 @@ int Bottle::turn_up(int delay_ms, bool print_steps) {
 /**
  * Turn bottle to pouring position.
  */
-int Bottle::turn_down(int delay_ms, bool print_steps) {
-    return turn_to(pos_down, delay_ms, print_steps);
+int Bottle::turn_down(int delay_ms, bool print_steps, bool check_weight) {
+    return turn_to(pos_down, delay_ms, print_steps, check_weight);
 }
 
 /**
@@ -144,13 +154,15 @@ int Bottle::pour(int requested_amount, int& measured_amount) {
 
     while(1) {
         DEBUG_MSG_LN("Turning bottle down...");
-        turn_down(TURN_DOWN_DELAY);
+        ret = turn_down(TURN_DOWN_DELAY, false, true); // enable check_weight
 
         // wait for requested weight
         // FIXME here we do not want WEIGHT_EPSILON and sharp >
-        DEBUG_MSG_LN("Waiting for weight...");
-        ret = delay_until(POURING_TIMEOUT,
-                orig_weight + requested_amount - UPGRIGHT_OFFSET, true);
+        if (ret == 0) {
+            DEBUG_MSG_LN("Waiting for weight...");
+            ret = delay_until(POURING_TIMEOUT,
+                    orig_weight + requested_amount - UPGRIGHT_OFFSET, true);
+        }
         if (ret == 0)
             break; // All good
 
