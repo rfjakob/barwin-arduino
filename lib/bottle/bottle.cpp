@@ -72,6 +72,10 @@ int Bottle::turn_to(int pos, int delay_ms, bool print_steps) {
         if (print_steps && i % 10 == 0) {
             DEBUG_VAL_LN(i);
         }
+        if (i % 300) {
+            int weight;
+            ads1231_get_grams(weight);
+        }
         delay(delay_ms);
 
         // turn servo one step

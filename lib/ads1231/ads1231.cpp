@@ -194,6 +194,8 @@ int wait_for_cup() {
         MSG("WAITING_FOR_CUP");
         int ret = delay_until(CUP_TIMEOUT, 0, false);
         if (ret == DELAY_UNTIL_TIMEOUT) {
+            // FIXME if wait_for_cup() is caused by a WHERE_THE_FUCK_IS_THE_CUP
+            // error, then the bottle will remain in pause position...
             ERROR("CUP_TIMEOUT_REACHED");
             return CUP_TIMEOUT_REACHED;
         } else if (ret != 0) {
