@@ -34,6 +34,8 @@ Messages received by Arduino.
     <dd>resume after bottle refill</dd>
     <dt>PAUSE</dt>
     <dd>not implemented yet, pause after next bottle</dd>
+    <dt>DANCING_BOTTLES</dt>
+    <dd>let the bottles dance!</dd>
     <dt>SET_SCALE_CALIB weight</dt>
     <dd>not implemented yet</dd>
     <dt>NOTHING</dt>
