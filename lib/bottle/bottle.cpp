@@ -36,8 +36,9 @@ Bottle::Bottle(int _number, int _pin, int _pos_down, int _pos_up) :
 
 /**
  * Turn servo towards 'pos' in 1 microsecond steps, waiting delay_ms
- * milliseconds between steps (speed = 1/delay).
- * Returns 0 when the position is reached or -1 on error.
+ * milliseconds between steps (speed = 1/delay). If check_weight weight
+ * is true, might abort with WHERE_THE_FUCK_IS_THE_CUP error.
+ * Returns 0 when the position is reached or SERVO_OUT_OF_RANGE on error.
  *
  * For details about the built-in Servo class see:
  *     /usr/share/arduino/libraries/Servo/Servo.cpp
@@ -46,7 +47,7 @@ Bottle::Bottle(int _number, int _pin, int _pos_down, int _pos_up) :
 int Bottle::turn_to(int pos, int delay_ms, bool print_steps, bool check_weight) {
     if (pos < SERVO_MIN || pos > SERVO_MAX) {
         DEBUG_MSG_LN("Error turning bottle, wrong servo pos!");
-        return -1;
+        return SERVO_OUT_OF_RANGE;
     }
 
     int current_pos = servo.readMicroseconds();
@@ -76,13 +77,12 @@ int Bottle::turn_to(int pos, int delay_ms, bool print_steps, bool check_weight) 
             int weight;
             int ret = ads1231_get_noblock(weight);
             if (ret != ADS1231_WOULD_BLOCK) {
-                //(weight);
-
                 if (weight < WEIGHT_EPSILON) {
-                    DEBUG_MSG_LN("while turning bottle: where is the cup?");
+                    DEBUG_MSG_LN("While turning bottle: where is the cup?");
                     return WHERE_THE_FUCK_IS_THE_CUP;
                 }
             }
+            // it would take too long to get weight...
             else delay(delay_ms);
         } else {
             delay(delay_ms);

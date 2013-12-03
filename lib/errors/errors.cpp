@@ -44,6 +44,12 @@ String strerror(int errno)
         case        ADS1231_TIMEOUT_LOW:
             return "ADS1231_TIMEOUT_LOW";
 
+        case        ADS1231_WOULD_BLOCK:
+            return "ADS1231_WOULD_BLOCK";
+
+        case        SERVO_OUT_OF_RANGE:
+            return "SERVO_OUT_OF_RANGE";
+
         default:
             return "UNDEFINED_ERROR_NUMBER_" + String(errno);
     }

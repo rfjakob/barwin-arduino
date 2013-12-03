@@ -25,6 +25,7 @@ String strerror(int errno);
 #define POURING_TIMEOUT_REACHED      14
 #define ABORTED                      12    // user abort
 #define MAX_DRINK_GRAMS_EXCEEDED     13    // sum of ingredients exceeds MAX_DRINK_GRAMS
+#define SERVO_OUT_OF_RANGE           15
 
 // Serial message parsing
 #define INVALID_COMMAND              21
