@@ -73,6 +73,10 @@ int Bottle::turn_to(int pos, int delay_ms, bool print_steps, bool check_weight) 
         if (print_steps && i % 10 == 0) {
             DEBUG_VAL_LN(i);
         }
+
+        // Return if we should abort...
+        RETURN_IFN_0(check_aborted());
+
         if (check_weight) {
             int weight;
             int ret = ads1231_get_noblock(weight);
@@ -183,7 +187,8 @@ int Bottle::pour(int requested_amount, int& measured_amount) {
             // TODO abort command should be processed in wait_for_cup()
             RETURN_IFN_0(wait_for_cup());
         }
-        // Scale error - turn bottle up and return error code
+        // other error - turn bottle up and return error code
+        // includes: scale error, user abort, ...
         else {
             turn_up(FAST_TURN_UP_DELAY);
             return ret;

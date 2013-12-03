@@ -53,6 +53,8 @@ int wait_for_resume() {
             // The conversion to String depends on having a trailing NULL!
             memset(cmd, 0, 8+1);
 
+            // TODO this is not nice, other parsing code is in loop()
+            // move to one function somehow?
             if(Serial.readBytes(cmd, 8)) {
                 String cmd_str = String(cmd);
                 if (cmd_str.equals("RESUME\r\n")) {
@@ -65,6 +67,32 @@ int wait_for_resume() {
                     ERROR(strerror(INVALID_COMMAND));
                     DEBUG_MSG_LN(String("Got string '") + String(cmd) + String("'"));
                 }
+            }
+        }
+    }
+    return 0;
+}
+
+/**
+ * Check if we should abort whatever we ware doing right now.
+ * Returns 0 if we should not abort, ABORTED if we should abort.
+ */
+int check_aborted() {
+    if (Serial.available() > 0) {
+        char cmd[8+1];
+        // The conversion to String depends on having a trailing NULL!
+        memset(cmd, 0, 8+1);
+
+        // TODO this is not nice, other parsing code is in loop()
+        // move to one function somehow?
+        if(Serial.readBytes(cmd, 8)) {
+            String cmd_str = String(cmd);
+            if (cmd_str.equals("ABORT\r\n")) {
+                ERROR(strerror(ABORTED));
+                return ABORTED;
+            } else {
+                ERROR(strerror(INVALID_COMMAND));
+                DEBUG_MSG_LN(String("Got string '") + String(cmd) + String("'"));
             }
         }
     }

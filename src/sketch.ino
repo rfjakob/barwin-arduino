@@ -201,7 +201,11 @@ int pour_cocktail(int* requested_amount) {
         // At this point, cur_bottle is at pause position again. Next crossfade
         // will turn it up completely.
 
-        if (ret != 0) {
+        if (ret = ABORTED) {
+            cur_bottle->turn_up(FAST_TURN_UP_DELAY);
+            return ret;
+        }
+        else if (ret != 0) {
             DEBUG_MSG_LN(String("pour_cocktail: cur_bottle->pour returned error ") + String(ret));
             ERROR(strerror(ret));
         }
