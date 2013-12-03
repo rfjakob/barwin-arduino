@@ -6,7 +6,6 @@
  - [x] empty bottle error handling
  - [x] MAX_DRINK_SIZE implement!
  - [x] rename UPRIGHT_OFFSET --> STOP_EARLY_GRAMS <-- won't fix
- - [ ] do we check the number of params?
  - [ ] auto calibration for UPRIGHT_OFFSET
  - [ ] Serial commands for different speed?
  - [ ] move bottle according to non-linear predefined function
@@ -15,6 +14,7 @@
  - [ ] abort button
  - [ ] abort command
  - [ ] pause/command switch
+ - [ ] do we check the number of params?
  - [x] move bottles at the same time?
  - [ ] Protothreads?
  - [ ] fix Makefile for Arduino One
@@ -22,7 +22,8 @@
  - [ ] problems with pin 13
  - [x] READY: add 0/1 if cup or not
  - [x] UPRIGHT_OFFSET / 2.0 (if less, don't do anything if more pour)
- - [ ] dancing bottles!
+ - [x] dancing bottles!
+ - [x] improve dancing bottles by turning more bottles at the same time
 
 Testing:
     - empty bottle
