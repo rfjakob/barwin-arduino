@@ -37,7 +37,12 @@ Messages received by Arduino.
     <dt>DANCING_BOTTLES</dt>
     <dd>let the bottles dance!</dd>
     <dt>SET_SCALE_CALIB weight</dt>
-    <dd>not implemented yet</dd>
+    <dd>not implemented yet, use instead TARE (was easier to implement)</dd>
+    <dt>TARE</dt>
+    <dd>
+        sets scale to 0, make sure nothing is on scale when sending this command
+        <b>Note:</b> taring is deleled, when Arduino is reseted (e.g. on lost serial connection)
+    </dd>
     <dt>NOTHING</dt>
     <dd>
         Arduino will do nothing and send message "DOING_NOTHING".

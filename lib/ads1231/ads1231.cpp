@@ -20,6 +20,7 @@
 //#define ADS1231_EMULATION 1
 
 unsigned long ads1231_last_millis = 0;
+int ads1231_additional_offset = 0;
 
 /*
  * Initialize the interface pins
@@ -113,7 +114,8 @@ int ads1231_get_grams(int& grams)
     if(ret != 0)
         return ret; // Scale error
 
-    grams = raw/ADS1231_DIVISOR + ADS1231_OFFSET;
+    // ads1231_additional_offset is a fast and easy solution to tare the scale
+    grams = raw/ADS1231_DIVISOR + ADS1231_OFFSET + ads1231_additional_offset;
     return 0; // Success
 }
 

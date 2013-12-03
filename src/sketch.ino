@@ -88,6 +88,21 @@ void loop() {
             // as microseconds second parameter
             bottles[params[0]].turn_to(params[1], TURN_DOWN_DELAY);
         }
+        // Example: TARE\r\n
+        else if (cmd_str.equals("TARE\r\n")) {
+            int weight;
+            DEBUG_MSG_LN("Measuring weight... (make sure scale is empty!)");
+            int ret = ads1231_get_grams(weight);
+            if (ret != 0) {
+                ERROR(strerror(ret));
+                return;
+            }
+            ads1231_additional_offset = -weight;
+            DEBUG_MSG_LN(
+                String("Scale tared, ads1231_additional_offset set to ")
+                + String(-weight)
+            );
+        }
         // Example: DANCING_BOTTLES\r\n
         else if (cmd_str.equals("DANCING_BOTTLES\r\n")) {
             dancing_bottles();

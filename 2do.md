@@ -1,7 +1,7 @@
 
  - [ ] Problem: orig might be measured if there is no cup
- - [ ] problem: when cup is away, bottle pours directly to scale and causes weight
- - [ ] Error handling? (scale?)
+ - [ ] Problem: when cup is away, bottle pours directly to scale and causes weight
+ - [x] Error handling? (scale?)
  - [ ] when cup is not there while pouring, abort pouring procedure (check if weight gets less between bottles)
  - [x] empty bottle error handling
  - [x] MAX_DRINK_SIZE implement!
@@ -9,7 +9,7 @@
  - [ ] auto calibration for UPRIGHT_OFFSET
  - [ ] Serial commands for different speed?
  - [ ] move bottle according to non-linear predefined function
- - [ ] Serial command: calibrate scale, SET_OFFSET (tare)
+ - [x] Serial command: calibrate scale, SET_OFFSET (tare)
  - [ ] Serial command: all to pos_up, all down
  - [ ] abort button
  - [ ] abort command
@@ -24,6 +24,8 @@
  - [x] UPRIGHT_OFFSET / 2.0 (if less, don't do anything if more pour)
  - [x] dancing bottles!
  - [x] improve dancing bottles by turning more bottles at the same time
+ - [ ] store some stuff in EPROM (eg. scale calibration, etc.)
+ - [ ] Serial command: calibrate scale, not only tare
 
 Testing:
     - empty bottle

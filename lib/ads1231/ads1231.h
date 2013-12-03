@@ -6,6 +6,7 @@
 #define ADS1231_H
 
 extern unsigned long ads1231_last_millis;
+extern int ads1231_additional_offset;
 
 void ads1231_init(void);
 int ads1231_get_value(long& val);
