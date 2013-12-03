@@ -168,6 +168,8 @@ int delay_until(long max_delay, int weight, bool pour_handling, bool reverse) {
         // this delays, we do not want it...
         //DEBUG_VAL_LN(cur);
 
+        RETURN_IFN_0(check_aborted());
+
         // "one" inverts the inequality
         if(cur * one > (weight + WEIGHT_EPSILON) * one)
             return SUCCESS;
