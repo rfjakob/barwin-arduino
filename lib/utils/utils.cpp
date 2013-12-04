@@ -78,6 +78,7 @@ int wait_for_resume() {
  * Returns 0 if we should not abort, ABORTED if we should abort.
  */
 int check_aborted() {
+    bool abort = false;
     if (Serial.available() > 0) {
         char cmd[8+1];
         // The conversion to String depends on having a trailing NULL!
@@ -88,13 +89,20 @@ int check_aborted() {
         if(Serial.readBytes(cmd, 8)) {
             String cmd_str = String(cmd);
             if (cmd_str.equals("ABORT\r\n")) {
-                ERROR(strerror(ABORTED));
-                return ABORTED;
+                abort = true;
             } else {
                 ERROR(strerror(INVALID_COMMAND));
                 DEBUG_MSG_LN(String("Got string '") + String(cmd) + String("'"));
             }
         }
+    }
+    else if (digitalRead(ABORT_BTN_PIN) == LOW) { // pull up inverts logic!
+        abort = true;
+    }
+
+    if (abort) {
+        ERROR(strerror(ABORTED));
+        return ABORTED;
     }
     return 0;
 }

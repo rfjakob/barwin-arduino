@@ -9,6 +9,8 @@
 #define ADS1231_DATA_PIN A0
 #define ADS1231_CLK_PIN  A1
 
+#define ABORT_BTN_PIN    A2
+
 // Define bottles (number, pin, up/down position for servo)
 //                     nr,  pin,  pos_down,  pos_up
 #define BOTTLES Bottle(0,    3,   1200,    2380), \
