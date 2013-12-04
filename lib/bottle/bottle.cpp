@@ -142,10 +142,20 @@ int Bottle::turn_to_pause_pos(int delay_ms, bool print_steps) {
 int Bottle::pour(int requested_amount, int& measured_amount) {
     // orig_weight is weight including ingredients poured until now
     int orig_weight, ret;
-    ret = ads1231_get_grams(orig_weight);
-    if (ret != 0) {
-        ERROR(strerror(ret));
-        return ret;
+    while (1) {
+        ret = ads1231_get_grams(orig_weight);
+        if (ret != 0) {
+            ERROR(strerror(ret));
+            return ret;
+        }
+        if (orig_weight < WEIGHT_EPSILON) {
+            // no cup...
+            wait_for_cup();
+        }
+        else {
+            // everything fine
+            break;
+        }
     }
 
     MSG(String("POURING ") + String(number) + String(" ") + String(orig_weight));
