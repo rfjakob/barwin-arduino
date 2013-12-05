@@ -1,0 +1,2 @@
+#!/bin/bash
+printf "ABORT\r\n" > /dev/ttyACM0 
