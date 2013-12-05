@@ -1,2 +1,2 @@
 #!/bin/bash
-printf "RESUME\r\n" > /dev/ttyACM0 
+printf "RESUME\r\n" > /dev/ttyACM?

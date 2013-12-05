@@ -1,2 +1,2 @@
 #!/bin/bash
-printf "POUR 0 35 0 130 0 10 0\r\n" > /dev/ttyACM0 
+printf "POUR 0 35 0 130 0 10 0\r\n" > /dev/ttyACM?

@@ -1,2 +1,2 @@
 #!/bin/bash
-printf "ABORT\r\n" > /dev/ttyACM0 
+printf "ABORT\r\n" > /dev/ttyACM?
