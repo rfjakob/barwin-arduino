@@ -89,6 +89,18 @@ void loop() {
             // as microseconds second parameter
             bottles[params[0]].turn_to(params[1], TURN_DOWN_DELAY);
         }
+        // Example: ECHO ENJOY\r\n
+        else if (cmd_str.equals("ECHO")) {
+            DEBUG_MSG_LN("Got ECHO command");
+            // Clear buffer for reuse
+            memset(cmd, 0, MAX_COMMAND_LENGTH + 1);
+            // Read in space character (and throw away)
+            Serial.readBytes(cmd, 1);
+            // Read rest of command
+            Serial.readBytesUntil('\r', cmd, MAX_COMMAND_LENGTH);
+            // Print it out
+            MSG(cmd);  
+        }
         // Example: TARE\r\n
         else if (cmd_str.equals("TARE\r\n")) {
             int weight;
