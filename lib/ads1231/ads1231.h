@@ -11,6 +11,7 @@ extern int ads1231_additional_offset;
 void ads1231_init(void);
 int ads1231_get_value(long& val);
 int ads1231_get_grams(int& grams);
+int ads1231_get_stable_grams(int& grams);
 int ads1231_get_noblock(int& grams);
 int delay_until(long max_delay, int max_weight, bool pour_handling, bool revers=false);
 int wait_for_cup();

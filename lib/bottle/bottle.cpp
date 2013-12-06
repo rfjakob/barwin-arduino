@@ -143,7 +143,7 @@ int Bottle::pour(int requested_amount, int& measured_amount) {
     // orig_weight is weight including ingredients poured until now
     int orig_weight, ret;
     while (1) {
-        ret = ads1231_get_grams(orig_weight);
+        ret = ads1231_get_stable_grams(orig_weight);
         if (ret != 0) {
             ERROR(strerror(ret));
             return ret;

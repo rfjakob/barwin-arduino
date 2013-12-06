@@ -119,6 +119,38 @@ int ads1231_get_grams(int& grams)
     return 0; // Success
 }
 
+
+/*
+ * Get the weight in grams but measure often until the same weight is measured
+ * for 3 three times.
+ * Can block for longer if the weight on scale is not stable.
+ * Returns 0 on sucess, an error code otherwise (see errors.h)
+ */
+int ads1231_get_stable_grams(int& grams)
+{
+    grams = 0; // needs to be 0 on error
+    int i = 0;
+    int weight_last, weight;
+    RETURN_IFN_0(ads1231_get_grams(weight));
+    while (i < 0) {
+        delay(300); // TODO make this a constant in config.h
+        weight_last = weight;
+        RETURN_IFN_0(ads1231_get_grams(weight));
+        // TODO maybe this would be more correct...? do we have abs?
+        //if (abs((weight_last - weight) < WEIGHT_EPSILON)
+        if (weight_last == weight) {
+            // weight stable
+            i++;
+        } else {
+            // weight not stable
+            i = 0;
+        }
+    }
+    grams = weight;
+    return 0;
+}
+
+
 /**
  *
  */
