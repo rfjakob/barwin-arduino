@@ -214,7 +214,7 @@ int pour_cocktail(int* requested_amount) {
         // At this point, cur_bottle is at pause position again. Next crossfade
         // will turn it up completely.
 
-        if (ret = ABORTED) {
+        if (ret == ABORTED) {
             cur_bottle->turn_up(FAST_TURN_UP_DELAY);
             return ret;
         }
