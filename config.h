@@ -49,6 +49,10 @@
 // ingredient), in milliseconds
 #define CUP_SETTLING_TIME 1500
 
+// Time to weight for a stable weight on scale
+// if ads1231_get_stable_grams() is called
+#define ADS1231_STABLE_MILLIS 5000
+
 // Milliseconds to wait until desired weight reached. If timeout is reached, probably
 // bottle is empty or screwed. This should never be reached because we should get a
 // BOTTLE_EMPTY error first. Only if something goes terribly wrong (unknown what)

@@ -126,14 +126,14 @@ int ads1231_get_grams(int& grams)
  * Can block for longer if the weight on scale is not stable.
  * Returns 0 on sucess, an error code otherwise (see errors.h)
  */
-int ads1231_get_stable_grams(int& grams)
-{
+int ads1231_get_stable_grams(int& grams) {
     grams = 0; // needs to be 0 on error
     int i = 0;
+    unsigned long start = millis();
     int weight_last, weight;
     RETURN_IFN_0(ads1231_get_grams(weight));
-    while (i < 0) {
-        delay(300); // TODO make this a constant in config.h
+    while (i < 2) {
+        delay(100); // TODO make this a constant in config.h
         weight_last = weight;
         RETURN_IFN_0(ads1231_get_grams(weight));
         // TODO maybe this would be more correct...? do we have abs?
@@ -144,6 +144,15 @@ int ads1231_get_stable_grams(int& grams)
         } else {
             // weight not stable
             i = 0;
+        }
+        DEBUG_START();
+        DEBUG_MSG("Weight not stable: ");
+        DEBUG_VAL(weight);
+        DEBUG_VAL(weight_last);
+        DEBUG_END();
+
+        if (millis() - start > ADS1231_STABLE_MILLIS) {
+            return ADS1231_STABLE_TIMEOUT;
         }
     }
     grams = weight;

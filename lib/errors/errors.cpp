@@ -50,6 +50,9 @@ String strerror(int errno)
         case        SERVO_OUT_OF_RANGE:
             return "SERVO_OUT_OF_RANGE";
 
+        case        ADS1231_STABLE_TIMEOUT:
+            return "ADS1231_STABLE_TIMEOUT";
+
         default:
             return "UNDEFINED_ERROR_NUMBER_" + String(errno);
     }
