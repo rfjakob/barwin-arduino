@@ -14,7 +14,7 @@
 // Define bottles (number, pin, up/down position for servo)
 //                     nr,  pin,  pos_down,  pos_up
 #define BOTTLES Bottle(0,    3,   1200,    2380), \
-                Bottle(1,    5,   1220,    2400), \
+                Bottle(1,    5,   1080,    2260), \
                 Bottle(2,    6,   1220,    2400), \
                 Bottle(3,    9,   1140,    2320), \
                 Bottle(4,   10,    950,    2100), \
