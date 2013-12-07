@@ -92,9 +92,11 @@ int check_aborted() {
                 abort = true;
             } else {
                 ERROR(strerror(INVALID_COMMAND));
-                DEBUG_MSG_LN(String("Got string '") + String(cmd) + String("'"));
+                DEBUG_MSG_LN(String("check_aborted: received '") + String(cmd) + String("'"));
             }
         }
+        else
+            DEBUG_MSG_LN("check_aborted: Timed out reading from serial");
     }
     else if (digitalRead(ABORT_BTN_PIN) == LOW) { // pull up inverts logic!
         abort = true;

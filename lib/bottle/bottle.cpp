@@ -74,8 +74,12 @@ int Bottle::turn_to(int pos, int delay_ms, bool print_steps, bool check_weight) 
             DEBUG_VAL_LN(i);
         }
 
+        unsigned long t0=millis();
         // Return if we should abort...
         RETURN_IFN_0(check_aborted());
+        unsigned long t1=millis()-t0;
+        if(t1 > 100)
+            DEBUG_MSG_LN(String("turn_to: check_aborted took ") + String(t1) + String("ms"));
 
         if (check_weight) {
             int weight;
