@@ -14,6 +14,7 @@
 #define SERVO_MAX 2500
 
 #include <Servo.h>
+#include "errors.h"
 
 // Macro initialising a array 'bottles' of Bottle instances as defined
 // in config.h by the comma separated list BOTTLES of constructor calls:
@@ -24,17 +25,17 @@
 
 class Bottle {
     public:
-        Bottle(int, int, int, int);
+        Bottle(unsigned char, unsigned char, int, int);
         static void init(Bottle* bottles, int bottles_nr);
-        int turn_to(int pos, int delay_ms, bool print_steps=false, bool check_weight=false);
-        int turn_up(int delay_ms, bool print_steps=false);
-        int turn_down(int delay_ms, bool print_steps=false, bool check_weight=false);
+        errv_t turn_to(int pos, int delay_ms, bool print_steps=false, bool check_weight=false);
+        errv_t turn_up(int delay_ms, bool print_steps=false);
+        errv_t turn_down(int delay_ms, bool print_steps=false, bool check_weight=false);
         int get_pause_pos();
-        int turn_to_pause_pos(int delay_ms, bool print_steps=false);
-        int pour(int requested_amount, int& measured_amount);
+        errv_t turn_to_pause_pos(int delay_ms, bool print_steps=false);
+        errv_t pour(int requested_amount, int& measured_amount);
         Servo servo;          // servo used for turning the bottle
-        const int number;     // all bottles have a unique number (0-n)
-        const char pin;       // pin to attach the servo
+        const unsigned char number;     // all bottles have a unique number (0-n)
+        const unsigned char pin;       // pin to attach the servo
         const int pos_down;   // servo position for bottle down (pouring)
         const int pos_up;     // servo position for bottle up (not pouring)
 };

@@ -30,7 +30,7 @@ void Bottle::init(Bottle* bottles, int bottles_nr) {
  * This should be done in the setup function, not in the global scope using
  * bottles_init().
  */
-Bottle::Bottle(int _number, int _pin, int _pos_down, int _pos_up) :
+Bottle::Bottle(unsigned char _number, unsigned char _pin, int _pos_down, int _pos_up) :
     number(_number), pin(_pin), pos_down(_pos_down), pos_up(_pos_up) {
 }
 
@@ -44,7 +44,7 @@ Bottle::Bottle(int _number, int _pin, int _pos_down, int _pos_up) :
  *     /usr/share/arduino/libraries/Servo/Servo.cpp
  *
  */
-int Bottle::turn_to(int pos, int delay_ms, bool print_steps, bool check_weight) {
+errv_t Bottle::turn_to(int pos, int delay_ms, bool print_steps, bool check_weight) {
     if (pos < SERVO_MIN || pos > SERVO_MAX) {
         DEBUG_MSG_LN("Invalid pos");
         return SERVO_OUT_OF_RANGE;
@@ -105,14 +105,14 @@ int Bottle::turn_to(int pos, int delay_ms, bool print_steps, bool check_weight) 
 /**
  * Turn bottle to upright position.
  */
-int Bottle::turn_up(int delay_ms, bool print_steps) {
+errv_t Bottle::turn_up(int delay_ms, bool print_steps) {
     return turn_to(pos_up, delay_ms, print_steps);
 }
 
 /**
  * Turn bottle to pouring position.
  */
-int Bottle::turn_down(int delay_ms, bool print_steps, bool check_weight) {
+errv_t Bottle::turn_down(int delay_ms, bool print_steps, bool check_weight) {
     return turn_to(pos_down, delay_ms, print_steps, check_weight);
 }
 
@@ -128,7 +128,7 @@ int Bottle::get_pause_pos()
  * Turn bottle to pause position.
  * Used e.g. in case of WHERE_THE_FUCK_IS_THE_CUP error.
  */
-int Bottle::turn_to_pause_pos(int delay_ms, bool print_steps) {
+errv_t Bottle::turn_to_pause_pos(int delay_ms, bool print_steps) {
     return turn_to(get_pause_pos(), delay_ms, print_steps);
 }
 
@@ -138,7 +138,7 @@ int Bottle::turn_to_pause_pos(int delay_ms, bool print_steps) {
  * Return 0 on success, other values are return values of
  * delay_until (including scale error codes).
  */
-int Bottle::pour(int requested_amount, int& measured_amount) {
+errv_t Bottle::pour(int requested_amount, int& measured_amount) {
     // orig_weight is weight including ingredients poured until now
     int orig_weight, ret;
     while (1) {

@@ -13,7 +13,7 @@
  */
 DEFINE_BOTTLES();
 
-int pour_cocktail(int* requested_amount);
+errv_t pour_cocktail(int* requested_amount);
 void parse_int_params(int* params, int size);
 
 void setup() {
@@ -153,7 +153,7 @@ void parse_int_params(int* params, int size) {
  * 'requested_amount' is the amount of liquid in grams to be poured from
  * each bottle(int array of size bottles_nr).
  */
-int pour_cocktail(int* requested_amount) {
+errv_t pour_cocktail(int* requested_amount) {
 
     // Sanity check: Never pour more than MAX_DRINK_GRAMS
     long sum = 0; // Use long to rule out overflow

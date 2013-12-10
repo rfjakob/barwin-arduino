@@ -9,8 +9,10 @@
 #ifndef ERRORS_H
 #define ERRORS_H
 
+typedef unsigned char errv_t;
+
 // Helper function
-String strerror(int errno);
+String strerror(unsigned char errno);
 
 // return values by delay_until()
 #define DELAY_UNTIL_TIMEOUT          1

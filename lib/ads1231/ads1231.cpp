@@ -44,7 +44,7 @@ void ads1231_init(void)
  * Get the raw ADC value. Can block up to 100ms in normal operation.
  * Returns 0 on success, an error code otherwise (see ads1231.h)
  */
-int ads1231_get_value(long& val)
+errv_t ads1231_get_value(long& val)
 {
     int i=0;
     unsigned long start;
@@ -97,7 +97,7 @@ int ads1231_get_value(long& val)
  * operation because the ADS1231 makes only 10 measurements per second.
  * Returns 0 on sucess, an error code otherwise (see errors.h)
  */
-int ads1231_get_grams(int& grams)
+errv_t ads1231_get_grams(int& grams)
 {
     // a primitive emulation using a potentiometer attached to pin A0
     // returns a value between 0 and 150 grams
@@ -126,7 +126,7 @@ int ads1231_get_grams(int& grams)
  * Can block for longer if the weight on scale is not stable.
  * Returns 0 on sucess, an error code otherwise (see errors.h)
  */
-int ads1231_get_stable_grams(int& grams) {
+errv_t ads1231_get_stable_grams(int& grams) {
     grams = 0; // needs to be 0 on error
     int i = 0;
     unsigned long start = millis();
@@ -163,7 +163,7 @@ int ads1231_get_stable_grams(int& grams) {
 /**
  *
  */
-int ads1231_get_noblock(int& grams) {
+errv_t ads1231_get_noblock(int& grams) {
     unsigned long t = (millis() - ads1231_last_millis) % 100;
     if (t < 90) {
         return ADS1231_WOULD_BLOCK;
@@ -185,7 +185,7 @@ int ads1231_get_noblock(int& grams) {
  *  3 cup removed (weight has decreased)
  *  other values: scale error (see ads1231.h).
  */
-int delay_until(long max_delay, int weight, bool pour_handling, bool reverse) {
+errv_t delay_until(long max_delay, int weight, bool pour_handling, bool reverse) {
     unsigned long start = millis();
     int cur, ret;
     int last     = -999; // == -inf, because the first time checks should
@@ -246,7 +246,7 @@ int delay_until(long max_delay, int weight, bool pour_handling, bool reverse) {
  * Wait for the cup.
  * Return error codes by delay_until.
  */
-int wait_for_cup() {
+errv_t wait_for_cup() {
     int weight;
     ads1231_get_grams(weight); // weight will be 0 in case of error
     if ( weight < WEIGHT_EPSILON) {
