@@ -161,7 +161,7 @@ errv_t pour_cocktail(int* requested_amount) {
         sum += requested_amount[i];
     }
     if(sum > MAX_DRINK_GRAMS) {
-        ERROR("MAX_DRINK_GRAMS_EXCEEDED");
+        ERROR(strerror(MAX_DRINK_GRAMS_EXCEEDED));
         return MAX_DRINK_GRAMS_EXCEEDED;
     }
 
