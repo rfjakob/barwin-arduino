@@ -187,9 +187,9 @@ errv_t pour_cocktail(int* requested_amount) {
         }
 
         // we cannot pour less than UPGRIGHT_OFFSET --> do not pour if it is
-        // less than UPGRIGHT_OFFSET/2.0 and print warning...
+        // less than UPGRIGHT_OFFSET/2 and print warning...
         if (requested_amount[i] < UPGRIGHT_OFFSET) {
-            if (UPGRIGHT_OFFSET / 2.0 > requested_amount[i]) {
+            if (UPGRIGHT_OFFSET / 2 > requested_amount[i]) {
                 DEBUG_MSG_LN("Will not pour");
                 continue;
             } else {
