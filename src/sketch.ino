@@ -27,12 +27,12 @@ void setup() {
     ads1231_init();
     Bottle::init(bottles, bottles_nr);
 
-    DEBUG_MSG_LN("setup() finished.");
-
     // Warn users of emulation mode to avoid unnecessary debugging...
     #ifdef ADS1231_EMULATION
-    DEBUG_MSG_LN("Warning! Scale emulation active!");
+    DEBUG_MSG_LN("Scale emulation active");
     #endif
+    
+    DEBUG_MSG_LN("setup() end");
 }
 
 
@@ -79,9 +79,8 @@ void loop() {
             pour_cocktail(requested_amount);
         }
         // Example: TURN_BOTTLE 3 2100\r\n
-        else if (cmd_str.equals("TURN_BOTTLE")) {
+        else if (cmd_str.equals("TURN")) {
             // turn bottle to specific position
-            DEBUG_MSG_LN("Turn bottle...");
             int params[2];
             parse_int_params(params, 2); // Also handles the "\r\n"
 
@@ -91,7 +90,7 @@ void loop() {
         }
         // Example: ECHO ENJOY\r\n
         else if (cmd_str.equals("ECHO")) {
-            DEBUG_MSG_LN("Got ECHO command");
+            DEBUG_MSG_LN("Got ECHO");
             // Clear buffer for reuse
             memset(cmd, 0, MAX_COMMAND_LENGTH + 1);
             // Read in space character (and throw away)
@@ -104,7 +103,7 @@ void loop() {
         // Example: TARE\r\n
         else if (cmd_str.equals("TARE\r\n")) {
             int weight;
-            DEBUG_MSG_LN("Measuring weight... (make sure scale is empty!)");
+            DEBUG_MSG_LN("Measuring");
             int ret = ads1231_get_grams(weight);
             if (ret != 0) {
                 ERROR(strerror(ret));
@@ -112,23 +111,22 @@ void loop() {
             }
             ads1231_additional_offset = -weight;
             DEBUG_MSG_LN(
-                String("Scale tared, ads1231_additional_offset set to ")
-                + String(-weight)
+                String("Scale tared to ") + String(-weight)
             );
         }
         // Example: DANCING_BOTTLES\r\n
-        else if (cmd_str.equals("DANCING_BOTTLES\r\n")) {
+        else if (cmd_str.equals("DANCE\r\n")) {
             dancing_bottles();
         }
         // Example: NOTHING\r\n
         // readBytesUntil read the trailing "\r\n" because there was no " " to stop at
-        else if (cmd_str.equals("NOTHING\r\n")) {
+        else if (cmd_str.equals("NOP\r\n")) {
             // dummy command, for testing
-            MSG("DOING_NOTHING");
+            MSG("NOP");
         }
         else {
-            ERROR("INVALID_COMMAND");
-            DEBUG_MSG_LN(String("Got string '") + String(cmd) + String("'"));
+            ERROR(strerror(INVALID_COMMAND));
+            DEBUG_MSG_LN(String("Got '") + String(cmd) + String("'"));
         }
     }
 }
@@ -163,7 +161,6 @@ int pour_cocktail(int* requested_amount) {
         sum += requested_amount[i];
     }
     if(sum > MAX_DRINK_GRAMS) {
-        DEBUG_MSG_LN("Total amount greater than MAX_DRINK_GRAMS");
         ERROR("MAX_DRINK_GRAMS_EXCEEDED");
         return MAX_DRINK_GRAMS_EXCEEDED;
     }
@@ -193,19 +190,16 @@ int pour_cocktail(int* requested_amount) {
         // less than UPGRIGHT_OFFSET/2.0 and print warning...
         if (requested_amount[i] < UPGRIGHT_OFFSET) {
             if (UPGRIGHT_OFFSET / 2.0 > requested_amount[i]) {
-                DEBUG_MSG_LN("Warning! Requested output is between: "
-                     "UPGRIGHT_OFFSET/2 > output > 0 --> will not pour!");
+                DEBUG_MSG_LN("Will not pour");
                 continue;
             } else {
-                DEBUG_MSG_LN("Warning! Requested output is between: "
-                    "UPGRIGHT_OFFSET > output >= UPGRIGHT_OFFSET/2 --> will pour too much!");
+                DEBUG_MSG_LN("Will pour too much");
             }
         }
 
         cur_bottle = &bottles[i];
 
         if (last_bottle != 0) { // On the first iteration last_bottle is NULL
-            DEBUG_MSG_LN("pour_cocktail: Crossfading...");
             crossfade(last_bottle, cur_bottle, TURN_UP_DELAY);
             // At this point, last_bottle is up and cur_bottle is at pause position
         }
@@ -220,7 +214,7 @@ int pour_cocktail(int* requested_amount) {
             return ret;
         }
         else if (ret != 0) {
-            DEBUG_MSG_LN(String("pour_cocktail: cur_bottle->pour returned error ") + String(ret));
+            DEBUG_MSG_LN(String("pour_cocktail: got ") + String(ret));
             ERROR(strerror(ret));
         }
 
@@ -237,7 +231,6 @@ int pour_cocktail(int* requested_amount) {
         msg += String(measured_amount[i]) + String(" ");
     MSG(msg);
 
-    DEBUG_MSG_LN("Please take cup!");
     delay_until(-1, 0, false, true);
 }
 
@@ -252,7 +245,6 @@ void dancing_bottles() {
         cur_bottle = &bottles[i];
 
         if (last_bottle != 0) { // On the first iteration last_bottle is NULL
-            DEBUG_MSG_LN("pour_cocktail: Crossfading...");
             crossfade(last_bottle, cur_bottle, DANCING_DELAY);
             // At this point, last_bottle is up and cur_bottle is at pause position
         }

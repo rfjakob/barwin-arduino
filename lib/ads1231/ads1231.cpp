@@ -146,7 +146,7 @@ int ads1231_get_stable_grams(int& grams) {
             i = 0;
         }
         DEBUG_START();
-        DEBUG_MSG("Weight not stable: ");
+        DEBUG_MSG("Not stable: ");
         DEBUG_VAL(weight);
         DEBUG_VAL(weight_last);
         DEBUG_END();
@@ -213,7 +213,7 @@ int delay_until(long max_delay, int weight, bool pour_handling, bool reverse) {
 
         // "one" inverts the inequality
         if(cur * one > (weight + WEIGHT_EPSILON) * one)
-            return SUCCESS;
+            return 0;
 
         // Just waiting for weight, no special pouring error detection
         if (!pour_handling)
@@ -255,10 +255,9 @@ int wait_for_cup() {
         if (ret == DELAY_UNTIL_TIMEOUT) {
             // FIXME if wait_for_cup() is caused by a WHERE_THE_FUCK_IS_THE_CUP
             // error, then the bottle will remain in pause position...
-            ERROR("CUP_TIMEOUT_REACHED");
+            ERROR(strerror(CUP_TIMEOUT_REACHED));
             return CUP_TIMEOUT_REACHED;
         } else if (ret != 0) {
-            DEBUG_MSG_LN("Scale error when waiting for cup.");
             ERROR(strerror(ret));
         }
         return ret;

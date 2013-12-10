@@ -58,14 +58,14 @@ int wait_for_resume() {
             if(Serial.readBytes(cmd, 8)) {
                 String cmd_str = String(cmd);
                 if (cmd_str.equals("RESUME\r\n")) {
-                    DEBUG_MSG(String("Free memory: ") + String(get_free_memory()));
+                    DEBUG_MSG(String("Free mem: ") + String(get_free_memory()));
                     break;
                 } else if (cmd_str.equals("ABORT\r\n")) {
-                    DEBUG_MSG_LN("Aborted.");
+                    DEBUG_MSG_LN("Aborted");
                     return ABORTED;
                 } else {
                     ERROR(strerror(INVALID_COMMAND));
-                    DEBUG_MSG_LN(String("Got string '") + String(cmd) + String("'"));
+                    DEBUG_MSG_LN(String("Got '") + String(cmd) + String("'"));
                 }
             }
         }
@@ -92,11 +92,11 @@ int check_aborted() {
                 abort = true;
             } else {
                 ERROR(strerror(INVALID_COMMAND));
-                DEBUG_MSG_LN(String("check_aborted: received '") + String(cmd) + String("'"));
+                DEBUG_MSG_LN(String("check_aborted: got '") + String(cmd) + String("'"));
             }
         }
         else
-            DEBUG_MSG_LN("check_aborted: Timed out reading from serial");
+            DEBUG_MSG_LN("check_aborted: timeout");
     }
     else if (digitalRead(ABORT_BTN_PIN) == LOW) { // pull up inverts logic!
         abort = true;

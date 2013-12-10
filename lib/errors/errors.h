@@ -12,9 +12,6 @@
 // Helper function
 String strerror(int errno);
 
-// Actual error codes
-#define SUCCESS                      0
-
 // return values by delay_until()
 #define DELAY_UNTIL_TIMEOUT          1
 #define BOTTLE_EMPTY                 2

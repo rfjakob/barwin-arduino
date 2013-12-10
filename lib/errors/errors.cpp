@@ -11,49 +11,46 @@
 String strerror(int errno)
 {
     switch(errno){
-        case        SUCCESS:
-            return "SUCCESS";
-
         case        DELAY_UNTIL_TIMEOUT:
-            return "DELAY_UNTIL_TIMEOUT";
+            return "DELAY_UNTIL_TO";
 
         case        BOTTLE_EMPTY:
             return "BOTTLE_EMPTY";
 
         case        WHERE_THE_FUCK_IS_THE_CUP:
-            return "WHERE_THE_FUCK_IS_THE_CUP";
+            return "CUP_GONE";
 
         case        CUP_TIMEOUT_REACHED:
-            return "CUP_TIMEOUT_REACHED";
+            return "CUP_TO";
 
         case        POURING_TIMEOUT_REACHED:
-            return "POURING_TIMEOUT_REACHED";
+            return "POUR_TO";
 
         case        ABORTED:
             return "ABORTED";
 
         case        MAX_DRINK_GRAMS_EXCEEDED:
-            return "MAX_DRINK_GRAMS_EXCEEDED";
+            return "MAX_EXCEEDED";
 
         case        INVALID_COMMAND:
-            return "INVALID_COMMAND";
+            return "INVAL_CMD";
 
         case        ADS1231_TIMEOUT_HIGH:
-            return "ADS1231_TIMEOUT_HIGH";
+            return "ADS_TO_H";
 
         case        ADS1231_TIMEOUT_LOW:
-            return "ADS1231_TIMEOUT_LOW";
+            return "ADS_TO_L";
 
         case        ADS1231_WOULD_BLOCK:
-            return "ADS1231_WOULD_BLOCK";
+            return "ADS_WB";
 
         case        SERVO_OUT_OF_RANGE:
-            return "SERVO_OUT_OF_RANGE";
+            return "SERVO_RANGE";
 
         case        ADS1231_STABLE_TIMEOUT:
-            return "ADS1231_STABLE_TIMEOUT";
+            return "ADS_STAB_TO";
 
         default:
-            return "UNDEFINED_ERROR_NUMBER_" + String(errno);
+            return "UNDEF_" + String(errno);
     }
 }
