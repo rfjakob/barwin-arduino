@@ -16,9 +16,6 @@
 #include "../../config.h"
 #include "errors.h"
 
-// emulate a scale
-//#define ADS1231_EMULATION 1
-
 unsigned long ads1231_last_millis = 0;
 int ads1231_additional_offset = 0;
 

@@ -5,6 +5,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+// emulate a scale
+//#define ADS1231_EMULATION 1
 
 #define ADS1231_DATA_PIN A0
 #define ADS1231_CLK_PIN  A1
