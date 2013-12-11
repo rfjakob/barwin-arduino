@@ -129,6 +129,8 @@ void crossfade(Bottle * b1, Bottle * b2, int delay_ms) {
     int new_pos=0;
     bool done_something;
 
+    DEBUG_MSG_LN("crossfade " + String(b1->number) + String(" ") + String(b2->number));
+
     while(1) {
         done_something=false;
 

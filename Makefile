@@ -12,7 +12,10 @@ endif
 #BOARD=uno
 #TTY=/dev/ttyACM
 
-all: build upload serial
+all: build size upload serial
+
+size:
+	avr-size .build/*/firmware.elf
 
 build:
 	ino build -m $(BOARD)

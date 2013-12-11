@@ -56,9 +56,9 @@ errv_t Bottle::turn_to(int pos, int delay_ms, bool print_steps, bool check_weigh
     int step = (current_pos < pos) ? 1 : -1;
 
     DEBUG_START();
-    DEBUG_MSG("Turning bottle '");
+    DEBUG_MSG("turn ");
     DEBUG_MSG(number);
-    DEBUG_MSG("' params: ");
+    DEBUG_MSG(", params ");
     DEBUG_VAL(current_pos);
     DEBUG_VAL(step);
     DEBUG_VAL(pos);
