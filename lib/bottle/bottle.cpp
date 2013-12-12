@@ -179,7 +179,7 @@ errv_t Bottle::pour(int requested_amount, int& measured_amount) {
         // Note that this does not work if requested_amount is less than
         // UPGRIGHT_OFFSET!
         if(ret == BOTTLE_EMPTY) {
-            ERROR(strerror(BOTTLE_EMPTY));
+            ERROR(strerror(BOTTLE_EMPTY) + String(" ") + String(number) );
             // TODO other speed here? it is empty already!
             turn_to(pos_up + BOTTLE_EMPTY_POS_OFFSET, TURN_UP_DELAY);
             RETURN_IFN_0(wait_for_resume()); // might return ABORTED
