@@ -1,6 +1,6 @@
-evobot-arduino
+barwin-arduino
 ==============
-Arduino code for Barwin, codename evobot - see http://barwin.suuf.cc/ for more info.
+Arduino code for Barwin (former codename evobot) - see http://barwin.suuf.cc/ for more info.
 This code controls the servos and the scale and communicates with the PC using a serial link.
 
 Dependencies
