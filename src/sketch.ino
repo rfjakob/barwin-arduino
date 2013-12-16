@@ -93,8 +93,6 @@ void loop() {
             DEBUG_MSG_LN("Got ECHO");
             // Clear buffer for reuse
             memset(cmd, 0, MAX_COMMAND_LENGTH + 1);
-            // Read in space character (and throw away)
-            Serial.readBytes(cmd, 1);
             // Read rest of command
             Serial.readBytesUntil('\r', cmd, MAX_COMMAND_LENGTH);
             // Print it out
