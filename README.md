@@ -26,7 +26,10 @@ Terminated using space and \r\n
 
 Serial -> Arduino:
 ------------------
-Messages received by Arduino.
+Messages received by Arduino. These messages might be called "commands". Note that
+depending on the current state, only few commands might be available and you will
+receive an "INVALID_CMD" error if you send other commands. The state diagram might
+help to figure out when to send which command.
 
 <dl>
     <dt>POUR x1 x2 x3 ... x_n</dt>
@@ -53,7 +56,7 @@ Messages received by Arduino.
 
 Arduino -> Serial:
 ------------------
-Messages sent by Arduino.
+Messages sent by Arduino. These messages are status messages (or replies to commands).
 
 <dl>
     <dt>READY current_weight is_cup_there</dt>

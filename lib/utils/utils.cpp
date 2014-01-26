@@ -65,7 +65,7 @@ int wait_for_resume() {
                     return ABORTED;
                 } else {
                     ERROR(strerror(INVALID_COMMAND));
-                    DEBUG_MSG_LN(String("Got '") + String(cmd) + String("'"));
+                    DEBUG_MSG_LN(String("Waiting RESUME, got '") + String(cmd) + String("'"));
                 }
             }
         }
@@ -96,7 +96,8 @@ int check_aborted() {
             }
         }
         else
-            DEBUG_MSG_LN("check_aborted: timeout");
+            // we check above Serial.available() > 0 --> can we get here?
+            DEBUG_MSG_LN("check_aborted: something went wrong");
     }
     else if (digitalRead(ABORT_BTN_PIN) == LOW) { // pull up inverts logic!
         abort = true;

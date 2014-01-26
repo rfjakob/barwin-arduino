@@ -1,3 +1,23 @@
+/**
+ * sketch.ino: barwin-arduino
+ *
+ * This file contains the basic procedure of pouring a cocktail. Weight/scale
+ * specific routines are defined in lib ads1231. Also in utils and errors you
+ * might find some stuff useful for other Arduino projects. The class Bottles
+ * and this file contains only barwin related code. Receiving and parsing
+ * serial messages, is done here. Everything which needs to be stored or done
+ * for each bottle should be in the Bottle class.
+ *
+ * General information on how to use the Arduno part of the barwin project
+ * should be documented in the README.md. General description (web interface,
+ * construction specific, other stuff) should be collected in other repositories
+ * or the web page.
+ *
+ * See also:
+ *      https://barwin.suuf.cc
+ *      https://github.com/petres/genBotWI
+ */
+
 #include <Arduino.h>
 #include <ads1231.h>
 #include <bottle.h>
@@ -5,12 +25,11 @@
 #include <errors.h>
 #include "../config.h"
 
-/*
- * Macro Magic that creates and initializes the variables
- *     Bottle bottles[]
- *     int bottles_nr
- * Macro is defined in bottle.h.
- */
+
+// Macro Magic that creates and initializes the variables
+//     Bottle bottles[]
+//     int bottles_nr
+// Macro is defined in bottle.h.
 DEFINE_BOTTLES();
 
 errv_t pour_cocktail(int* requested_amount);
@@ -52,6 +71,7 @@ void loop() {
             + String(weight > WEIGHT_EPSILON ? 1 : 0);
         MSG(msg);
 
+        // XXX often used debugging code to get raw weight value:
         //long weight_raw;
         //ads1231_get_value(weight_raw);
         //DEBUG_VAL_LN(weight_raw);
@@ -89,6 +109,9 @@ void loop() {
             bottles[params[0]].turn_to(params[1], TURN_DOWN_DELAY);
         }
         // Example: ECHO ENJOY\r\n
+        // Arduino will then print "ENJOY"
+        // This is a workaround to resend garbled messages manually.
+        // see also: https://github.com/rfjakob/barwin-arduino/issues/5
         else if (cmd_str.equals("ECHO")) {
             DEBUG_MSG_LN("Got ECHO");
             // Clear buffer for reuse
@@ -116,7 +139,7 @@ void loop() {
         else if (cmd_str.equals("DANCE\r\n")) {
             dancing_bottles();
         }
-        // Example: NOTHING\r\n
+        // Example: NOP\r\n
         // readBytesUntil read the trailing "\r\n" because there was no " " to stop at
         else if (cmd_str.equals("NOP\r\n")) {
             // dummy command, for testing

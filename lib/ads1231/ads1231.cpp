@@ -1,11 +1,17 @@
-/*
+/**
  * Library for the TI ADS1231 24-Bit Analog-to-Digital Converter
  *
  * Written in plain C, but for some reason ino expects it to have .cpp
  * file extension, otherwise linking fails.
  *
+ * File is written in plain C, because rfjakob insists on it. He thinks the
+ * following comment suffices to end the discussion and to have it in plain C:
+ *
  * Originally written by lumbric, commmented and slightly modified by
  * rfjakob
+ *
+ * But the discussion is not over yet. We are going to continue it in
+ * ../bottle/bottle.h! :)
  */
 
 #include <Arduino.h>
