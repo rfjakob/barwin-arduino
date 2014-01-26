@@ -61,6 +61,8 @@ errv_t wait_for_resume() {
 /**
  * Check if we should abort whatever we ware doing right now.
  * Returns 0 if we should not abort, ABORTED if we should abort.
+ *
+ * If receive_resume is set to true, 'RESUME' is a valid cmd as well.
  */
 errv_t check_aborted(bool receive_resume) {
     bool abort = false;
@@ -95,6 +97,9 @@ errv_t check_aborted(bool receive_resume) {
     }
     else if (digitalRead(ABORT_BTN_PIN) == LOW) { // pull up inverts logic!
         abort = true;
+    }
+    else if (receive_resume && digitalRead(RESUME_BTN_PIN) == LOW) {
+        return RESUMED;
     }
 
     if (abort) {

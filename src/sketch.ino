@@ -37,6 +37,7 @@ void parse_int_params(int* params, int size);
 
 void setup() {
     pinMode(ABORT_BTN_PIN, INPUT_PULLUP);
+    pinMode(RESUME_BTN_PIN, INPUT_PULLUP);
 
     // This is obligatory on the Uno, and a noop on the Leonardo.
     // Means we can just do it unconditionally.
