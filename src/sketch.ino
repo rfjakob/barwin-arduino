@@ -112,7 +112,7 @@ void loop() {
                 String("Scale tared to ") + String(-weight)
             );
         }
-        // Example: DANCING_BOTTLES\r\n
+        // Example: DANCE\r\n
         else if (cmd_str.equals("DANCE\r\n")) {
             dancing_bottles();
         }
