@@ -25,6 +25,7 @@ String strerror(unsigned char errno);
 #define ABORTED                      12    // user abort
 #define MAX_DRINK_GRAMS_EXCEEDED     13    // sum of ingredients exceeds MAX_DRINK_GRAMS
 #define SERVO_OUT_OF_RANGE           15    // if Bottle::turn_to is called with wrong pos
+#define RESUMED                      16    // after BOTTLE_EMPTY
 
 // Serial message parsing
 #define INVALID_COMMAND              21
