@@ -50,7 +50,7 @@ void setup() {
     #ifdef ADS1231_EMULATION
     DEBUG_MSG_LN("Scale emulation active");
     #endif
-    
+
     DEBUG_MSG_LN("setup() end");
 }
 
@@ -119,7 +119,7 @@ void loop() {
             // Read rest of command
             Serial.readBytesUntil('\r', cmd, MAX_COMMAND_LENGTH);
             // Print it out
-            MSG(cmd);  
+            MSG(cmd);
         }
         // Example: TARE\r\n
         else if (cmd_str.equals("TARE\r\n")) {

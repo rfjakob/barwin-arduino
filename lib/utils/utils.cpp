@@ -46,7 +46,7 @@ int get_free_memory()
  * Returns 0 if it gets it,
  * ABORTED if it gets ABORT.
  */
-int wait_for_resume() {
+errv_t wait_for_resume() {
     while(1) {
         if (Serial.available() > 0) {
             char cmd[8+1];
@@ -77,7 +77,7 @@ int wait_for_resume() {
  * Check if we should abort whatever we ware doing right now.
  * Returns 0 if we should not abort, ABORTED if we should abort.
  */
-int check_aborted() {
+errv_t check_aborted() {
     bool abort = false;
     if (Serial.available() > 0) {
         char cmd[8+1];

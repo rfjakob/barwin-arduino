@@ -66,8 +66,8 @@
 
 bool has_time_passed(long time_period, long& last_passed);
 int get_free_memory();
-int wait_for_resume();
-int check_aborted();
+errv_t wait_for_resume();
+errv_t check_aborted();
 void crossfade(Bottle * b1, Bottle * b2, int delay_ms);
 
 /**
