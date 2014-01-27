@@ -32,12 +32,19 @@
 // Macro is defined in bottle.h.
 DEFINE_BOTTLES();
 
+// FIXME currently hardcoded: array size for second dimension must
+// be at least bottles_nr + 1 (i.e. 8 in most cases)
+unsigned char drink_btns[][8] = DRINK_BTNS;
+
 errv_t pour_cocktail(int* requested_amount);
 void parse_int_params(int* params, int size);
+void init_drink_btns();
+void process_drink_btns();
 
 void setup() {
     pinMode(ABORT_BTN_PIN, INPUT_PULLUP);
     pinMode(RESUME_BTN_PIN, INPUT_PULLUP);
+    init_drink_btns();
 
     // This is obligatory on the Uno, and a noop on the Leonardo.
     // Means we can just do it unconditionally.
@@ -149,6 +156,47 @@ void loop() {
         else {
             ERROR(strerror(INVALID_COMMAND));
             DEBUG_MSG_LN(String("Got '") + String(cmd) + String("'"));
+        }
+    } else {
+        process_drink_btns();
+    }
+
+}
+
+
+/**
+ * Initializes hardware buttons for predefined drinks.
+ */
+void init_drink_btns() {
+    char drink_btns_nr = sizeof(drink_btns)/sizeof(drink_btns[0]);
+    for (int i = 0; i < drink_btns_nr; i++) {
+        Serial.println(drink_btns[i][0]);
+        pinMode(drink_btns[i][0], INPUT_PULLUP);
+    }
+}
+
+
+/**
+ * Check if any of the hardware buttons for predefined drinks is currently pressed.
+ * If yes call pour the according drink.
+ *
+ * Note that this function should run quite fast and needs to be called often
+ * (i.e. fast polling in loop()), otherwise the event is not detected.
+ */
+void process_drink_btns(){
+     char drink_btns_nr = sizeof(drink_btns)/sizeof(drink_btns[0]);
+    for (int i = 0; i < drink_btns_nr; i++) {
+        if(digitalRead(drink_btns[i][0]) == LOW){
+            // Button of i-th predefined drink pressed
+            // TODO typecast
+            int requested_amount[bottles_nr];
+
+            // TODO is this the best way to cast an char array --> int array?
+            for (int j = 0; j < bottles_nr; j++) {
+                requested_amount[j] = drink_btns[i][j+1];
+            }
+            pour_cocktail(requested_amount);
+            break;
         }
     }
 }

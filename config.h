@@ -14,6 +14,13 @@
 #define ABORT_BTN_PIN    A2
 #define RESUME_BTN_PIN   A3
 
+// Predefined drinks for hardware buttons
+// Note: Values not more than 255, because we use unsigned char!
+//                   PIN   amount in g for each bottle
+#define DRINK_BTNS {{0,    100,   0,   0,   0,   0,   0,   0}, \
+                    {1,      0,  50,   0,   0,   0,   0,   0} \
+}
+
 // Define bottles (number, pin, up/down position for servo)
 //                     nr,  pin,  pos_down,  pos_up
 #define BOTTLES Bottle(0,    3,   1200,    2380), \
