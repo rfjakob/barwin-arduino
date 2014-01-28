@@ -9,8 +9,8 @@
 #include <EEPROM.h>
 
 
-template <class T> int EEPROM_read(int ee, T& value);
-template <class T> int EEPROM_write(int ee, const T& value);
+int EEPROM_read(int ee, int& value);
+int EEPROM_write(int ee, const int& value);
 
 #define ADS1231_OFFSET_EEPROM_POS   0
 
