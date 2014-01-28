@@ -174,7 +174,7 @@ errv_t ads1231_tare(int& grams) {
     RETURN_IFN_0( ads1231_get_stable_grams(grams) );
 
     // success
-    ads1231_offset = -grams;
+    ads1231_offset += -grams;
     EEPROM_write(ADS1231_OFFSET_EEPROM_POS, ads1231_offset);
 
     return 0;
