@@ -34,7 +34,8 @@
 // ADC counts per milligram
 #define ADS1231_DIVISOR  1565.1671343537414
 // Zero offset, grams
-#define ADS1231_OFFSET   (127.97810572652163 - 3)
+//#define ADS1231_OFFSET   (127.97810572652163 - 3)
+// ADS1231_OFFSET will be stored in EPROM on command TARE!
 
 // How to calibrate using a weight (in grams) and the measured raw value
 // as returned by ads1231_get_value():

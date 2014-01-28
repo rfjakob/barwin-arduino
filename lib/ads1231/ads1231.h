@@ -8,7 +8,7 @@
 #include "errors.h"
 
 extern unsigned long ads1231_last_millis;
-extern int ads1231_additional_offset;
+extern int ads1231_offset;
 
 void ads1231_init(void);
 errv_t ads1231_get_value(long& val);

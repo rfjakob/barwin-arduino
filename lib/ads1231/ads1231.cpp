@@ -18,12 +18,13 @@
 #include <limits.h>
 
 #include <ads1231.h>
+#include <custom_eeprom.h>
 #include <utils.h>
 #include "../../config.h"
 #include "errors.h"
 
 unsigned long ads1231_last_millis = 0;
-int ads1231_additional_offset = 0;
+int ads1231_offset = 0;
 
 /*
  * Initialize the interface pins
@@ -41,6 +42,8 @@ void ads1231_init(void)
     // Set CLK low to get the ADS1231 out of suspend
     digitalWrite(ADS1231_CLK_PIN, 0);
 
+    // Read absolute offset from EPROM
+    EEPROM_read(ADS1231_OFFSET_EEPROM_POS, ads1231_offset);
 }
 
 /*
@@ -117,8 +120,7 @@ errv_t ads1231_get_grams(int& grams)
     if(ret != 0)
         return ret; // Scale error
 
-    // ads1231_additional_offset is a fast and easy solution to tare the scale
-    grams = raw/ADS1231_DIVISOR + ADS1231_OFFSET + ads1231_additional_offset;
+    grams = raw/ADS1231_DIVISOR + ads1231_offset;
     return 0; // Success
 }
 
@@ -172,7 +174,8 @@ errv_t ads1231_tare(int& grams) {
     RETURN_IFN_0( ads1231_get_stable_grams(grams) );
 
     // success
-    ads1231_additional_offset = -grams;
+    ads1231_offset = -grams;
+    EEPROM_write(ADS1231_OFFSET_EEPROM_POS, ads1231_offset);
 
     return 0;
 }
