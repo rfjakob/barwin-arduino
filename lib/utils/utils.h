@@ -36,6 +36,7 @@
 #else
     // disable all debug output on serial interface...
     #define DEBUG_START()
+    #define DEBUG_END()
     #define DEBUG_MSG(msg)
     #define DEBUG_MSG_LN(msg)
 
@@ -53,7 +54,6 @@
                         Serial.println(" "); \
                       } while (0)
 
-#endif
 
 // Call something and return error code if !=0
 // e.g.: RETURN_IFN_0(delay_until(...));
@@ -85,3 +85,4 @@ void crossfade(Bottle * b1, Bottle * b2, int delay_ms);
         if (has_time_passed(time_period, HAS_TIME_PASSED_last_passed))
 
 
+#endif

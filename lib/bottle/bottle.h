@@ -19,7 +19,7 @@
 // Macro initialising a array 'bottles' of Bottle instances as defined
 // in config.h by the comma separated list BOTTLES of constructor calls:
 #define DEFINE_BOTTLES()  Bottle bottles[] = {BOTTLES};\
-                          int bottles_nr = sizeof(bottles)/sizeof(bottles[0]);
+                          char bottles_nr = sizeof(bottles)/sizeof(bottles[0]);
 
 
 
