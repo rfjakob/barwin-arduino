@@ -133,12 +133,11 @@ void loop() {
         else if (cmd_str.equals("TARE\r\n")) {
             int weight;
             DEBUG_MSG_LN("Measuring");
-            int ret = ads1231_get_grams(weight);
+            int ret = ads1231_tare(weight);
             if (ret != 0) {
                 ERROR(strerror(ret));
                 return;
             }
-            ads1231_additional_offset = -weight;
             DEBUG_MSG_LN(
                 String("Scale tared to ") + String(-weight)
             );

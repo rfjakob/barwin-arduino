@@ -15,6 +15,7 @@ errv_t ads1231_get_value(long& val);
 errv_t ads1231_get_grams(int& grams);
 errv_t ads1231_get_stable_grams(int& grams);
 errv_t ads1231_get_noblock(int& grams);
+errv_t ads1231_tare(int& grams);
 errv_t delay_until(long max_delay, int max_weight, bool pour_handling, bool revers=false);
 errv_t wait_for_cup();
 

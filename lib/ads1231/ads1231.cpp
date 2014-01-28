@@ -164,6 +164,21 @@ errv_t ads1231_get_stable_grams(int& grams) {
 
 
 /**
+ * Tare scale. Call this if there is nothing on scale to store offset and zero
+ * current measured value.
+ */
+errv_t ads1231_tare(int& grams) {
+    // get grams or return error immediately on error
+    RETURN_IFN_0( ads1231_get_stable_grams(grams) );
+
+    // success
+    ads1231_additional_offset = -grams;
+
+    return 0;
+}
+
+
+/**
  * Get grams from scale if measurement fast enough, otherwise returns
  * with error ADS1231_WOULD_BLOCK. Should not block longer than 10ms.
  */
