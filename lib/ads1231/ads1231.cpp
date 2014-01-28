@@ -164,15 +164,19 @@ errv_t ads1231_get_stable_grams(int& grams) {
 
 
 /**
- *
+ * Get grams from scale if measurement fast enough, otherwise returns
+ * with error ADS1231_WOULD_BLOCK. Should not block longer than 10ms.
  */
 errv_t ads1231_get_noblock(int& grams) {
+     // ADS1231 supports 10 samples per second. That means after the last
+     // sample we need to wait 100ms. If 90ms passed already, it should be OK.
     unsigned long t = (millis() - ads1231_last_millis) % 100;
     if (t < 90) {
         return ADS1231_WOULD_BLOCK;
     }
     return ads1231_get_grams(grams);
 }
+
 
 /**
  * Blocks until weight is more than weight + WEIGHT_EPSILON
