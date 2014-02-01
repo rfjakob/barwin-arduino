@@ -60,7 +60,7 @@
 
 // Delay after cup placed on scale (before setting zero point for first
 // ingredient), in milliseconds
-#define CUP_SETTLING_TIME 1500
+#define CUP_SETTLING_TIME 0
 
 // Time to weight for a stable weight on scale
 // if ads1231_get_stable_grams() is called
