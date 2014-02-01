@@ -74,12 +74,17 @@ errv_t Bottle::turn_to(int pos, int delay_ms, bool print_steps, bool check_weigh
             DEBUG_VAL_LN(i);
         }
 
-        unsigned long t0=millis();
-        // Return if we should abort...
-        RETURN_IFN_0(check_aborted());
-        unsigned long t1=millis()-t0;
-        if(t1 > 100)
-            DEBUG_MSG_LN(String("check_aborted took ") + String(t1) + String("ms"));
+        // check abort only if turning down...
+        // TODO actually it would be nice to be able to abort also when turning
+        // up but that means to check if already aborted...
+        if (step * (pos_up - pos_down) < 0) {
+            unsigned long t0=millis();
+            // Return if we should abort...
+            RETURN_IFN_0(check_aborted());
+            unsigned long t1=millis()-t0;
+            if(t1 > 100)
+                DEBUG_MSG_LN(String("check_aborted took ") + String(t1) + String("ms"));
+        }
 
         if (check_weight) {
             int weight;
