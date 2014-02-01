@@ -1,13 +1,18 @@
-evobot-arduino
+barwin-arduino
 ==============
-Arduino code for the evobot.
-Controls the servos and the scale and communicates with the PC using a serial link.
+Arduino code for Barwin (former codename evobot) - see http://barwin.suuf.cc/ for more info.
+This code controls the servos and the scale and communicates with the PC using a serial link.
 
 Dependencies
 ============
+Debian:
 	sudo apt-get install arduino python-pip picocom
 	sudo pip install ino pyserial
 
+Fedora:
+    sudo yum install arduino python-pip picocom
+    sudo pip install ino pyserial
+    
 Compile + Upload + Connect to serial
 ====================================
 	make
@@ -16,14 +21,15 @@ See Makefile for details. Tested with Arduino Duemilanove and Arduino Leonardo.
 
 Serial Interface
 =====================
-TODO: describe this better!
-
-timeout: 100milliseconds
-terminating using space and \r\n
+Timeout for one command: 50 milliseconds (see SERIAL_TIMEOUT in config.h)
+Terminated using space and \r\n
 
 Serial -> Arduino:
 ------------------
-Messages received by Arduino.
+Messages received by Arduino. These messages might be called "commands". Note that
+depending on the current state, only few commands might be available and you will
+receive an "INVALID_CMD" error if you send other commands. The state diagram might
+help to figure out when to send which command.
 
 <dl>
     <dt>POUR x1 x2 x3 ... x_n</dt>
@@ -34,16 +40,14 @@ Messages received by Arduino.
     <dd>resume after bottle refill</dd>
     <dt>PAUSE</dt>
     <dd>not implemented yet, pause after next bottle</dd>
-    <dt>DANCING_BOTTLES</dt>
+    <dt>DANCE</dt>
     <dd>let the bottles dance!</dd>
-    <dt>SET_SCALE_CALIB weight</dt>
-    <dd>not implemented yet, use instead TARE (was easier to implement)</dd>
     <dt>TARE</dt>
     <dd>
         sets scale to 0, make sure nothing is on scale when sending this command
         <b>Note:</b> taring is deleled, when Arduino is reseted (e.g. on lost serial connection)
     </dd>
-    <dt>NOTHING</dt>
+    <dt>NOP</dt>
     <dd>
         Arduino will do nothing and send message "DOING_NOTHING".
         This is a dummy message, for testing only.
@@ -52,7 +56,7 @@ Messages received by Arduino.
 
 Arduino -> Serial:
 ------------------
-Messages sent by Arduino.
+Messages sent by Arduino. These messages are status messages (or replies to commands).
 
 <dl>
     <dt>READY current_weight is_cup_there</dt>
@@ -78,31 +82,54 @@ Messages sent by Arduino.
     </dd>
     <dt>ENJOY x1 x2 x3 ... x_n</dt>
     <dd>TODO</dd>
-    <dt>TURN_BOTTLE bottle microseconds</dt>
+    <dt>TURN bottle microseconds</dt>
     <dd>turn a specific bottle for debugging porpuses</dd>
     <dt>ERROR error_desc</dt>
     <dd>
     	<dl>
     		<dt>error_desc: str</dt>
             <dd>
-                One of the following strings:
+                For the full list of Strings see errors.cpp. Important examples:
                 <ul>
-                    <li>CUP_TIMEOUT_REACHED</li>
-                    <li>INVALID_COMMAND</li>
+                    <li>CUP_TO</li>
+                    <li>INVAL_CMD/li>
                 </ul>
             </dd>
         </dl>
     </dd>
-    <dt>DOING_NOTHING</dt>
+    <dt>NOP</dt>
     <dd>
-        If Arduino gets command "NOTHING", it does nothing.
-        This is a dummy message, for testing only.
+        If Arduino gets command NOP, it replies with NOP and does nothing.
     </dd>
 
 </dl>
 
+State Diagram
+=============
+Can be rendered via http://yuml.me/diagram/plain/class/draw
+
+    [READY]-POUR>[POURING]
+    [READY]-POUR>[WAITING_FOR_CUP]
+    [WAITING_FOR_CUP]->[ERROR CUP_TO]
+    [ERROR CUP_TO]->[READY]
+    [WAITING_FOR_CUP]->[POURING]
+    [POURING]-next bottle>[POURING]
+    [POURING]->[ENJOY]
+    [POURING]-ABORT>[READY]
+    [ENJOY]->[READY]
+    [READY]->[READY]
+    [POURING]->[ERROR CUP_GONE]
+    [POURING]->[ERROR BOTTLE_EMPTY]
+    [ERROR BOTTLE_EMPTY]-RESUME>[POURING]
+    [ERROR CUP_GONE]->[POURING]
+
+Pre-rendered PNG: http://yuml.me/fc246f45 (created Thursday 12.12.2013, may be out of date)
+
 Further Documentation
 =====================
+* Scale pinout diagram
+* Eagle Schematics (TODO)
+* Eagle Layout (TODO)
 In the Documentation folder
 
 

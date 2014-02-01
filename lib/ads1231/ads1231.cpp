@@ -1,26 +1,30 @@
-/*
+/**
  * Library for the TI ADS1231 24-Bit Analog-to-Digital Converter
  *
  * Written in plain C, but for some reason ino expects it to have .cpp
  * file extension, otherwise linking fails.
  *
+ * File is written in plain C, because rfjakob insists on it. He thinks the
+ * following comment suffices to end the discussion and to have it in plain C:
+ *
  * Originally written by lumbric, commmented and slightly modified by
  * rfjakob
+ *
+ * But the discussion is not over yet. We are going to continue it in
+ * ../bottle/bottle.h! :)
  */
 
 #include <Arduino.h>
 #include <limits.h>
 
 #include <ads1231.h>
+#include <custom_eeprom.h>
 #include <utils.h>
 #include "../../config.h"
 #include "errors.h"
 
-// emulate a scale
-//#define ADS1231_EMULATION 1
-
 unsigned long ads1231_last_millis = 0;
-int ads1231_additional_offset = 0;
+int ads1231_offset = 0;
 
 /*
  * Initialize the interface pins
@@ -38,13 +42,15 @@ void ads1231_init(void)
     // Set CLK low to get the ADS1231 out of suspend
     digitalWrite(ADS1231_CLK_PIN, 0);
 
+    // Read absolute offset from EPROM
+    EEPROM_read(ADS1231_OFFSET_EEPROM_POS, ads1231_offset);
 }
 
 /*
  * Get the raw ADC value. Can block up to 100ms in normal operation.
  * Returns 0 on success, an error code otherwise (see ads1231.h)
  */
-int ads1231_get_value(long& val)
+errv_t ads1231_get_value(long& val)
 {
     int i=0;
     unsigned long start;
@@ -97,7 +103,7 @@ int ads1231_get_value(long& val)
  * operation because the ADS1231 makes only 10 measurements per second.
  * Returns 0 on sucess, an error code otherwise (see errors.h)
  */
-int ads1231_get_grams(int& grams)
+errv_t ads1231_get_grams(int& grams)
 {
     // a primitive emulation using a potentiometer attached to pin A0
     // returns a value between 0 and 150 grams
@@ -114,8 +120,7 @@ int ads1231_get_grams(int& grams)
     if(ret != 0)
         return ret; // Scale error
 
-    // ads1231_additional_offset is a fast and easy solution to tare the scale
-    grams = raw/ADS1231_DIVISOR + ADS1231_OFFSET + ads1231_additional_offset;
+    grams = raw/ADS1231_DIVISOR + ads1231_offset;
     return 0; // Success
 }
 
@@ -126,7 +131,7 @@ int ads1231_get_grams(int& grams)
  * Can block for longer if the weight on scale is not stable.
  * Returns 0 on sucess, an error code otherwise (see errors.h)
  */
-int ads1231_get_stable_grams(int& grams) {
+errv_t ads1231_get_stable_grams(int& grams) {
     grams = 0; // needs to be 0 on error
     int i = 0;
     unsigned long start = millis();
@@ -146,7 +151,7 @@ int ads1231_get_stable_grams(int& grams) {
             i = 0;
         }
         DEBUG_START();
-        DEBUG_MSG("Weight not stable: ");
+        DEBUG_MSG("Not stable: ");
         DEBUG_VAL(weight);
         DEBUG_VAL(weight_last);
         DEBUG_END();
@@ -161,15 +166,35 @@ int ads1231_get_stable_grams(int& grams) {
 
 
 /**
- *
+ * Tare scale. Call this if there is nothing on scale to store offset and zero
+ * current measured value.
  */
-int ads1231_get_noblock(int& grams) {
+errv_t ads1231_tare(int& grams) {
+    // get grams or return error immediately on error
+    RETURN_IFN_0( ads1231_get_stable_grams(grams) );
+
+    // success
+    ads1231_offset += -grams;
+    EEPROM_write(ADS1231_OFFSET_EEPROM_POS, ads1231_offset);
+
+    return 0;
+}
+
+
+/**
+ * Get grams from scale if measurement fast enough, otherwise returns
+ * with error ADS1231_WOULD_BLOCK. Should not block longer than 10ms.
+ */
+errv_t ads1231_get_noblock(int& grams) {
+     // ADS1231 supports 10 samples per second. That means after the last
+     // sample we need to wait 100ms. If 90ms passed already, it should be OK.
     unsigned long t = (millis() - ads1231_last_millis) % 100;
     if (t < 90) {
         return ADS1231_WOULD_BLOCK;
     }
     return ads1231_get_grams(grams);
 }
+
 
 /**
  * Blocks until weight is more than weight + WEIGHT_EPSILON
@@ -185,7 +210,7 @@ int ads1231_get_noblock(int& grams) {
  *  3 cup removed (weight has decreased)
  *  other values: scale error (see ads1231.h).
  */
-int delay_until(long max_delay, int weight, bool pour_handling, bool reverse) {
+errv_t delay_until(long max_delay, int weight, bool pour_handling, bool reverse) {
     unsigned long start = millis();
     int cur, ret;
     int last     = -999; // == -inf, because the first time checks should
@@ -213,7 +238,7 @@ int delay_until(long max_delay, int weight, bool pour_handling, bool reverse) {
 
         // "one" inverts the inequality
         if(cur * one > (weight + WEIGHT_EPSILON) * one)
-            return SUCCESS;
+            return 0;
 
         // Just waiting for weight, no special pouring error detection
         if (!pour_handling)
@@ -246,7 +271,7 @@ int delay_until(long max_delay, int weight, bool pour_handling, bool reverse) {
  * Wait for the cup.
  * Return error codes by delay_until.
  */
-int wait_for_cup() {
+errv_t wait_for_cup() {
     int weight;
     ads1231_get_grams(weight); // weight will be 0 in case of error
     if ( weight < WEIGHT_EPSILON) {
@@ -255,10 +280,9 @@ int wait_for_cup() {
         if (ret == DELAY_UNTIL_TIMEOUT) {
             // FIXME if wait_for_cup() is caused by a WHERE_THE_FUCK_IS_THE_CUP
             // error, then the bottle will remain in pause position...
-            ERROR("CUP_TIMEOUT_REACHED");
+            ERROR(strerror(CUP_TIMEOUT_REACHED));
             return CUP_TIMEOUT_REACHED;
         } else if (ret != 0) {
-            DEBUG_MSG_LN("Scale error when waiting for cup.");
             ERROR(strerror(ret));
         }
         return ret;

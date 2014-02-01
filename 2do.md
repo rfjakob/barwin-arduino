@@ -11,8 +11,10 @@
  - [ ] move bottle according to non-linear predefined function
  - [x] Serial command: calibrate scale, SET_OFFSET (tare)
  - [ ] Serial command: all to pos_up, all down
- - [ ] abort button
- - [ ] abort command
+ - [x] abort button
+ - [x] resume button
+ - [x] buttons for predefined drinks
+ - [x] abort command
  - [ ] pause/command switch
  - [ ] do we check the number of params?
  - [x] move bottles at the same time?

@@ -46,38 +46,25 @@ int get_free_memory()
  * Returns 0 if it gets it,
  * ABORTED if it gets ABORT.
  */
-int wait_for_resume() {
+errv_t wait_for_resume() {
     while(1) {
-        if (Serial.available() > 0) {
-            char cmd[8+1];
-            // The conversion to String depends on having a trailing NULL!
-            memset(cmd, 0, 8+1);
-
-            // TODO this is not nice, other parsing code is in loop()
-            // move to one function somehow?
-            if(Serial.readBytes(cmd, 8)) {
-                String cmd_str = String(cmd);
-                if (cmd_str.equals("RESUME\r\n")) {
-                    DEBUG_MSG(String("Free memory: ") + String(get_free_memory()));
-                    break;
-                } else if (cmd_str.equals("ABORT\r\n")) {
-                    DEBUG_MSG_LN("Aborted.");
-                    return ABORTED;
-                } else {
-                    ERROR(strerror(INVALID_COMMAND));
-                    DEBUG_MSG_LN(String("Got string '") + String(cmd) + String("'"));
-                }
-            }
+        errv_t ret = check_aborted(true);
+        if (ret == RESUMED) {
+            return 0;
+        }
+        else if (ret) {
+            return ret;
         }
     }
-    return 0;
 }
 
 /**
  * Check if we should abort whatever we ware doing right now.
  * Returns 0 if we should not abort, ABORTED if we should abort.
+ *
+ * If receive_resume is set to true, 'RESUME' is a valid cmd as well.
  */
-int check_aborted() {
+errv_t check_aborted(bool receive_resume) {
     bool abort = false;
     if (Serial.available() > 0) {
         char cmd[8+1];
@@ -86,20 +73,33 @@ int check_aborted() {
 
         // TODO this is not nice, other parsing code is in loop()
         // move to one function somehow?
+        // XXX why do we use readBytes here and not readBytesUntil as in
+        // sketch.ino? Why 8 bytes and not MAX_COMMAND_LENGTH?
+        //    --> introduced in commit 612367ef
         if(Serial.readBytes(cmd, 8)) {
             String cmd_str = String(cmd);
             if (cmd_str.equals("ABORT\r\n")) {
                 abort = true;
+            }
+            else if (receive_resume && cmd_str.equals("RESUME\r\n")) {
+                DEBUG_MSG(String("Free mem: ") + String(get_free_memory()));
+                return RESUMED;
             } else {
                 ERROR(strerror(INVALID_COMMAND));
-                DEBUG_MSG_LN(String("check_aborted: received '") + String(cmd) + String("'"));
+                DEBUG_MSG_LN(String("check_aborted: got '") + String(cmd) + String("'"));
             }
         }
-        else
-            DEBUG_MSG_LN("check_aborted: Timed out reading from serial");
+        // To save some bytes commenting out:
+        //else {
+        //    // we check above Serial.available() > 0 --> can we get here?
+        //    DEBUG_MSG_LN("check_aborted: something went wrong");
+        //}
     }
     else if (digitalRead(ABORT_BTN_PIN) == LOW) { // pull up inverts logic!
         abort = true;
+    }
+    else if (receive_resume && digitalRead(RESUME_BTN_PIN) == LOW) {
+        return RESUMED;
     }
 
     if (abort) {
@@ -128,6 +128,8 @@ void crossfade(Bottle * b1, Bottle * b2, int delay_ms) {
     int b2_pos = b2->servo.readMicroseconds();
     int new_pos=0;
     bool done_something;
+
+    DEBUG_MSG_LN("crossfade " + String(b1->number) + String(" ") + String(b2->number));
 
     while(1) {
         done_something=false;

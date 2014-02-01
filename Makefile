@@ -12,7 +12,10 @@ endif
 #BOARD=uno
 #TTY=/dev/ttyACM
 
-all: build upload serial
+all: build size upload serial
+
+size:
+	avr-size .build/*/firmware.elf
 
 build:
 	ino build -m $(BOARD)
@@ -23,7 +26,8 @@ upload:
 serial:
 	sleep 2s # /dev/ttyACMx needs some time to appear
 	echo "NOTE: ctrl-ax to exit picocom"
-	picocom -b $(BAUDRATE) $(TTY)? | tee -a serial-`date --iso`.log
+	mkdir -p log
+	picocom -b $(BAUDRATE) $(TTY)? | tee -a log/serial-`date --iso`.log
 	# if above does not work, use instead:
 	#ino serial
 

@@ -5,11 +5,23 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+// emulate a scale
+//#define ADS1231_EMULATION 1
 
 #define ADS1231_DATA_PIN A0
 #define ADS1231_CLK_PIN  A1
 
-#define ABORT_BTN_PIN    A2
+#define ABORT_BTN_PIN    0
+#define RESUME_BTN_PIN   1
+
+// Predefined drinks for hardware buttons
+// Note: Values not more than 255, because we use unsigned char!
+//                   PIN   amount in g for each bottle
+#define DRINK_BTNS {{A2,    100,   0,   0,   0,   0,   0,   0}, \
+                    {A3,     20,  50,  30,  20,  40,  20,  20}, \
+                    {A4,      0,  50,   0,   0,   0,   0,   0}, \
+                    {A5,     40,   0,   0,   0,   0, 120,   0}  \
+}
 
 // Define bottles (number, pin, up/down position for servo)
 //                     nr,  pin,  pos_down,  pos_up
@@ -24,7 +36,8 @@
 // ADC counts per milligram
 #define ADS1231_DIVISOR  1565.1671343537414
 // Zero offset, grams
-#define ADS1231_OFFSET   (127.97810572652163 - 3)
+//#define ADS1231_OFFSET   (127.97810572652163 - 3)
+// ADS1231_OFFSET will be stored in EPROM on command TARE!
 
 // How to calibrate using a weight (in grams) and the measured raw value
 // as returned by ads1231_get_value():

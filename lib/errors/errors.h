@@ -9,11 +9,10 @@
 #ifndef ERRORS_H
 #define ERRORS_H
 
-// Helper function
-String strerror(int errno);
+typedef unsigned char errv_t;
 
-// Actual error codes
-#define SUCCESS                      0
+// Helper function
+String strerror(unsigned char errno);
 
 // return values by delay_until()
 #define DELAY_UNTIL_TIMEOUT          1
@@ -26,6 +25,7 @@ String strerror(int errno);
 #define ABORTED                      12    // user abort
 #define MAX_DRINK_GRAMS_EXCEEDED     13    // sum of ingredients exceeds MAX_DRINK_GRAMS
 #define SERVO_OUT_OF_RANGE           15    // if Bottle::turn_to is called with wrong pos
+#define RESUMED                      16    // after BOTTLE_EMPTY
 
 // Serial message parsing
 #define INVALID_COMMAND              21

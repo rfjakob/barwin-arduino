@@ -30,7 +30,7 @@ void Bottle::init(Bottle* bottles, int bottles_nr) {
  * This should be done in the setup function, not in the global scope using
  * bottles_init().
  */
-Bottle::Bottle(int _number, int _pin, int _pos_down, int _pos_up) :
+Bottle::Bottle(unsigned char _number, unsigned char _pin, int _pos_down, int _pos_up) :
     number(_number), pin(_pin), pos_down(_pos_down), pos_up(_pos_up) {
 }
 
@@ -44,9 +44,9 @@ Bottle::Bottle(int _number, int _pin, int _pos_down, int _pos_up) :
  *     /usr/share/arduino/libraries/Servo/Servo.cpp
  *
  */
-int Bottle::turn_to(int pos, int delay_ms, bool print_steps, bool check_weight) {
+errv_t Bottle::turn_to(int pos, int delay_ms, bool print_steps, bool check_weight) {
     if (pos < SERVO_MIN || pos > SERVO_MAX) {
-        DEBUG_MSG_LN("Error turning bottle, wrong servo pos!");
+        DEBUG_MSG_LN("Invalid pos");
         return SERVO_OUT_OF_RANGE;
     }
 
@@ -56,9 +56,9 @@ int Bottle::turn_to(int pos, int delay_ms, bool print_steps, bool check_weight) 
     int step = (current_pos < pos) ? 1 : -1;
 
     DEBUG_START();
-    DEBUG_MSG("Start turning bottle '");
+    DEBUG_MSG("turn ");
     DEBUG_MSG(number);
-    DEBUG_MSG("' with params: ");
+    DEBUG_MSG(", params ");
     DEBUG_VAL(current_pos);
     DEBUG_VAL(step);
     DEBUG_VAL(pos);
@@ -79,14 +79,13 @@ int Bottle::turn_to(int pos, int delay_ms, bool print_steps, bool check_weight) 
         RETURN_IFN_0(check_aborted());
         unsigned long t1=millis()-t0;
         if(t1 > 100)
-            DEBUG_MSG_LN(String("turn_to: check_aborted took ") + String(t1) + String("ms"));
+            DEBUG_MSG_LN(String("check_aborted took ") + String(t1) + String("ms"));
 
         if (check_weight) {
             int weight;
             int ret = ads1231_get_noblock(weight);
             if (ret != ADS1231_WOULD_BLOCK) {
                 if (weight < WEIGHT_EPSILON) {
-                    DEBUG_MSG_LN("While turning bottle: where is the cup?");
                     return WHERE_THE_FUCK_IS_THE_CUP;
                 }
             }
@@ -99,25 +98,21 @@ int Bottle::turn_to(int pos, int delay_ms, bool print_steps, bool check_weight) 
         // turn servo one step
         servo.writeMicroseconds(i);
     }
-    DEBUG_START();
-    DEBUG_MSG("Finished turning bottle '");
-    DEBUG_MSG(number);
-    DEBUG_MSG("'.");
-    DEBUG_END();
+
     return 0;
 }
 
 /**
  * Turn bottle to upright position.
  */
-int Bottle::turn_up(int delay_ms, bool print_steps) {
+errv_t Bottle::turn_up(int delay_ms, bool print_steps) {
     return turn_to(pos_up, delay_ms, print_steps);
 }
 
 /**
  * Turn bottle to pouring position.
  */
-int Bottle::turn_down(int delay_ms, bool print_steps, bool check_weight) {
+errv_t Bottle::turn_down(int delay_ms, bool print_steps, bool check_weight) {
     return turn_to(pos_down, delay_ms, print_steps, check_weight);
 }
 
@@ -133,7 +128,7 @@ int Bottle::get_pause_pos()
  * Turn bottle to pause position.
  * Used e.g. in case of WHERE_THE_FUCK_IS_THE_CUP error.
  */
-int Bottle::turn_to_pause_pos(int delay_ms, bool print_steps) {
+errv_t Bottle::turn_to_pause_pos(int delay_ms, bool print_steps) {
     return turn_to(get_pause_pos(), delay_ms, print_steps);
 }
 
@@ -143,7 +138,7 @@ int Bottle::turn_to_pause_pos(int delay_ms, bool print_steps) {
  * Return 0 on success, other values are return values of
  * delay_until (including scale error codes).
  */
-int Bottle::pour(int requested_amount, int& measured_amount) {
+errv_t Bottle::pour(int requested_amount, int& measured_amount) {
     // orig_weight is weight including ingredients poured until now
     int orig_weight, ret;
     while (1) {
@@ -164,33 +159,27 @@ int Bottle::pour(int requested_amount, int& measured_amount) {
 
     MSG(String("POURING ") + String(number) + String(" ") + String(orig_weight));
 
-    DEBUG_START();
-    DEBUG_MSG("Start pouring bottle: ");
-    DEBUG_VAL(requested_amount);
-    DEBUG_VAL(orig_weight);
-    DEBUG_END();
-
     while(1) {
-        DEBUG_MSG_LN("Turning bottle down...");
+        DEBUG_MSG_LN("Turn down");
         ret = turn_down(TURN_DOWN_DELAY, false, true); // enable check_weight
 
         // wait for requested weight
         // FIXME here we do not want WEIGHT_EPSILON and sharp >
         if (ret == 0) {
-            DEBUG_MSG_LN("Waiting for weight...");
+            DEBUG_MSG_LN("Waiting");
             ret = delay_until(POURING_TIMEOUT,
                     orig_weight + requested_amount - UPGRIGHT_OFFSET, true);
         }
         if (ret == 0)
             break; // All good
 
-        DEBUG_MSG_LN(String("pour(): delay until returned error ") + String(ret));
+        DEBUG_MSG_LN(String("pour: got err ") + String(ret));
 
         // Bottle empty
         // Note that this does not work if requested_amount is less than
         // UPGRIGHT_OFFSET!
         if(ret == BOTTLE_EMPTY) {
-            ERROR("BOTTE_EMPTY");
+            ERROR(strerror(BOTTLE_EMPTY) + String(" ") + String(number) );
             // TODO other speed here? it is empty already!
             turn_to(pos_up + BOTTLE_EMPTY_POS_OFFSET, TURN_UP_DELAY);
             RETURN_IFN_0(wait_for_resume()); // might return ABORTED
@@ -210,14 +199,13 @@ int Bottle::pour(int requested_amount, int& measured_amount) {
     }
 
     // We turn to pause pos and not completely up so we can crossfade
-    DEBUG_MSG_LN("Bottle:pour(): Turining to pause pos");
     turn_to_pause_pos(TURN_UP_DELAY);
 
     ads1231_get_grams(measured_amount);
     measured_amount -= orig_weight;
 
     DEBUG_START();
-    DEBUG_MSG("Bottle statistics: ");
+    DEBUG_MSG("Stats: ");
     DEBUG_VAL(requested_amount);
     DEBUG_VAL(measured_amount);
     DEBUG_END();
