@@ -187,10 +187,12 @@ void process_drink_btns(){
     for (int i = 0; i < drink_btns_nr; i++) {
         if(digitalRead(drink_btns[i][0]) == LOW){
             // Button of i-th predefined drink pressed
-            // TODO typecast
-            int requested_amount[bottles_nr];
+
+            DEBUG_MSG_LN(String("Button ") + String(i) +
+                String(" (counting from 0) pressed"));
 
             // TODO is this the best way to cast an char array --> int array?
+            int requested_amount[bottles_nr];
             for (int j = 0; j < bottles_nr; j++) {
                 requested_amount[j] = drink_btns[i][j+1];
             }
