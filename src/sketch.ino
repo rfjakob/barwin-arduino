@@ -157,6 +157,7 @@ void loop() {
             DEBUG_MSG_LN(String("Got '") + String(cmd) + String("'"));
         }
     } else {
+        // hardware buttons for hardcoded cocktails...
         process_drink_btns();
     }
 

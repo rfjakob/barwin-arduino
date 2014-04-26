@@ -164,6 +164,7 @@ errv_t Bottle::pour(int requested_amount, int& measured_amount) {
 
     MSG(String("POURING ") + String(number) + String(" ") + String(orig_weight));
 
+    // loop until successfully poured or aborted or other fatal error
     while(1) {
         DEBUG_MSG_LN("Turn down");
         ret = turn_down(TURN_DOWN_DELAY, false, true); // enable check_weight
