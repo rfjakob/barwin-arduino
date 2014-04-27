@@ -27,11 +27,11 @@ class Bottle {
     public:
         Bottle(unsigned char, unsigned char, int, int);
         static void init(Bottle* bottles, int bottles_nr);
-        errv_t turn_to(int pos, int delay_ms, bool print_steps=false, bool check_weight=false);
-        errv_t turn_up(int delay_ms, bool print_steps=false);
-        errv_t turn_down(int delay_ms, bool print_steps=false, bool check_weight=false);
+        errv_t turn_to(int pos, int delay_ms, bool check_weight=false);
+        errv_t turn_up(int delay_ms);
+        errv_t turn_down(int delay_ms, bool check_weight=false);
         int get_pause_pos();
-        errv_t turn_to_pause_pos(int delay_ms, bool print_steps=false);
+        errv_t turn_to_pause_pos(int delay_ms);
         errv_t pour(int requested_amount, int& measured_amount);
         Servo servo;          // servo used for turning the bottle
         const unsigned char number;     // all bottles have a unique number (0-n)

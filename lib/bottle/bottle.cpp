@@ -44,7 +44,7 @@ Bottle::Bottle(unsigned char _number, unsigned char _pin, int _pos_down, int _po
  *     /usr/share/arduino/libraries/Servo/Servo.cpp
  *
  */
-errv_t Bottle::turn_to(int pos, int delay_ms, bool print_steps, bool check_weight) {
+errv_t Bottle::turn_to(int pos, int delay_ms, bool check_weight) {
     if (pos < SERVO_MIN || pos > SERVO_MAX) {
         DEBUG_MSG_LN("Invalid pos");
         return SERVO_OUT_OF_RANGE;
@@ -70,9 +70,11 @@ errv_t Bottle::turn_to(int pos, int delay_ms, bool print_steps, bool check_weigh
         //                             this inverts the relation if turning down
 
         // Warning: printing to serial delays turning!
-        if (print_steps && i % 10 == 0) {
-            DEBUG_VAL_LN(i);
-        }
+        // Might help to to debug servo movement. Not necessary now, commenting
+        // out to save bytes.
+        //if (print_steps && i % 10 == 0) {
+        //    DEBUG_VAL_LN(i);
+        //}
 
         // check abort only if turning down...
         // TODO actually it would be nice to be able to abort also when turning
@@ -110,15 +112,15 @@ errv_t Bottle::turn_to(int pos, int delay_ms, bool print_steps, bool check_weigh
 /**
  * Turn bottle to upright position.
  */
-errv_t Bottle::turn_up(int delay_ms, bool print_steps) {
-    return turn_to(pos_up, delay_ms, print_steps);
+errv_t Bottle::turn_up(int delay_ms) {
+    return turn_to(pos_up, delay_ms);
 }
 
 /**
  * Turn bottle to pouring position.
  */
-errv_t Bottle::turn_down(int delay_ms, bool print_steps, bool check_weight) {
-    return turn_to(pos_down, delay_ms, print_steps, check_weight);
+errv_t Bottle::turn_down(int delay_ms, bool check_weight) {
+    return turn_to(pos_down, delay_ms, check_weight);
 }
 
 /**
@@ -133,8 +135,8 @@ int Bottle::get_pause_pos()
  * Turn bottle to pause position.
  * Used e.g. in case of WHERE_THE_FUCK_IS_THE_CUP error.
  */
-errv_t Bottle::turn_to_pause_pos(int delay_ms, bool print_steps) {
-    return turn_to(get_pause_pos(), delay_ms, print_steps);
+errv_t Bottle::turn_to_pause_pos(int delay_ms) {
+    return turn_to(get_pause_pos(), delay_ms);
 }
 
 
@@ -167,7 +169,7 @@ errv_t Bottle::pour(int requested_amount, int& measured_amount) {
     // loop until successfully poured or aborted or other fatal error
     while(1) {
         DEBUG_MSG_LN("Turn down");
-        ret = turn_down(TURN_DOWN_DELAY, false, true); // enable check_weight
+        ret = turn_down(TURN_DOWN_DELAY, true); // enable check_weight
 
         // wait for requested weight
         // FIXME here we do not want WEIGHT_EPSILON and sharp >
