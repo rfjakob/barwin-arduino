@@ -10,7 +10,7 @@
  - [ ] Serial commands for different speed?
  - [ ] move bottle according to non-linear predefined function
  - [x] Serial command: calibrate scale, SET_OFFSET (tare)
- - [ ] Serial command: all to pos_up, all down
+ - [x] WON’T FIX Serial command: all to pos_up, all down
  - [x] abort button
  - [x] resume button
  - [x] buttons for predefined drinks
@@ -26,7 +26,7 @@
  - [x] UPRIGHT_OFFSET / 2.0 (if less, don't do anything if more pour)
  - [x] dancing bottles!
  - [x] improve dancing bottles by turning more bottles at the same time
- - [ ] store some stuff in EPROM (eg. scale calibration, etc.)
+ - [x] store some stuff in EPROM (eg. scale calibration, etc.)
  - [ ] Serial command: calibrate scale, not only tare
 
 Testing:
