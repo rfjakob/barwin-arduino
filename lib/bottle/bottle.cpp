@@ -91,7 +91,9 @@ errv_t Bottle::turn_to(int pos, int delay_ms, bool check_weight) {
         if (check_weight) {
             int weight;
             int ret = ads1231_get_noblock(weight);
-            if (ret != ADS1231_WOULD_BLOCK) {
+            if (ret == 0) {
+                // we got a valid weight from scale
+                // (very likely ret is ADS1231_WOULD_BLOCK)
                 if (weight < WEIGHT_EPSILON) {
                     return WHERE_THE_FUCK_IS_THE_CUP;
                 }
