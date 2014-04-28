@@ -240,10 +240,6 @@ errv_t pour_cocktail(int* requested_amount) {
     // wait until weight > WEIGHT_EPSILON or CUP_TIMEOUT reached
     RETURN_IFN_0(wait_for_cup());
 
-    // wait a bit until cup weight can be measured safely
-    // TODO is this obsolete since we have ads1231_get_stable_grams?
-    delay(CUP_SETTLING_TIME);
-
     // Actually poured liquid for each bottle
     int measured_amount[bottles_nr];
     // initializing array with 0
