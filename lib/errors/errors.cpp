@@ -35,6 +35,9 @@ String strerror(errv_t errno)
         case        INVALID_COMMAND:
             return "INVAL_CMD";
 
+        case        WEIGHT_NOT_STABLE:
+            return "WEIGHT_NOT_STABLE";
+
         case        ADS1231_TIMEOUT_HIGH:
             return "ADS_TO_H";
 

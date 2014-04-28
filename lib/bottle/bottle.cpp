@@ -37,14 +37,20 @@ Bottle::Bottle(unsigned char _number, unsigned char _pin, int _pos_down, int _po
 /**
  * Turn servo towards 'pos' in 1 microsecond steps, waiting delay_ms
  * milliseconds between steps (speed = 1/delay). If check_weight weight
- * is true, might abort with WHERE_THE_FUCK_IS_THE_CUP error.
+ * is true, might abort with WHERE_THE_FUCK_IS_THE_CUP error. If a valid pointer
+ * stable_weight is passed, turns bottle until a stable weight is measured
+ * (returns WEIGHT_NOT_STABLE if pos is reached before weight stable).
+ *
  * Returns 0 when the position is reached or SERVO_OUT_OF_RANGE on error.
  *
  * For details about the built-in Servo class see:
  *     /usr/share/arduino/libraries/Servo/Servo.cpp
  *
  */
-errv_t Bottle::turn_to(int pos, int delay_ms, bool check_weight) {
+errv_t Bottle::turn_to(int pos, int delay_ms, bool check_weight, int* stable_weight) {
+    int weight_previous1 = -9999;  // just any impossible value
+    int weight_previous2 = -9999;  // ..before we have real values
+
     if (pos < SERVO_MIN || pos > SERVO_MAX) {
         DEBUG_MSG_LN("Invalid pos");
         return SERVO_OUT_OF_RANGE;
@@ -88,14 +94,24 @@ errv_t Bottle::turn_to(int pos, int delay_ms, bool check_weight) {
                 DEBUG_MSG_LN(String("check_aborted took ") + String(t1) + String("ms"));
         }
 
-        if (check_weight) {
+        if (check_weight || stable_weight) {
             int weight;
             int ret = ads1231_get_noblock(weight);
             if (ret == 0) {
                 // we got a valid weight from scale
-                // (very likely ret is ADS1231_WOULD_BLOCK)
-                if (weight < WEIGHT_EPSILON) {
+                if (check_weight && weight < WEIGHT_EPSILON) {
                     return WHERE_THE_FUCK_IS_THE_CUP;
+                }
+
+                // get next weight sample and return if weight is stable
+                if (stable_weight) {
+                    if (weight_previous2 == weight_previous1
+                            && weight_previous1 == weight) {
+                        *stable_weight = weight;
+                        return 0;
+                    }
+                    weight_previous2 = weight_previous1;
+                    weight_previous1 = weight;
                 }
             }
             // it would take too long to get weight...
@@ -106,6 +122,11 @@ errv_t Bottle::turn_to(int pos, int delay_ms, bool check_weight) {
 
         // turn servo one step
         servo.writeMicroseconds(i);
+    }
+
+    // pos reached before weight stable
+    if (stable_weight) {
+        return WEIGHT_NOT_STABLE;
     }
 
     return 0;
@@ -151,12 +172,15 @@ errv_t Bottle::pour(int requested_amount, int& measured_amount) {
     // orig_weight is weight including ingredients poured until now
     int orig_weight, ret;
     while (1) {
-        ret = ads1231_get_stable_grams(orig_weight);
-        if (ret != 0) {
+        // get weight while turning bottle, because ads1231_stable_millis()
+        // blocks bottle in pause position too long
+        int below_pause = (pos_down + get_pause_pos()) / 2;
+        ret = turn_to(below_pause, TURN_DOWN_DELAY, true, &orig_weight);
+        if (ret != 0 && ret != WHERE_THE_FUCK_IS_THE_CUP) {
             ERROR(strerror(ret));
             return ret;
         }
-        if (orig_weight < WEIGHT_EPSILON) {
+        if (ret == WHERE_THE_FUCK_IS_THE_CUP || orig_weight < WEIGHT_EPSILON) {
             // no cup...
             wait_for_cup();
         }

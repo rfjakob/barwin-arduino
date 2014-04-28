@@ -128,7 +128,10 @@ errv_t ads1231_get_grams(int& grams)
 /*
  * Get the weight in grams but measure often until the same weight is measured
  * for 3 three times.
- * Can block for longer if the weight on scale is not stable.
+ * Can block for longer if the weight on scale is not stable. Something similar
+ * is implemented in Bottle::turn_to() (see parameter 'stable_weight') in order
+ * to get a stable weight without blocking the movement of the bottle.
+ *
  * Returns 0 on sucess, an error code otherwise (see errors.h)
  */
 errv_t ads1231_get_stable_grams(int& grams) {
