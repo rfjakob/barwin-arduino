@@ -53,6 +53,7 @@ errv_t wait_for_resume() {
             return 0;
         }
         else if (ret) {
+            ERROR(strerror(ret));
             return ret;
         }
     }
@@ -65,7 +66,7 @@ errv_t wait_for_resume() {
  * If receive_resume is set to true, 'RESUME' is a valid cmd as well.
  */
 errv_t check_aborted(bool receive_resume) {
-    bool abort = false;
+    int ret = 0;
     if (Serial.available() > 0) {
         char cmd[8+1];
         // The conversion to String depends on having a trailing NULL!
@@ -79,7 +80,7 @@ errv_t check_aborted(bool receive_resume) {
         if(Serial.readBytes(cmd, 8)) {
             String cmd_str = String(cmd);
             if (cmd_str.equals("ABORT\r\n")) {
-                abort = true;
+                ret = ABORTED;
             }
             else if (receive_resume && cmd_str.equals("RESUME\r\n")) {
                 DEBUG_MSG(String("Free mem: ") + String(get_free_memory()));
@@ -96,17 +97,13 @@ errv_t check_aborted(bool receive_resume) {
         //}
     }
     else if (digitalRead(ABORT_BTN_PIN) == LOW) { // pull up inverts logic!
-        abort = true;
+        ret = ABORTED;
     }
     else if (receive_resume && digitalRead(RESUME_BTN_PIN) == LOW) {
         return RESUMED;
     }
 
-    if (abort) {
-        ERROR(strerror(ABORTED));
-        return ABORTED;
-    }
-    return 0;
+    return ret;
 }
 
 /**

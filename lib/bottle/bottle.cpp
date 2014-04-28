@@ -86,12 +86,8 @@ errv_t Bottle::turn_to(int pos, int delay_ms, bool check_weight, int* stable_wei
         // TODO actually it would be nice to be able to abort also when turning
         // up but that means to check if already aborted...
         if (step * (pos_up - pos_down) < 0) {
-            unsigned long t0=millis();
             // Return if we should abort...
             RETURN_IFN_0(check_aborted());
-            unsigned long t1=millis()-t0;
-            if(t1 > 100)
-                DEBUG_MSG_LN(String("check_aborted took ") + String(t1) + String("ms"));
         }
 
         if (check_weight || stable_weight) {
@@ -221,7 +217,6 @@ errv_t Bottle::pour(int requested_amount, int& measured_amount) {
         // Cup was removed early
         else if(ret == WHERE_THE_FUCK_IS_THE_CUP) {
             turn_to_pause_pos(FAST_TURN_UP_DELAY);
-            // TODO abort command should be processed in wait_for_cup()
             RETURN_IFN_0(wait_for_cup());
         }
         // other error - turn bottle up and return error code
