@@ -268,11 +268,7 @@ errv_t pour_cocktail(int* requested_amount) {
         cur_bottle = &bottles[i];
 
         if (last_bottle != 0) { // On the first iteration last_bottle is NULL
-            errv_t ret = crossfade(last_bottle, cur_bottle, TURN_UP_DELAY);
-            if (ret) {
-                ERROR(strerror(ret));
-                return ret;
-            }
+            RETURN_IFN_0(crossfade(last_bottle, cur_bottle, TURN_UP_DELAY));
             // At this point, last_bottle is up and cur_bottle is at pause position
         }
 
@@ -310,7 +306,7 @@ errv_t pour_cocktail(int* requested_amount) {
 /**
  * If the bot is bored it lets the bottles dance! :)
  */
-void dancing_bottles() {
+errv_t dancing_bottles() {
     Bottle *cur_bottle = NULL;
     Bottle *last_bottle = NULL;
     bottles[0].turn_to_pause_pos(DANCING_DELAY);
@@ -318,7 +314,7 @@ void dancing_bottles() {
         cur_bottle = &bottles[i];
 
         if (last_bottle != 0) { // On the first iteration last_bottle is NULL
-            crossfade(last_bottle, cur_bottle, DANCING_DELAY);
+            RETURN_IFN_0(crossfade(last_bottle, cur_bottle, DANCING_DELAY));
             // At this point, last_bottle is up and cur_bottle is at pause position
         }
         // At this point, cur_bottle is at pause position again. Next crossfade

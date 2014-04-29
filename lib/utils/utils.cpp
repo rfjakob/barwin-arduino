@@ -83,7 +83,7 @@ errv_t check_aborted(bool receive_resume) {
                 ret = ABORTED;
             }
             else if (receive_resume && cmd_str.equals("RESUME\r\n")) {
-                DEBUG_MSG(String("Free mem: ") + String(get_free_memory()));
+                DEBUG_MSG_LN(String("Free mem: ") + String(get_free_memory()));
                 return RESUMED;
             } else {
                 ERROR(strerror(INVALID_COMMAND));
@@ -118,6 +118,8 @@ errv_t check_aborted(bool receive_resume) {
  *            x
  *           / \
  * b1 ______/   \______ pause position
+ *
+ * Returns ABORTED if aborted.
  */
 errv_t crossfade(Bottle * b1, Bottle * b2, int delay_ms) {
     int step = 1;
@@ -153,7 +155,13 @@ errv_t crossfade(Bottle * b1, Bottle * b2, int delay_ms) {
 
         delay(delay_ms/2);
 
-        RETURN_IFN_0(check_aborted());
+        if (check_aborted()) {
+            // no other cleanup, other bottles should be alright
+            b1->turn_up(FAST_TURN_UP_DELAY);
+            b2->turn_up(FAST_TURN_UP_DELAY);
+            ERROR(strerror(ABORTED));
+            return ABORTED;
+        }
     }
 
     return 0;
