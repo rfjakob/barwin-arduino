@@ -119,7 +119,7 @@ errv_t check_aborted(bool receive_resume) {
  *           / \
  * b1 ______/   \______ pause position
  */
-void crossfade(Bottle * b1, Bottle * b2, int delay_ms) {
+errv_t crossfade(Bottle * b1, Bottle * b2, int delay_ms) {
     int step = 1;
     int b1_pos = b1->servo.readMicroseconds();
     int b2_pos = b2->servo.readMicroseconds();
@@ -152,5 +152,9 @@ void crossfade(Bottle * b1, Bottle * b2, int delay_ms) {
             break;
 
         delay(delay_ms/2);
+
+        RETURN_IFN_0(check_aborted());
     }
+
+    return 0;
 }

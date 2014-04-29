@@ -268,7 +268,11 @@ errv_t pour_cocktail(int* requested_amount) {
         cur_bottle = &bottles[i];
 
         if (last_bottle != 0) { // On the first iteration last_bottle is NULL
-            crossfade(last_bottle, cur_bottle, TURN_UP_DELAY);
+            errv_t ret = crossfade(last_bottle, cur_bottle, TURN_UP_DELAY);
+            if (ret) {
+                ERROR(strerror(ret));
+                return ret;
+            }
             // At this point, last_bottle is up and cur_bottle is at pause position
         }
 
