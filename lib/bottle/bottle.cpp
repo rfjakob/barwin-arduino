@@ -47,7 +47,7 @@ Bottle::Bottle(unsigned char _number, unsigned char _pin, int _pos_down, int _po
  *     /usr/share/arduino/libraries/Servo/Servo.cpp
  *
  */
-errv_t Bottle::turn_to(int pos, int delay_ms, bool check_weight, int* stable_weight) {
+errv_t Bottle::turn_to(int pos, int delay_ms, bool check_weight, int* stable_weight, bool enable_abortcheck) {
     int weight_previous1 = -9999;  // just any impossible value
     int weight_previous2 = -9999;  // ..before we have real values
 
@@ -82,12 +82,14 @@ errv_t Bottle::turn_to(int pos, int delay_ms, bool check_weight, int* stable_wei
         //    DEBUG_VAL_LN(i);
         //}
 
-        // check abort only if turning down...
-        // TODO actually it would be nice to be able to abort also when turning
-        // up but that means to check if already aborted...
-        if (step * (pos_up - pos_down) < 0) {
-            // Return if we should abort...
-            RETURN_IFN_0(check_aborted());
+        // check abort only if not already aborted...
+        if (enable_abortcheck) {
+            // turn up and return if we should abort...
+            errv_t ret = check_aborted();
+            if (ret) {
+                turn_up(FAST_TURN_UP_DELAY, true);
+                return ret;
+            }
         }
 
         if (check_weight || stable_weight) {
@@ -131,8 +133,8 @@ errv_t Bottle::turn_to(int pos, int delay_ms, bool check_weight, int* stable_wei
 /**
  * Turn bottle to upright position.
  */
-errv_t Bottle::turn_up(int delay_ms) {
-    return turn_to(pos_up, delay_ms);
+errv_t Bottle::turn_up(int delay_ms, bool enable_abortcheck) {
+    return turn_to(pos_up, delay_ms, false, NULL, enable_abortcheck);
 }
 
 /**

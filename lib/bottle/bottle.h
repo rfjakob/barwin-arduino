@@ -27,8 +27,8 @@ class Bottle {
     public:
         Bottle(unsigned char, unsigned char, int, int);
         static void init(Bottle* bottles, int bottles_nr);
-        errv_t turn_to(int pos, int delay_ms, bool check_weight=false, int* stable_weight=NULL);
-        errv_t turn_up(int delay_ms);
+        errv_t turn_to(int pos, int delay_ms, bool check_weight=false, int* stable_weight=NULL, bool enable_abortcheck=true);
+        errv_t turn_up(int delay_ms, bool enable_abortcheck=true);
         errv_t turn_down(int delay_ms, bool check_weight=false);
         int get_pause_pos();
         errv_t turn_to_pause_pos(int delay_ms);
