@@ -190,10 +190,12 @@ errv_t Bottle::pour(int requested_amount, int& measured_amount) {
         }
     }
 
-    MSG(String("POURING ") + String(number) + String(" ") + String(orig_weight));
-
     // loop until successfully poured or aborted or other fatal error
     while(1) {
+        // petres wants POURING message also after resume...
+        // https://github.com/rfjakob/barwin-arduino/issues/10
+        MSG(String("POURING ") + String(number) + String(" ") + String(orig_weight));
+
         DEBUG_MSG_LN("Turn down");
         ret = turn_down(TURN_DOWN_DELAY, true); // enable check_weight
 
@@ -224,6 +226,7 @@ errv_t Bottle::pour(int requested_amount, int& measured_amount) {
         }
         // Cup was removed early
         else if(ret == WHERE_THE_FUCK_IS_THE_CUP) {
+            ERROR(strerror(WHERE_THE_FUCK_IS_THE_CUP));
             RETURN_IFN_0(turn_to_pause_pos(FAST_TURN_UP_DELAY));
             RETURN_IFN_0(wait_for_cup());
         }
