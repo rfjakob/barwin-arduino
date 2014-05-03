@@ -276,17 +276,14 @@ errv_t delay_until(long max_delay, int weight, bool pour_handling, bool reverse)
  */
 errv_t wait_for_cup() {
     int weight;
-    ads1231_get_grams(weight); // weight will be 0 in case of error
-    if ( weight < WEIGHT_EPSILON) {
+    RETURN_IFN_0(ads1231_get_grams(weight));
+    if (weight < WEIGHT_EPSILON) {
         MSG("WAITING_FOR_CUP");
         int ret = delay_until(CUP_TIMEOUT, 0, false);
         if (ret == DELAY_UNTIL_TIMEOUT) {
             // FIXME if wait_for_cup() is caused by a WHERE_THE_FUCK_IS_THE_CUP
             // error, then the bottle will remain in pause position...
-            ERROR(strerror(CUP_TIMEOUT_REACHED));
             return CUP_TIMEOUT_REACHED;
-        } else if (ret != 0) {
-            ERROR(strerror(ret));
         }
         return ret;
     }

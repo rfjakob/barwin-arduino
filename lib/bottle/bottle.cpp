@@ -87,7 +87,7 @@ errv_t Bottle::turn_to(int pos, int delay_ms, bool check_weight, int* stable_wei
             // turn up and return if we should abort...
             errv_t ret = check_aborted();
             if (ret) {
-                turn_up(FAST_TURN_UP_DELAY, true);
+                turn_up(FAST_TURN_UP_DELAY, false);
                 return ret;
             }
         }
@@ -112,13 +112,15 @@ errv_t Bottle::turn_to(int pos, int delay_ms, bool check_weight, int* stable_wei
                     weight_previous1 = weight;
                 }
             }
-            // it would take too long to get weight...
-            else delay(delay_ms);
-        } else {
-            delay(delay_ms);
+            else if (ret != ADS1231_WOULD_BLOCK) {
+                // ignoring if it would take too long to get weight, but
+                // return in case of other error != 0
+                return ret;
+            }
         }
 
         // turn servo one step
+        delay(delay_ms);
         servo.writeMicroseconds(i);
     }
 
@@ -175,12 +177,12 @@ errv_t Bottle::pour(int requested_amount, int& measured_amount) {
         int below_pause = (pos_down + get_pause_pos()) / 2;
         ret = turn_to(below_pause, TURN_DOWN_DELAY, true, &orig_weight);
         if (ret != 0 && ret != WHERE_THE_FUCK_IS_THE_CUP) {
-            ERROR(strerror(ret));
+            turn_up(FAST_TURN_UP_DELAY, false);
             return ret;
         }
         if (ret == WHERE_THE_FUCK_IS_THE_CUP || orig_weight < WEIGHT_EPSILON) {
             // no cup...
-            wait_for_cup();
+            RETURN_IFN_0(wait_for_cup());
         }
         else {
             // everything fine
@@ -213,26 +215,32 @@ errv_t Bottle::pour(int requested_amount, int& measured_amount) {
         if(ret == BOTTLE_EMPTY) {
             ERROR(strerror(BOTTLE_EMPTY) + String(" ") + String(number) );
             // TODO other speed here? it is empty already!
-            turn_to(pos_up + BOTTLE_EMPTY_POS_OFFSET, TURN_UP_DELAY);
-            RETURN_IFN_0(wait_for_resume()); // might return ABORTED
+            RETURN_IFN_0(turn_to(pos_up + BOTTLE_EMPTY_POS_OFFSET, TURN_UP_DELAY));
+            errv_t ret = wait_for_resume(); // might return ABORTED
+            if (ret) {
+                turn_up(FAST_TURN_UP_DELAY, false);
+                return ret;
+            }
         }
         // Cup was removed early
         else if(ret == WHERE_THE_FUCK_IS_THE_CUP) {
-            turn_to_pause_pos(FAST_TURN_UP_DELAY);
+            RETURN_IFN_0(turn_to_pause_pos(FAST_TURN_UP_DELAY));
             RETURN_IFN_0(wait_for_cup());
         }
         // other error - turn bottle up and return error code
         // includes: scale error, user abort, ...
         else {
-            turn_up(FAST_TURN_UP_DELAY);
+            // if ABORTED was triggered during turn_to(), bottle is up already
+            // but that does not matter
+            turn_up(FAST_TURN_UP_DELAY, true);
             return ret;
         }
     }
 
     // We turn to pause pos and not completely up so we can crossfade
-    turn_to_pause_pos(TURN_UP_DELAY);
+    RETURN_IFN_0(turn_to_pause_pos(TURN_UP_DELAY));
 
-    ads1231_get_grams(measured_amount);
+    RETURN_IFN_0(ads1231_get_grams(measured_amount));
     measured_amount -= orig_weight;
 
     DEBUG_START();

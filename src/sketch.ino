@@ -36,10 +36,10 @@ DEFINE_BOTTLES();
 // be at least bottles_nr + 1 (i.e. 8 in most cases)
 unsigned char drink_btns[][8] = DRINK_BTNS;
 
-errv_t pour_cocktail(int* requested_amount);
 void parse_int_params(int* params, int size);
 void init_drink_btns();
-void process_drink_btns();
+errv_t pour_cocktail(int* requested_amount);
+errv_t process_drink_btns();
 
 void setup() {
     pinMode(ABORT_BTN_PIN, INPUT_PULLUP);
@@ -64,14 +64,19 @@ void setup() {
 
 
 void loop() {
+    // the function do_stuff() introduces a layer to print errors for error
+    // passed until here (and not caught earlier), see errors.h for details
+    errv_t ret = do_stuff();
+    if (ret) {
+        ERROR(strerror(ret));
+    }
+}
+
+errv_t do_stuff() {
     // print some stuff every SEND_READY_INTERVAL milliseconds while idle
     IF_HAS_TIME_PASSED(SEND_READY_INTERVAL)  {
-        int ret, weight = 0;
-        ret = ads1231_get_grams(weight);
-        if (ret != 0) {
-            ERROR(strerror(ret));
-            return;
-        }
+        int weight = 0;
+        RETURN_IFN_0(ads1231_get_grams(weight));
 
         // send message: READY weight is_cup_there
         String msg = String("READY ")
@@ -96,7 +101,7 @@ void loop() {
         // or a space is read from serial input. It returns the number of bytes
         // read.
         if(Serial.readBytesUntil(' ', cmd, MAX_COMMAND_LENGTH) == 0)
-            return; // Can that even happen??
+            return 255; // Can that even happen??
 
         String cmd_str = String(cmd);
 
@@ -104,7 +109,7 @@ void loop() {
         if (cmd_str.equals("POUR")) {
             int requested_amount[bottles_nr];
             parse_int_params(requested_amount, bottles_nr); // Also handles the "\r\n"
-            pour_cocktail(requested_amount);
+            return pour_cocktail(requested_amount);
         }
         // Example: TURN_BOTTLE 3 2100\r\n
         else if (cmd_str.equals("TURN")) {
@@ -114,7 +119,7 @@ void loop() {
 
             // bottle number (int starting at 0) first parameter, position
             // as microseconds second parameter
-            bottles[params[0]].turn_to(params[1], TURN_DOWN_DELAY);
+            return bottles[params[0]].turn_to(params[1], TURN_DOWN_DELAY);
         }
         // Example: ECHO ENJOY\r\n
         // Arduino will then print "ENJOY"
@@ -133,18 +138,14 @@ void loop() {
         else if (cmd_str.equals("TARE\r\n")) {
             int weight;
             DEBUG_MSG_LN("Measuring");
-            int ret = ads1231_tare(weight);
-            if (ret != 0) {
-                ERROR(strerror(ret));
-                return;
-            }
+            RETURN_IFN_0(ads1231_tare(weight));
             DEBUG_MSG_LN(
                 String("Scale tared to ") + String(-weight)
             );
         }
         // Example: DANCE\r\n
         else if (cmd_str.equals("DANCE\r\n")) {
-            dancing_bottles();
+            return dancing_bottles();
         }
         // Example: NOP\r\n
         // readBytesUntil read the trailing "\r\n" because there was no " " to stop at
@@ -153,14 +154,15 @@ void loop() {
             MSG("NOP");
         }
         else {
-            ERROR(strerror(INVALID_COMMAND));
             DEBUG_MSG_LN(String("Got '") + String(cmd) + String("'"));
+            return INVALID_COMMAND;
         }
     } else {
         // hardware buttons for hardcoded cocktails...
-        process_drink_btns();
+        return process_drink_btns();
     }
 
+    return 0;
 }
 
 
@@ -183,8 +185,8 @@ void init_drink_btns() {
  * Note that this function should run quite fast and needs to be called often
  * (i.e. fast polling in loop()), otherwise the event is not detected.
  */
-void process_drink_btns(){
-     char drink_btns_nr = sizeof(drink_btns)/sizeof(drink_btns[0]);
+errv_t process_drink_btns(){
+    char drink_btns_nr = sizeof(drink_btns)/sizeof(drink_btns[0]);
     for (int i = 0; i < drink_btns_nr; i++) {
         if(digitalRead(drink_btns[i][0]) == LOW){
             // Button of i-th predefined drink pressed
@@ -197,10 +199,11 @@ void process_drink_btns(){
             for (int j = 0; j < bottles_nr; j++) {
                 requested_amount[j] = drink_btns[i][j+1];
             }
-            pour_cocktail(requested_amount);
-            break;
+            return pour_cocktail(requested_amount);
         }
     }
+
+    return 0;
 }
 
 
@@ -233,7 +236,6 @@ errv_t pour_cocktail(int* requested_amount) {
         sum += requested_amount[i];
     }
     if(sum > MAX_DRINK_GRAMS) {
-        ERROR(strerror(MAX_DRINK_GRAMS_EXCEEDED));
         return MAX_DRINK_GRAMS_EXCEEDED;
     }
 
@@ -272,25 +274,18 @@ errv_t pour_cocktail(int* requested_amount) {
             // At this point, last_bottle is up and cur_bottle is at pause position
         }
 
-        int ret;
-        ret = cur_bottle->pour(requested_amount[i], measured_amount[i]);
+        RETURN_IFN_0(
+            cur_bottle->pour(requested_amount[i], measured_amount[i])
+        );
         // At this point, cur_bottle is at pause position again. Next crossfade
         // will turn it up completely.
-
-        if (ret == ABORTED) {
-            cur_bottle->turn_up(FAST_TURN_UP_DELAY);
-            return ret;
-        }
-        else if (ret != 0) {
-            DEBUG_MSG_LN(String("pour_cocktail: got ") + String(ret));
-            ERROR(strerror(ret));
-        }
 
         // Save bottle for next iteration
         last_bottle=cur_bottle;
     }
 
     // Last bottle is hanging at pause position at this point. Turn up completely.
+    // no need to check return value here - too late for ABORT
     last_bottle->turn_up(TURN_UP_DELAY);
 
     // Send success message, measured_amount as params
@@ -300,7 +295,9 @@ errv_t pour_cocktail(int* requested_amount) {
     MSG(msg);
 
     // wait until user takes the cup
-    delay_until(-1, 0, false, true);
+    RETURN_IFN_0(delay_until(-1, 0, false, true));
+
+    return 0;
 }
 
 /**
@@ -309,7 +306,7 @@ errv_t pour_cocktail(int* requested_amount) {
 errv_t dancing_bottles() {
     Bottle *cur_bottle = NULL;
     Bottle *last_bottle = NULL;
-    bottles[0].turn_to_pause_pos(DANCING_DELAY);
+    RETURN_IFN_0(bottles[0].turn_to_pause_pos(DANCING_DELAY));
     for (int i = 0; i < bottles_nr; i++) {
         cur_bottle = &bottles[i];
 
@@ -323,5 +320,5 @@ errv_t dancing_bottles() {
         // Save bottle for next iteration
         last_bottle=cur_bottle;
     }
-    last_bottle->turn_up(DANCING_DELAY);
+    RETURN_IFN_0(last_bottle->turn_up(DANCING_DELAY));
 }

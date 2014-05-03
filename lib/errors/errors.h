@@ -3,8 +3,15 @@
  *
  * Used as return values of functions in case of errors. Should be globally
  * unique so they can passed on from one function to the next, e.g. using
- * RETURN_IFN_0(). On every error (except ABORTED?) an error message using
- * the macro name should be emitted using the ERROR() macro.
+ * RETURN_IFN_0(). *Not passing* an error code to the next function (using
+ * RETURN_IFN_0) is similar to catching an exception, while passing an error
+ * to the next function is similar to an uncaught exception which is passed to
+ * the next function. The internet says that nobody uses exceptions on
+ * microcontrollers. Actually after messing around with error codes, I ask
+ * myself why I trust the internet.
+ *
+ * If you do not pass an error code until top level, you should print it using
+ * the macro ERROR(). For errors passed until top this is done in do_stuff().
  */
 #ifndef ERRORS_H
 #define ERRORS_H

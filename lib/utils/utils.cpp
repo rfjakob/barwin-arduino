@@ -53,7 +53,6 @@ errv_t wait_for_resume() {
             return 0;
         }
         else if (ret) {
-            ERROR(strerror(ret));
             return ret;
         }
     }
@@ -159,7 +158,6 @@ errv_t crossfade(Bottle * b1, Bottle * b2, int delay_ms) {
             // no other cleanup, other bottles should be alright
             b1->turn_up(FAST_TURN_UP_DELAY);
             b2->turn_up(FAST_TURN_UP_DELAY);
-            ERROR(strerror(ABORTED));
             return ABORTED;
         }
     }
