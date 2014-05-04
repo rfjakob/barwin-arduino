@@ -28,6 +28,7 @@
  - [x] improve dancing bottles by turning more bottles at the same time
  - [x] store some stuff in EPROM (eg. scale calibration, etc.)
  - [ ] Serial command: calibrate scale, not only tare
+ - [ ] dancing bottles should move backwards as well
 
 Testing:
     - empty bottle
