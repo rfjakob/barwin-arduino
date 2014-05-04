@@ -87,6 +87,8 @@ errv_t Bottle::turn_to(int pos, int delay_ms, bool check_weight, int* stable_wei
             // turn up and return if we should abort...
             errv_t ret = check_aborted();
             if (ret) {
+                // turn_up might not be necessary here, called another time
+                // later (does not matter if called twice)
                 turn_up(FAST_TURN_UP_DELAY, false);
                 return ret;
             }
@@ -176,8 +178,12 @@ errv_t Bottle::pour(int requested_amount, int& measured_amount) {
         // blocks bottle in pause position too long
         int below_pause = (pos_down + get_pause_pos()) / 2;
         ret = turn_to(below_pause, TURN_DOWN_DELAY, true, &orig_weight);
+
+        // Note that checking weight here is a critical issue, allows hacking
+        // the robot. If a heavy weight is placed while measuring and then
+        // removed while pouring (results in more alcohol). Stable weight
+        // should resolve most problems.
         if (ret != 0 && ret != WHERE_THE_FUCK_IS_THE_CUP) {
-            turn_up(FAST_TURN_UP_DELAY, false);
             return ret;
         }
         if (ret == WHERE_THE_FUCK_IS_THE_CUP || orig_weight < WEIGHT_EPSILON) {
@@ -218,11 +224,7 @@ errv_t Bottle::pour(int requested_amount, int& measured_amount) {
             ERROR(strerror(BOTTLE_EMPTY) + String(" ") + String(number) );
             // TODO other speed here? it is empty already!
             RETURN_IFN_0(turn_to(pos_up + BOTTLE_EMPTY_POS_OFFSET, TURN_UP_DELAY));
-            errv_t ret = wait_for_resume(); // might return ABORTED
-            if (ret) {
-                turn_up(FAST_TURN_UP_DELAY, false);
-                return ret;
-            }
+            RETURN_IFN_0(wait_for_resume()); // might return ABORTED
         }
         // Cup was removed early
         else if(ret == WHERE_THE_FUCK_IS_THE_CUP) {
@@ -233,9 +235,6 @@ errv_t Bottle::pour(int requested_amount, int& measured_amount) {
         // other error - turn bottle up and return error code
         // includes: scale error, user abort, ...
         else {
-            // if ABORTED was triggered during turn_to(), bottle is up already
-            // but that does not matter
-            turn_up(FAST_TURN_UP_DELAY, true);
             return ret;
         }
     }

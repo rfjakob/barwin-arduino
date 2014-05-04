@@ -274,9 +274,13 @@ errv_t pour_cocktail(int* requested_amount) {
             // At this point, last_bottle is up and cur_bottle is at pause position
         }
 
-        RETURN_IFN_0(
-            cur_bottle->pour(requested_amount[i], measured_amount[i])
-        );
+        errv_t ret = cur_bottle->pour(requested_amount[i], measured_amount[i]);
+        if (ret) {
+            // if ABORTED was triggered during turn_to(), bottle is up already
+            // but that does not matter
+            cur_bottle->turn_up(FAST_TURN_UP_DELAY, false);
+            return ret;
+        }
         // At this point, cur_bottle is at pause position again. Next crossfade
         // will turn it up completely.
 
@@ -295,7 +299,7 @@ errv_t pour_cocktail(int* requested_amount) {
         if (measured_amount[i] > MAX_DRINK_GRAMS
             || measured_amount[i] < 0
             || abs(pour_error) > MAX_POUR_ERROR) {
-            msg = "ERROR POURING_INACCURATE";
+            msg = "ERROR POURING_INACCURATE ";
         }
     }
 
