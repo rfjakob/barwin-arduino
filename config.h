@@ -104,4 +104,8 @@
 // (not per bottle, but per pouring procedure)
 #define MAX_DRINK_GRAMS 250
 
+// If the requested and the measured output for at least one ingredient is
+// larger, an ERROR message will be printed instead of ENJOY (in grams).
+#define MAX_POUR_ERROR  20
+
 #endif
