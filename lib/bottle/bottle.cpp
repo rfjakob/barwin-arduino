@@ -183,6 +183,9 @@ errv_t Bottle::pour(int requested_amount, int& measured_amount) {
         // the robot. If a heavy weight is placed while measuring and then
         // removed while pouring (results in more alcohol). Stable weight
         // should resolve most problems.
+        if (ret == WEIGHT_NOT_STABLE) {
+            ret = ads1231_get_stable_grams(orig_weight);
+        }
         if (ret != 0 && ret != WHERE_THE_FUCK_IS_THE_CUP) {
             return ret;
         }
