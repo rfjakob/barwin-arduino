@@ -293,17 +293,21 @@ errv_t pour_cocktail(int* requested_amount) {
     last_bottle->turn_up(TURN_UP_DELAY);
 
     // check if measured_amount makes sense
-    String msg = "ENJOY ";
+    // if not we print an error, but still send enjoy with wrong values because
+    // we do not want change anything in java (values are ignored in java)
+    // see also https://github.com/rfjakob/barwin-arduino/issues/11
     for (int i = 0; i < bottles_nr; i++) {
         int pour_error = measured_amount[i] - requested_amount[i];
         if (measured_amount[i] > MAX_DRINK_GRAMS
             || measured_amount[i] < 0
             || abs(pour_error) > MAX_POUR_ERROR) {
-            msg = "ERROR POURING_INACCURATE ";
+            ERROR(strerror(POURING_INACCURATE));
+            break;
         }
     }
 
     // Send success or error message, measured_amount as params
+    String msg = "ENJOY ";
     for (int i = 0; i < bottles_nr; i++)
         msg += String(measured_amount[i]) + String(" ");
     MSG(msg);

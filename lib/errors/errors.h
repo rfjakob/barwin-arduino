@@ -34,7 +34,7 @@ String strerror(unsigned char errno);
 #define SERVO_OUT_OF_RANGE           15    // if Bottle::turn_to is called with wrong pos
 #define RESUMED                      16    // after BOTTLE_EMPTY
 #define WEIGHT_NOT_STABLE            17    // if turn_to() reaches pos before weight stable
-//#define POURING_INACCURATE         18    // requested and measured amount differ too much
+#define POURING_INACCURATE         18    // requested and measured amount differ too much
 
 // Serial message parsing
 #define INVALID_COMMAND              21

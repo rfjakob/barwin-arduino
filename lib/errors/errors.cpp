@@ -38,9 +38,8 @@ String strerror(errv_t errno)
         case        WEIGHT_NOT_STABLE:
             return "WEIGHT_NOT_STABLE";
 
-// currently not needed as error code, comment out --> save some bytes
-//        case        POURING_INACCURATE:
-//            return "POURING_INACCURATE";
+        case        POURING_INACCURATE:
+            return "INACCURATE";
 
         case        ADS1231_TIMEOUT_HIGH:
             return "ADS_TO_H";
