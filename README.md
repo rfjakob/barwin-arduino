@@ -6,12 +6,16 @@ This code controls the servos and the scale and communicates with the PC using a
 Dependencies
 ============
 Debian:
-	sudo apt-get install arduino python-pip picocom
-	sudo pip install ino pyserial
+```
+sudo apt-get install arduino python-pip picocom
+sudo pip install ino pyserial
+```
 
 Fedora:
-    sudo yum install arduino python-pip picocom
-    sudo pip install ino pyserial
+```
+sudo yum install arduino python-pip picocom
+sudo pip install ino pyserial
+```
     
 Compile + Upload + Connect to serial
 ====================================
@@ -21,8 +25,12 @@ See Makefile for details. Tested with Arduino Duemilanove and Arduino Leonardo.
 
 Serial Interface
 =====================
-Timeout for one command: 50 milliseconds (see SERIAL_TIMEOUT in config.h)
-Terminated using space and \r\n
+Timeout for one command: 50 milliseconds (see ```SERIAL_TIMEOUT``` in ```config.h```)
+Terminated using space and ```\r\n```, e.g. to send a command from terminal:
+
+```
+printf "ABORT\r\n" > /dev/ttyACM?
+```
 
 Serial -> Arduino:
 ------------------
