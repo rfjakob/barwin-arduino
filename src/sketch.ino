@@ -312,9 +312,6 @@ errv_t pour_cocktail(int* requested_amount) {
         msg += String(measured_amount[i]) + String(" ");
     MSG(msg);
 
-    // wait until user takes the cup
-    RETURN_IFN_0(delay_until(-1, 0, false, true));
-
     return 0;
 }
 
