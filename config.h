@@ -18,11 +18,12 @@
 // Note: Values not more than 255, because we use unsigned char!
 // Drinks: Screw driver, Spezi, Long I.I. Tea, Cuba Libre
 // Bottles: Vodka, Rum, Gin, Triple Sec, Orange juice, Lime, Cola
+// Bottles: Rum, Vodka, Water, Orange, Gin, Tonic, Cola
 //                   PIN   amount in g for each bottle
-#define DRINK_BTNS {{A2,     50,   0,   0,   0, 120,   0,   0}, \
-                    {A4,      0,   0,   0,   0,  85,  10,  85}, \
-                    {A5,     15,  20,  15,  15,   0,  25,  70}, \
-                    {A3,      0,  45,   0,   0,   0,  10, 120} \
+#define DRINK_BTNS {{A2,      0,  50,   0,  120,   0,   0,   0}, \
+                    {A4,      0,   0,   0,   85,   0,   0,  85}, \
+                    {A5,      0,   0,  50,    0,   0, 120,   0}, \
+                    {A3,     50,   0,   0,    0,   0,   0, 120} \
 }
 
 // Define bottles (number, pin, up/down position for servo)
