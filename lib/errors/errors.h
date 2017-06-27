@@ -19,7 +19,7 @@
 typedef unsigned char errv_t;
 
 // Helper function
-String strerror(unsigned char errno);
+String c_strerror(errv_t errno);
 
 // return values by delay_until()
 #define DELAY_UNTIL_TIMEOUT          1

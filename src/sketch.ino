@@ -23,7 +23,7 @@
 #include <bottle.h>
 #include <utils.h>
 #include <errors.h>
-#include "../config.h"
+#include "config.h"
 
 
 // Macro Magic that creates and initializes the variables
@@ -40,6 +40,8 @@ void parse_int_params(int* params, int size);
 void init_drink_btns();
 errv_t pour_cocktail(int* requested_amount);
 errv_t process_drink_btns();
+errv_t do_stuff();
+errv_t dancing_bottles();
 
 void setup() {
     pinMode(ABORT_BTN_PIN, INPUT_PULLUP);
@@ -68,7 +70,7 @@ void loop() {
     // passed until here (and not caught earlier), see errors.h for details
     errv_t ret = do_stuff();
     if (ret) {
-        ERROR(strerror(ret));
+        ERROR(c_strerror(ret));
     }
 }
 
@@ -301,7 +303,7 @@ errv_t pour_cocktail(int* requested_amount) {
         if (measured_amount[i] > MAX_DRINK_GRAMS
             || measured_amount[i] < 0
             || abs(pour_error) > MAX_POUR_ERROR) {
-            ERROR(strerror(POURING_INACCURATE));
+            ERROR(c_strerror(POURING_INACCURATE));
             break;
         }
     }

@@ -8,7 +8,7 @@
  * The awkward formatting is on purpose: This way you spot immediately if the
  * case value and the returned string do not match (typos, copy paste errors).
  */
-String strerror(errv_t errno)
+String c_strerror(errv_t errno)
 {
     switch(errno){
         case        DELAY_UNTIL_TIMEOUT:

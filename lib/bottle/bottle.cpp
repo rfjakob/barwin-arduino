@@ -3,10 +3,10 @@
  */
 
 #include <Arduino.h>
-#include "bottle.h"
-#include "ads1231.h"
+#include <bottle.h>
+#include <ads1231.h>
 #include <utils.h>
-#include "errors.h"
+#include <errors.h>
 #include "../../config.h"
 
 
@@ -224,14 +224,14 @@ errv_t Bottle::pour(int requested_amount, int& measured_amount) {
         // Note that this does not work if requested_amount is less than
         // UPGRIGHT_OFFSET!
         if(ret == BOTTLE_EMPTY) {
-            ERROR(strerror(BOTTLE_EMPTY) + String(" ") + String(number) );
+            ERROR(c_strerror(BOTTLE_EMPTY) + String(" ") + String(number) );
             // TODO other speed here? it is empty already!
             RETURN_IFN_0(turn_to(pos_up + BOTTLE_EMPTY_POS_OFFSET, TURN_UP_DELAY));
             RETURN_IFN_0(wait_for_resume()); // might return ABORTED
         }
         // Cup was removed early
         else if(ret == WHERE_THE_FUCK_IS_THE_CUP) {
-            ERROR(strerror(WHERE_THE_FUCK_IS_THE_CUP));
+            ERROR(c_strerror(WHERE_THE_FUCK_IS_THE_CUP));
             RETURN_IFN_0(turn_to_pause_pos(FAST_TURN_UP_DELAY));
             RETURN_IFN_0(wait_for_cup());
         }

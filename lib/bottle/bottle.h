@@ -14,7 +14,7 @@
 #define SERVO_MAX 2500
 
 #include <Servo.h>
-#include "errors.h"
+#include <errors.h>
 
 // Macro initialising a array 'bottles' of Bottle instances as defined
 // in config.h by the comma separated list BOTTLES of constructor calls:

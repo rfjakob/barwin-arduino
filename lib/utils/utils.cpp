@@ -1,7 +1,7 @@
 #include <Arduino.h>
-#include "utils.h""
-#include "bottle.h"
-#include "errors.h"
+#include <utils.h>
+#include <bottle.h>
+#include <errors.h>
 #include "../../config.h"
 
 /**
@@ -85,7 +85,7 @@ errv_t check_aborted(bool receive_resume) {
                 DEBUG_MSG_LN(String("Free mem: ") + String(get_free_memory()));
                 return RESUMED;
             } else {
-                ERROR(strerror(INVALID_COMMAND));
+                ERROR(c_strerror(INVALID_COMMAND));
                 DEBUG_MSG_LN(String("check_aborted: got '") + String(cmd) + String("'"));
             }
         }

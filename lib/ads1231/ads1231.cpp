@@ -21,7 +21,7 @@
 #include <custom_eeprom.h>
 #include <utils.h>
 #include "../../config.h"
-#include "errors.h"
+#include <errors.h>
 
 unsigned long ads1231_last_millis = 0;
 int ads1231_offset = 0;
