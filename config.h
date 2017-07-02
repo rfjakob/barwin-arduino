@@ -11,18 +11,23 @@
 #define ADS1231_DATA_PIN A0
 #define ADS1231_CLK_PIN  A1
 
-#define ABORT_BTN_PIN    1
-#define RESUME_BTN_PIN   0
+// Set to for button array (2 pins used per button)
+#define USE_TWO_PIN_BUTTONS  1 
 
-// Predefined drinks for hardware buttons
+// if USE_TWO_PIN_BUTTONS is set, set two values comma separated
+#define ABORT_BTN_PIN    A5, 0
+#define RESUME_BTN_PIN   A5, 1
+
+// Predefined drinks for hardware buttons (pin2 only used if USE_TWO_PIN_BUTTONS is set)
 // Note: Values not more than 255, because we use unsigned char!
 // Drinks: Screw driver, Spezi, Long I.I. Tea, Cuba Libre
 // Bottles: Vodka, Rum, Gin, Triple Sec, Orange juice, Lime, Cola
-//                   PIN   amount in g for each bottle
-#define DRINK_BTNS {{A2,     50,   0,   0,   0, 120,   0,   0}, \
-                    {A4,      0,   0,   0,   0,  85,  10,  85}, \
-                    {A5,     15,  20,  15,  15,   0,  25,  70}, \
-                    {A3,      0,  45,   0,   0,   0,  10, 120} \
+//
+//                   amount in g for each bottle           PIN1  PIN2
+#define DRINK_BTNS {{50,  0,   0,   0,   120,  0,   0,     A2,   0      }, \
+                    {0,   0,   0,   0,   85,   10,  85,    A3,   0      }, \
+                    {15,  20,  15,  15,  0,    25,  70,    A4,   0      }, \
+                    {0,   45,  0,   0,   0,    10,  120,   A2,   1      } \
 }
 
 // Define bottles (number, pin, up/down position for servo)

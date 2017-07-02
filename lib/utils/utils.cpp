@@ -66,6 +66,20 @@ bool is_button_pressed(int pin) {
     return (digitalRead(pin) == LOW);
 }
 
+
+/**
+ * Check if button in matrix keypad is pressed. pin1 and pin2 define row/column
+ * of button. pin1 has pullup, pin2 is output and must be always high and set
+ * to low while reading from pin1 for this button.
+ */
+bool is_button_pressed(int pin1, int pin2) {
+    digitalWrite(pin2, LOW);
+    bool is_pressed = (digitalRead(pin1) == LOW);
+    digitalWrite(pin2, HIGH);
+    return is_pressed;
+}
+
+
 /**
  * Check if we should abort whatever we ware doing right now.
  * Returns 0 if we should not abort, ABORTED if we should abort.

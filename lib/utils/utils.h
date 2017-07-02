@@ -68,6 +68,7 @@ bool has_time_passed(long time_period, long& last_passed);
 int get_free_memory();
 errv_t wait_for_resume();
 bool is_button_pressed(int pin);
+bool is_button_pressed(int pin1, int pin2);
 errv_t check_aborted(bool receive_resume=false);
 errv_t  crossfade(Bottle * b1, Bottle * b2, int delay_ms);
 
