@@ -275,6 +275,10 @@ errv_t delay_until(long max_delay, int weight, bool pour_handling, bool reverse)
  * Return error codes by delay_until.
  */
 errv_t wait_for_cup() {
+    #ifdef WITHOUT_SCALE
+    return 0;
+    #endif
+
     int weight;
     RETURN_IFN_0(ads1231_get_grams(weight));
     if (weight < WEIGHT_EPSILON) {

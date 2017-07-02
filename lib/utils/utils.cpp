@@ -59,6 +59,28 @@ errv_t wait_for_resume() {
 }
 
 /**
+ * Check if button is pressed. Assumes that pin is configured as input with
+ * (internal or external) pullup.
+ */
+bool is_button_pressed(int pin) {
+    return (digitalRead(pin) == LOW);
+}
+
+
+/**
+ * Check if button in matrix keypad is pressed. pin1 and pin2 define row/column
+ * of button. pin1 has pullup, pin2 is output and must be always high and set
+ * to low while reading from pin1 for this button.
+ */
+bool is_button_pressed(int pin1, int pin2) {
+    digitalWrite(pin2, LOW);
+    bool is_pressed = (digitalRead(pin1) == LOW);
+    digitalWrite(pin2, HIGH);
+    return is_pressed;
+}
+
+
+/**
  * Check if we should abort whatever we ware doing right now.
  * Returns 0 if we should not abort, ABORTED if we should abort.
  *
@@ -95,14 +117,31 @@ errv_t check_aborted(bool receive_resume) {
         //    DEBUG_MSG_LN("check_aborted: something went wrong");
         //}
     }
-    else if (digitalRead(ABORT_BTN_PIN) == LOW) { // pull up inverts logic!
+    else if (is_button_pressed(ABORT_BTN_PIN)) { // pull up inverts logic!
         ret = ABORTED;
     }
-    else if (receive_resume && digitalRead(RESUME_BTN_PIN) == LOW) {
+    else if (receive_resume && is_button_pressed(RESUME_BTN_PIN)) {
         return RESUMED;
     }
 
     return ret;
+}
+
+/**
+ * Blocks until user abort or max_dalay (in ms) is reached. Will wait
+ * infinitely for user abort if max_delay is negative.
+ * Return values:   see also errors.h!
+ *  0 max_delay was reached (success)
+ *  ABORTED 
+ */
+errv_t delay_abortable(long max_delay) {
+    unsigned long start = millis();
+    while(1) {
+        if(max_delay > 0 && millis() - start > max_delay)
+            return 0;
+
+        RETURN_IFN_0(check_aborted());
+    }
 }
 
 /**

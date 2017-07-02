@@ -33,8 +33,8 @@
 DEFINE_BOTTLES();
 
 // FIXME currently hardcoded: array size for second dimension must
-// be at least bottles_nr + 1 (i.e. 8 in most cases)
-unsigned char drink_btns[][8] = DRINK_BTNS;
+// be at least bottles_nr + 2 (i.e. 9 in most cases)
+unsigned char drink_btns[][9] = DRINK_BTNS;
 
 void parse_int_params(int* params, int size);
 void init_drink_btns();
@@ -42,8 +42,20 @@ errv_t pour_cocktail(int* requested_amount);
 errv_t process_drink_btns();
 
 void setup() {
-    pinMode(ABORT_BTN_PIN, INPUT_PULLUP);
-    pinMode(RESUME_BTN_PIN, INPUT_PULLUP);
+    #ifdef USE_TWO_PIN_BUTTONS
+        int abort_btn_pins[] = {ABORT_BTN_PIN};
+        int resume_btn_pins[] = {RESUME_BTN_PIN};
+        pinMode(abort_btn_pins[0], INPUT_PULLUP);
+        pinMode(resume_btn_pins[0], INPUT_PULLUP);
+        pinMode(abort_btn_pins[1], OUTPUT);
+        pinMode(resume_btn_pins[1], OUTPUT);
+        digitalWrite(abort_btn_pins[1], HIGH);
+        digitalWrite(resume_btn_pins[1], HIGH);
+    #else
+        pinMode(ABORT_BTN_PIN, INPUT_PULLUP);
+        pinMode(RESUME_BTN_PIN, INPUT_PULLUP);
+    #endif
+
     init_drink_btns();
 
     // This is obligatory on the Uno, and a noop on the Leonardo.
@@ -51,7 +63,9 @@ void setup() {
     Serial.begin(9600);
     Serial.setTimeout(SERIAL_TIMEOUT);
 
-    ads1231_init();
+    #ifndef WITHOUT_SCALE
+        ads1231_init();
+    #endif
     Bottle::init(bottles, bottles_nr);
 
     // Warn users of emulation mode to avoid unnecessary debugging...
@@ -76,7 +90,9 @@ errv_t do_stuff() {
     // print some stuff every SEND_READY_INTERVAL milliseconds while idle
     IF_HAS_TIME_PASSED(SEND_READY_INTERVAL)  {
         int weight = 0;
-        RETURN_IFN_0(ads1231_get_grams(weight));
+        #ifndef WITHOUT_SCALE
+            RETURN_IFN_0(ads1231_get_grams(weight));
+        #endif
 
         // send message: READY weight is_cup_there
         String msg = String("READY ")
@@ -136,12 +152,14 @@ errv_t do_stuff() {
         }
         // Example: TARE\r\n
         else if (cmd_str.equals("TARE\r\n")) {
+            #ifndef WITHOUT_SCALE
             int weight;
             DEBUG_MSG_LN("Measuring");
             RETURN_IFN_0(ads1231_tare(weight));
             DEBUG_MSG_LN(
                 String("Scale tared to ") + String(-weight)
             );
+            #endif
         }
         // Example: DANCE\r\n
         else if (cmd_str.equals("DANCE\r\n")) {
@@ -172,8 +190,14 @@ errv_t do_stuff() {
 void init_drink_btns() {
     char drink_btns_nr = sizeof(drink_btns)/sizeof(drink_btns[0]);
     for (int i = 0; i < drink_btns_nr; i++) {
-        Serial.println(drink_btns[i][0]);
-        pinMode(drink_btns[i][0], INPUT_PULLUP);
+        //Serial.println(drink_btns[i][0]);
+        pinMode(drink_btns[i][bottles_nr], INPUT_PULLUP);
+
+        #ifdef USE_TWO_PIN_BUTTONS
+            // see is_button_pressed for docstring
+            pinMode(drink_btns[i][bottles_nr + 1], OUTPUT);
+            digitalWrite(drink_btns[i][bottles_nr + 1], HIGH);
+        #endif
     }
 }
 
@@ -188,7 +212,13 @@ void init_drink_btns() {
 errv_t process_drink_btns(){
     char drink_btns_nr = sizeof(drink_btns)/sizeof(drink_btns[0]);
     for (int i = 0; i < drink_btns_nr; i++) {
-        if(digitalRead(drink_btns[i][0]) == LOW){
+        #ifdef USE_TWO_PIN_BUTTONS
+            bool is_pressed = is_button_pressed(drink_btns[i][bottles_nr],
+                                                drink_btns[i][bottles_nr + 1]);
+        #else
+            bool is_pressed = is_button_pressed(drink_btns[i][bottles_nr]);
+        #endif
+        if (is_pressed) {
             // Button of i-th predefined drink pressed
 
             DEBUG_MSG_LN(String("Button ") + String(i) +
@@ -197,7 +227,7 @@ errv_t process_drink_btns(){
             // TODO is this the best way to cast an char array --> int array?
             int requested_amount[bottles_nr];
             for (int j = 0; j < bottles_nr; j++) {
-                requested_amount[j] = drink_btns[i][j+1];
+                requested_amount[j] = drink_btns[i][j];
             }
             return pour_cocktail(requested_amount);
         }
