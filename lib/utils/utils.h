@@ -70,6 +70,7 @@ errv_t wait_for_resume();
 bool is_button_pressed(int pin);
 bool is_button_pressed(int pin1, int pin2);
 errv_t check_aborted(bool receive_resume=false);
+errv_t delay_abortable(long max_delay);
 errv_t  crossfade(Bottle * b1, Bottle * b2, int delay_ms);
 
 /**

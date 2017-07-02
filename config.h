@@ -11,6 +11,10 @@
 #define ADS1231_DATA_PIN A0
 #define ADS1231_CLK_PIN  A1
 
+#define WITHOUT_SCALE 1
+#define MS_PER_GRAMS  50.
+
+
 // Set to for button array (2 pins used per button)
 #define USE_TWO_PIN_BUTTONS  1 
 

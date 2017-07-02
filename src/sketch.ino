@@ -63,7 +63,9 @@ void setup() {
     Serial.begin(9600);
     Serial.setTimeout(SERIAL_TIMEOUT);
 
-    ads1231_init();
+    #ifndef WITHOUT_SCALE
+        ads1231_init();
+    #endif
     Bottle::init(bottles, bottles_nr);
 
     // Warn users of emulation mode to avoid unnecessary debugging...
@@ -88,7 +90,9 @@ errv_t do_stuff() {
     // print some stuff every SEND_READY_INTERVAL milliseconds while idle
     IF_HAS_TIME_PASSED(SEND_READY_INTERVAL)  {
         int weight = 0;
-        RETURN_IFN_0(ads1231_get_grams(weight));
+        #ifndef WITHOUT_SCALE
+            RETURN_IFN_0(ads1231_get_grams(weight));
+        #endif
 
         // send message: READY weight is_cup_there
         String msg = String("READY ")
@@ -148,12 +152,14 @@ errv_t do_stuff() {
         }
         // Example: TARE\r\n
         else if (cmd_str.equals("TARE\r\n")) {
+            #ifndef WITHOUT_SCALE
             int weight;
             DEBUG_MSG_LN("Measuring");
             RETURN_IFN_0(ads1231_tare(weight));
             DEBUG_MSG_LN(
                 String("Scale tared to ") + String(-weight)
             );
+            #endif
         }
         // Example: DANCE\r\n
         else if (cmd_str.equals("DANCE\r\n")) {
@@ -336,8 +342,10 @@ errv_t pour_cocktail(int* requested_amount) {
         msg += String(measured_amount[i]) + String(" ");
     MSG(msg);
 
-    // wait until user takes the cup
-    RETURN_IFN_0(delay_until(-1, 0, false, true));
+    #ifndef WITHOUT_SCALE
+        // wait until user takes the cup (not done for lebertron)
+        RETURN_IFN_0(delay_until(-1, 0, false, true));
+    #endif
 
     return 0;
 }

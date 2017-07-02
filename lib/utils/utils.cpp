@@ -128,6 +128,23 @@ errv_t check_aborted(bool receive_resume) {
 }
 
 /**
+ * Blocks until user abort or max_dalay (in ms) is reached. Will wait
+ * infinitely for user abort if max_delay is negative.
+ * Return values:   see also errors.h!
+ *  0 max_delay was reached (success)
+ *  ABORTED 
+ */
+errv_t delay_abortable(long max_delay) {
+    unsigned long start = millis();
+    while(1) {
+        if(max_delay > 0 && millis() - start > max_delay)
+            return 0;
+
+        RETURN_IFN_0(check_aborted());
+    }
+}
+
+/**
  * Turns bottle 1 up while simultaneously turning bottle 2 down to
  * pause position. Works best if bottle 1 is at pause position at start.
  *
