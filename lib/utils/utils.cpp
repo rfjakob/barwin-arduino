@@ -59,6 +59,14 @@ errv_t wait_for_resume() {
 }
 
 /**
+ * Check if button is pressed. Assumes that pin is configured as input with
+ * (internal or external) pullup.
+ */
+bool is_button_pressed(int pin) {
+    return (digitalRead(pin) == LOW);
+}
+
+/**
  * Check if we should abort whatever we ware doing right now.
  * Returns 0 if we should not abort, ABORTED if we should abort.
  *
@@ -95,10 +103,10 @@ errv_t check_aborted(bool receive_resume) {
         //    DEBUG_MSG_LN("check_aborted: something went wrong");
         //}
     }
-    else if (digitalRead(ABORT_BTN_PIN) == LOW) { // pull up inverts logic!
+    else if (is_button_pressed(ABORT_BTN_PIN)) { // pull up inverts logic!
         ret = ABORTED;
     }
-    else if (receive_resume && digitalRead(RESUME_BTN_PIN) == LOW) {
+    else if (receive_resume && is_button_pressed(RESUME_BTN_PIN)) {
         return RESUMED;
     }
 

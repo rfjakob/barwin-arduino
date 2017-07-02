@@ -188,7 +188,7 @@ void init_drink_btns() {
 errv_t process_drink_btns(){
     char drink_btns_nr = sizeof(drink_btns)/sizeof(drink_btns[0]);
     for (int i = 0; i < drink_btns_nr; i++) {
-        if(digitalRead(drink_btns[i][0]) == LOW){
+        if(is_button_pressed(drink_btns[i][0])) {
             // Button of i-th predefined drink pressed
 
             DEBUG_MSG_LN(String("Button ") + String(i) +
