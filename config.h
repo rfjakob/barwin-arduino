@@ -11,30 +11,43 @@
 #define ADS1231_DATA_PIN A0
 #define ADS1231_CLK_PIN  A1
 
-#define ABORT_BTN_PIN    1
-#define RESUME_BTN_PIN   0
+#define WITHOUT_SCALE 1
+#define MS_PER_GRAMS  50.
 
-// Predefined drinks for hardware buttons
+
+// Set to for button array (2 pins used per button)
+#define USE_TWO_PIN_BUTTONS  1
+
+// if USE_TWO_PIN_BUTTONS is set, set two values comma separated
+#define ABORT_BTN_PIN    A5, 0
+#define RESUME_BTN_PIN   A4, 0
+
+// Predefined drinks for hardware buttons (pin2 only used if USE_TWO_PIN_BUTTONS is set)
 // Note: Values not more than 255, because we use unsigned char!
 // Drinks: Screw driver, Spezi, Long I.I. Tea, Cuba Libre
 // Bottles: Vodka, Rum, Gin, Triple Sec, Orange juice, Lime, Cola
-// Bottles: Rum, Vodka, Water, Orange, Gin, Tonic, Cola
-//                   PIN   amount in g for each bottle
-#define DRINK_BTNS {{A2,      0,  50,   0,  120,   0,   0,   0}, \
-                    {A4,      0,   0,   0,   85,   0,   0,  85}, \
-                    {A5,      0,   0,  50,    0,   0, 120,   0}, \
-                    {A3,     50,   0,   0,    0,   0,   0, 120} \
+//
+// A5...row 1      4...column 1
+// A4...row 2      2...column 2
+// A3...row 3      1...column 3
+// A2...row 4      0...column 4
+//
+//                   amount in g for each bottle           PIN1  PIN2
+#define DRINK_BTNS {{50,  0,   0,   0,   120,  0,   0,     A5,   4      }, \
+                    {0,   0,   0,   0,   85,   10,  85,    A5,   2      }, \
+                    {15,  20,  15,  15,  0,    25,  70,    A5,   1      }, \
+                    {0,   45,  0,   0,   0,    10,  120,   A4,   4      } \
 }
 
 // Define bottles (number, pin, up/down position for servo)
 //                     nr,  pin,  pos_down,  pos_up
-#define BOTTLES Bottle(0,    3,   1200,    2380), \
-                Bottle(1,    5,   1220,    2400), \
-                Bottle(2,    6,   1220,    2400), \
-                Bottle(3,    9,   1090,    2240), \
-                Bottle(4,   10,    950,    2100), \
-                Bottle(5,   13,   1240,    2420), \
-                Bottle(6,   11,    920,    2100)
+#define BOTTLES Bottle(0,    3,   1200,    2350), \
+                Bottle(1,    5,   1200,    2350), \
+                Bottle(2,    6,   1200,    2350), \
+                Bottle(3,    9,   1200,    2350), \
+                Bottle(4,   10,   1200,    2350), \
+                Bottle(5,   13,   1200,    2350), \
+                Bottle(6,   11,   1200,    2350)
 
 // ADC counts per milligram
 #define ADS1231_DIVISOR  1565.1671343537414

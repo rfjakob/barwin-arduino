@@ -94,6 +94,7 @@ errv_t Bottle::turn_to(int pos, int delay_ms, bool check_weight, int* stable_wei
             }
         }
 
+        #ifndef WITHOUT_SCALE
         if (check_weight || stable_weight) {
             int weight;
             int ret = ads1231_get_noblock(weight);
@@ -120,6 +121,7 @@ errv_t Bottle::turn_to(int pos, int delay_ms, bool check_weight, int* stable_wei
                 return ret;
             }
         }
+        #endif
 
         // turn servo one step
         delay(delay_ms);
@@ -172,7 +174,9 @@ errv_t Bottle::turn_to_pause_pos(int delay_ms) {
  */
 errv_t Bottle::pour(int requested_amount, int& measured_amount) {
     // orig_weight is weight including ingredients poured until now
-    int orig_weight, ret;
+    int orig_weight = 0;
+    int ret = 0;
+    #ifndef WITHOUT_SCALE
     while (1) {
         // get weight while turning bottle, because ads1231_stable_millis()
         // blocks bottle in pause position too long
@@ -198,6 +202,7 @@ errv_t Bottle::pour(int requested_amount, int& measured_amount) {
             break;
         }
     }
+    #endif
 
     // loop until successfully poured or aborted or other fatal error
     while(1) {
@@ -212,8 +217,12 @@ errv_t Bottle::pour(int requested_amount, int& measured_amount) {
         // FIXME here we do not want WEIGHT_EPSILON and sharp >
         if (ret == 0) {
             DEBUG_MSG_LN("Waiting");
-            ret = delay_until(POURING_TIMEOUT,
-                    orig_weight + requested_amount - UPGRIGHT_OFFSET, true);
+            #ifndef WITHOUT_SCALE
+                ret = delay_until(POURING_TIMEOUT,
+                        orig_weight + requested_amount - UPGRIGHT_OFFSET, true);
+            #else
+                ret = delay_abortable(requested_amount * MS_PER_GRAMS);
+            #endif
         }
         if (ret == 0)
             break; // All good
@@ -245,13 +254,20 @@ errv_t Bottle::pour(int requested_amount, int& measured_amount) {
     // We turn to pause pos and not completely up so we can crossfade
     RETURN_IFN_0(turn_to_pause_pos(TURN_UP_DELAY));
 
+    #ifndef WITHOUT_SCALE
     RETURN_IFN_0(ads1231_get_grams(measured_amount));
     measured_amount -= orig_weight;
+    #else
+    // this is not a real measurement, but best we can do not break the
+    // protocol and keep everything backward compatible without scale...
+    measured_amount = requested_amount;
+    #endif
 
     DEBUG_START();
     DEBUG_MSG("Stats: ");
     DEBUG_VAL(requested_amount);
     DEBUG_VAL(measured_amount);
     DEBUG_END();
+
     return 0;
 }
