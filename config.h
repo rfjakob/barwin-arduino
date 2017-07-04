@@ -46,8 +46,8 @@
                 Bottle(2,    6,   1200,    2350), \
                 Bottle(3,    9,   1200,    2350), \
                 Bottle(4,   10,   1200,    2350), \
-                Bottle(5,   13,   1200,    2350), \
-                Bottle(6,   11,   1200,    2350)
+                Bottle(5,   11,   1200,    2350), \
+                Bottle(6,   13,   1200,    2350)
 
 // ADC counts per milligram
 #define ADS1231_DIVISOR  1565.1671343537414
