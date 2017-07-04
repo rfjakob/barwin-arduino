@@ -8,10 +8,10 @@
 // emulate a scale
 //#define ADS1231_EMULATION 1
 
-#define ADS1231_DATA_PIN A0
-#define ADS1231_CLK_PIN  A1
+#define ADS1231_DATA_PIN A1
+#define ADS1231_CLK_PIN  A0
 
-#define WITHOUT_SCALE 1
+//#define WITHOUT_SCALE 1
 #define MS_PER_GRAMS  50.
 
 
