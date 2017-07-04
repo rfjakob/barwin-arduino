@@ -74,7 +74,7 @@ VERSION ?=	1.0
 # Valid model names can be found in $(ARDUINO_DIR)/hardware/arduino/avr/boards.txt
 # This must be set to a valid model name.
 #ARDUINO_MODEL ?= micro
-ARDUINO_MODEL = uno
+ARDUINO_MODEL = leonardo
 #ARDUINO_MODEL = nano328  # Is set to a 168 CPU
 #ARDUINO_MODEL = atmega2560
 
@@ -125,6 +125,7 @@ AVRDUDE_PROGRAMMER = avr109
 # Give the name of the directory containing the library source files.
 ifndef ARDUINO_LIBS
 ARDUINO_LIBS =
+ARDUINO_LIBS += Arduino
 ARDUINO_LIBS += EEPROM
 ARDUINO_LIBS += Wire
 ARDUINO_LIBS += SPI
