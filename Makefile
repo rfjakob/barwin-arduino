@@ -85,7 +85,7 @@ ARDUINO_FAMILY = mega
 
 # Arduino variant (for Arduino 1.0+).
 # Directory containing the pins_arduino.h file.
-#ARDUINO_VARIANT=$(ARDUINO_DIR)/hardware/arduino/avr/variants/micro
+ARDUINO_VARIANT=$(ARDUINO_DIR)/hardware/arduino/avr/variants/micro
 
 # MCU architecture.
 # Currently hardcoded to avr (sam, etc. are unsupported.)
@@ -125,7 +125,6 @@ AVRDUDE_PROGRAMMER = avr109
 # Give the name of the directory containing the library source files.
 ifndef ARDUINO_LIBS
 ARDUINO_LIBS =
-ARDUINO_LIBS += Arduino
 ARDUINO_LIBS += EEPROM
 ARDUINO_LIBS += Wire
 ARDUINO_LIBS += SPI
