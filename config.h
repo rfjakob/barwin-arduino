@@ -8,10 +8,10 @@
 // emulate a scale
 //#define ADS1231_EMULATION 1
 
-#define ADS1231_DATA_PIN A0
-#define ADS1231_CLK_PIN  A1
+#define ADS1231_DATA_PIN A1
+#define ADS1231_CLK_PIN  A0
 
-#define WITHOUT_SCALE 1
+//#define WITHOUT_SCALE 1
 #define MS_PER_GRAMS  50.
 
 
@@ -41,13 +41,13 @@
 
 // Define bottles (number, pin, up/down position for servo)
 //                     nr,  pin,  pos_down,  pos_up
-#define BOTTLES Bottle(0,    3,   1200,    2350), \
-                Bottle(1,    5,   1200,    2350), \
-                Bottle(2,    6,   1200,    2350), \
-                Bottle(3,    9,   1200,    2350), \
-                Bottle(4,   10,   1200,    2350), \
-                Bottle(5,   13,   1200,    2350), \
-                Bottle(6,   11,   1200,    2350)
+#define BOTTLES Bottle(0,    3,   1050,    2300), \
+                Bottle(1,    5,   1200,    2300), \
+                Bottle(2,    6,   1200,    2150), \
+                Bottle(3,    9,   1200,    2050), \
+                Bottle(4,   10,   2350,    850), \
+                Bottle(5,   11,   2350,    950), \
+                Bottle(6,   13,   2350,    800)
 
 // ADC counts per milligram
 #define ADS1231_DIVISOR  1565.1671343537414
