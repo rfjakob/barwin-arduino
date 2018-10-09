@@ -108,7 +108,7 @@ ARDUINO ?= 	161
 # E.g. /usr/local/arduino, or $(HOME)/arduino
 # Make sure this matches ARDUINO above!
 #ARDUINO_DIR =	/usr/local/pckg/arduino/arduino-0023
-ARDUINO_DIR ?=	/usr/share/arduino
+ARDUINO_DIR ?=	/opt/arduino-1.8.7
 ARDUINO_DIR2 ?=	/home/peter/Arduino
 
 # Arduino 0.x based on 328P now need the new programmer protocol.

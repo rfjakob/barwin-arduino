@@ -24,40 +24,56 @@
 
 // Predefined drinks for hardware buttons (pin2 only used if USE_TWO_PIN_BUTTONS is set)
 // Note: Values not more than 255, because we use unsigned char!
-// Drinks: Screw driver, Spezi, Long I.I. Tea, Cuba Libre
-// Bottles: Vodka, Rum, Gin, Triple Sec, Orange juice, Lime, Cola
 //
 // A5...row 1      4...column 1
 // A4...row 2      2...column 2
 // A3...row 3      1...column 3
 // A2...row 4      0...column 4
 //
+// Bottles: Vodka, Martini, Gin, Whisky, Tonic, Cola, Orange
+// Drinks:
+//
+//      Gin tonic      (1)
+//      Martini Vodka  (2)
+//      Vodka Orange   (3)
+//      Whisky Cola    (4)
+//      Vodka Cola     (5)
+//      Spezi          (6)
+//      Vodka          (7)
+//      Martini        (8)
+//      Gin            (9)
+//      Whisky         (C)
+//      Tonic          (*)
+//      Cola           (0)
+//      Orange         (#)
+//      von allem      (D)
+//
 //                   amount in g for each bottle           PIN1  PIN2
-#define DRINK_BTNS {{50,   0,   0,   0,   0,    0,    0,    A5,   4      }, \
-                    {0,   50,   0,   0,   0,    0,    0,    A5,   2      }, \
-                    {0,    0,  50,   0,   0,    0,    0,    A5,   1      }, \
-                    {0,   45,   0,  50,   0,    0,    0,    A4,   4      } \
-                    {0,    0,   0,   0,  50,    0,    0,    A4,   2      } \
-                    {0,    0,   0,   0,   0,   50,    0,    A4,   1      } \
-                    {0,    0,   0,   0,   0,    0,   50,    A3,   4      } \
-                    {50,   0,   0,   0, 120,    0,    0,    A3,   2      } \
-                    {0,    0,   0,   0,  85,   10,   85,    A3,   1      } \
-                    {15,  20,  15,   15,  0,   25,   70,    A3,   0      } \
-                    {0,   45,   0,   0,   0,   10,  120,    A2,   4      } \
-                    {0,    0,   0,   0,   0,    0,    0,    A2,   2      } \
-                    {0,    0,   0,   0,   0,    0,    0,    A2,   1      } \
-                    {0,    0,   0,   0,   0,    0,    0,    A2,   0      } \
+#define DRINK_BTNS {{0,    0,  40,   0,   140,  0,    0,    A5,   4      }, \
+                    {30,  60,   0,   0,   0,    0,    0,    A5,   2      }, \
+                    {40,   0,   0,   0,   0,    0,  140,    A5,   1      }, \
+                    {0,    0,   0,  40,   0,  140,    0,    A4,   4      }, \
+                    {40,   0,   0,   0,   0,  140,    0,    A4,   2      }, \
+                    {0,    0,   0,   0,   0,   60,   60,    A4,   1      }, \
+                    {10,   0,   0,   0,   0,    0,    0,    A3,   4      }, \
+                    {0,   10,   0,   0,   0,    0,    0,    A3,   2      }, \
+                    {0,    0,  10,   0,   0,    0,    0,    A3,   1      }, \
+                    {0,    0,   0,  10,   0,    0,    0,    A3,   0      }, \
+                    {0,    0,   0,   0,  60,    0,    0,    A2,   4      }, \
+                    {0,    0,   0,   0,   0,   70,    0,    A2,   2      }, \
+                    {0,    0,   0,   0,   0,    0,   70,    A2,   1      }, \
+                    {20,  20,  20,  20,  20,   20,   20,    A2,   0      }  \
 }
 
 // Define bottles (number, pin, up/down position for servo)
 //                     nr,  pin,  pos_down,  pos_up
 #define BOTTLES Bottle(0,    3,   1050,    2300), \
                 Bottle(1,    5,   1200,    2300), \
-                Bottle(2,    6,   1200,    2150), \
-                Bottle(3,    9,   1200,    2050), \
+                Bottle(2,    6,   1200,    2200), \
+                Bottle(3,    9,   1080,    2050), \
                 Bottle(4,   10,   2350,    850), \
-                Bottle(5,   11,   2350,    950), \
-                Bottle(6,   13,   2350,    800)
+                Bottle(5,   11,   2150,    950), \
+                Bottle(6,   13,   2250,    800)
 
 // ADC counts per milligram
 #define ADS1231_DIVISOR  1565.1671343537414
