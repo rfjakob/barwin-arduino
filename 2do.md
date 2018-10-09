@@ -1,4 +1,7 @@
 
+ - [ ] add LCD screen for serial messages
+ - [ ] make cup weighting bulletproof, stop if wait decreases significantly before pouring finished
+ - [ ] dancing bottles should dance also in reverse direction
  - [x] Problem: orig might be measured if there is no cup
  - [ ] Problem: when cup is away, bottle pours directly to scale and causes weight
  - [x] Error handling? (scale?)
