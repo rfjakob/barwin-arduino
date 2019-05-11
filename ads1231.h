@@ -5,7 +5,7 @@
 #ifndef ADS1231_H
 #define ADS1231_H
 
-#include <errors.h>
+#include "errors.h"
 
 extern unsigned long ads1231_last_millis;
 extern int ads1231_offset;

@@ -1,8 +1,9 @@
 #include <Arduino.h>
-#include <utils.h>
-#include <bottle.h>
-#include <errors.h>
-#include "../../config.h"
+
+#include "utils.h"
+#include "bottle.h"
+#include "errors.h"
+#include "config.h"
 
 /**
  * Used to call something every 'time_period' milliseconds.

@@ -3,11 +3,12 @@
  */
 
 #include <Arduino.h>
-#include <bottle.h>
-#include <ads1231.h>
-#include <utils.h>
-#include <errors.h>
-#include "../../config.h"
+
+#include "bottle.h"
+#include "ads1231.h"
+#include "utils.h"
+#include "errors.h"
+#include "config.h"
 
 
 /*
