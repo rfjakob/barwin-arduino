@@ -1,4 +1,4 @@
-ARDUINO_DIR := $(shell ls -d /opt/arduino-* | tail -1)
+ARDUINO_DIR := $(shell find /opt -maxdepth 1 -type d -name "arduino-*" | tail -1)
 $(info Using ARDUINO_DIR=$(ARDUINO_DIR))
 
 .PHONY: build

@@ -1,4 +1,4 @@
-barwin-arduino
+barwin-arduino [![Build Status](https://travis-ci.org/rfjakob/barwin-arduino.svg?branch=master)](https://travis-ci.org/rfjakob/barwin-arduino)
 ==============
 Arduino code for Barwin (former codename evobot) - see http://barwin.suuf.cc/ for more info.
 This code controls the servos and the scale and communicates with the PC using a serial link.
