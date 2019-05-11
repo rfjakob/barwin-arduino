@@ -108,7 +108,7 @@ ARDUINO ?= 	161
 # E.g. /usr/local/arduino, or $(HOME)/arduino
 # Make sure this matches ARDUINO above!
 #ARDUINO_DIR =	/usr/local/pckg/arduino/arduino-0023
-ARDUINO_DIR ?=	/opt/arduino-1.8.7
+ARDUINO_DIR ?=	/opt/arduino-1.8.9
 ARDUINO_DIR2 ?=	/home/peter/Arduino
 
 # Arduino 0.x based on 328P now need the new programmer protocol.
@@ -161,9 +161,9 @@ OUTPUT ?=	.build
 
 # Where are tools like avr-gcc located on your system?
 # If you set this, it must end with a slash!
-#AVR_TOOLS_PATH = $(ARDUINO_DIR)/hardware/tools/avr/bin/
+AVR_TOOLS_PATH ?= $(ARDUINO_DIR)/hardware/tools/avr/bin/
 #AVR_TOOLS_PATH = /usr/bin/
-AVR_TOOLS_PATH ?=
+#AVR_TOOLS_PATH ?=
 
 # Reset command to use.
 # Possible values are: "stty", "python", "perl".
