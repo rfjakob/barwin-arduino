@@ -19,10 +19,10 @@
  */
 
 #include <Arduino.h>
-#include <ads1231.h>
-#include <bottle.h>
-#include <utils.h>
-#include <errors.h>
+#include "ads1231.h"
+#include "bottle.h"
+#include "utils.h"
+#include "errors.h"
 #include "config.h"
 
 
