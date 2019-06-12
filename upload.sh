@@ -1,1 +1,1 @@
-avrdude -C//etc/avrdude.conf -v -patmega32u4 -carduino -P/dev/ttyACM0 -b9600 -D -Uflash:w:/tmp/arduino_build_766618/bla.ino.hex:i
+avrdude -C//etc/avrdude.conf -v -patmega2560 -cstk500v2 -P/dev/ttyACM0 -b115200 -D -Uflash:w:$PWD/arduino-builder/barwin-arduino.ino.hex:i

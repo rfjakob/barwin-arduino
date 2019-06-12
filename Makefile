@@ -5,7 +5,7 @@ $(info Using ARDUINO_DIR=$(ARDUINO_DIR))
 build:
 	mkdir -p arduino-builder
 	$(ARDUINO_DIR)/arduino-builder -libraries $(ARDUINO_DIR)/libraries -hardware $(ARDUINO_DIR)/hardware \
-	-tools $(ARDUINO_DIR)/hardware/tools -tools $(ARDUINO_DIR)/tools-builder -fqbn arduino:avr:leonardo \
+		-tools $(ARDUINO_DIR)/hardware/tools -tools $(ARDUINO_DIR)/tools-builder -fqbn arduino:avr:mega:cpu=atmega2560 \
 	-build-path arduino-builder \
 	barwin-arduino.ino
 
