@@ -26,7 +26,7 @@ reason.)
 
 Compile + Upload + Connect to serial
 ====================================
-	make && ./upload.sh
+	make
 
 See Makefile for details. Currently mega2560 used, Makefile and upload.sh needs
 to be adapted (see 0721c72e).
