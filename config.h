@@ -8,8 +8,8 @@
 // emulate a scale
 //#define ADS1231_EMULATION 1
 
-#define ADS1231_DATA_PIN A1
-#define ADS1231_CLK_PIN  A0
+#define ADS1231_DATA_PIN 21
+#define ADS1231_CLK_PIN  20
 
 //#define WITHOUT_SCALE 1
 #define MS_PER_GRAMS  50.
@@ -49,31 +49,31 @@
 //      von allem      (D)
 //
 //                   amount in g for each bottle           PIN1  PIN2
-#define DRINK_BTNS {{0,    0,  40,   0,   140,  0,    0,    A5,   4      }, \
-                    {30,  60,   0,   0,   0,    0,    0,    A5,   2      }, \
-                    {40,   0,   0,   0,   0,    0,  140,    A5,   1      }, \
-                    {0,    0,   0,  40,   0,  140,    0,    A4,   4      }, \
-                    {40,   0,   0,   0,   0,  140,    0,    A4,   2      }, \
-                    {0,    0,   0,   0,   0,   60,   60,    A4,   1      }, \
-                    {10,   0,   0,   0,   0,    0,    0,    A3,   4      }, \
-                    {0,   10,   0,   0,   0,    0,    0,    A3,   2      }, \
-                    {0,    0,  10,   0,   0,    0,    0,    A3,   1      }, \
+#define DRINK_BTNS {{0,    0,  40,   0,   140,  0,    0,    A5,   0      }, \
+                    {30,  60,   0,   0,   0,    0,    0,    A5,   0      }, \
+                    {40,   0,   0,   0,   0,    0,  140,    A5,   0      }, \
+                    {0,    0,   0,  40,   0,  140,    0,    A4,   0      }, \
+                    {40,   0,   0,   0,   0,  140,    0,    A4,   0      }, \
+                    {0,    0,   0,   0,   0,   60,   60,    A4,   0      }, \
+                    {10,   0,   0,   0,   0,    0,    0,    A3,   0      }, \
+                    {0,   10,   0,   0,   0,    0,    0,    A3,   0      }, \
+                    {0,    0,  10,   0,   0,    0,    0,    A3,   0      }, \
                     {0,    0,   0,  10,   0,    0,    0,    A3,   0      }, \
-                    {0,    0,   0,   0,  60,    0,    0,    A2,   4      }, \
-                    {0,    0,   0,   0,   0,   70,    0,    A2,   2      }, \
-                    {0,    0,   0,   0,   0,    0,   70,    A2,   1      }, \
+                    {0,    0,   0,   0,  60,    0,    0,    A2,   0      }, \
+                    {0,    0,   0,   0,   0,   70,    0,    A2,   0      }, \
+                    {0,    0,   0,   0,   0,    0,   70,    A2,   0      }, \
                     {20,  20,  20,  20,  20,   20,   20,    A2,   0      }  \
 }
 
 // Define bottles (number, pin, up/down position for servo)
 //                     nr,  pin,  pos_down,  pos_up
-#define BOTTLES Bottle(0,    3,   1050,    2300), \
-                Bottle(1,    5,   1200,    2300), \
-                Bottle(2,    6,   1200,    2200), \
-                Bottle(3,    9,   1080,    2050), \
-                Bottle(4,   10,   2350,    850), \
-                Bottle(5,   11,   2150,    950), \
-                Bottle(6,   13,   2250,    800)
+#define BOTTLES Bottle(0,    2,    800,    2250), \
+                Bottle(1,    3,   1000,    2400), \
+                Bottle(2,    4,   1000,    2400), \
+                Bottle(3,    5,    800,    2150), \
+                Bottle(4,    6,   2300,    700), \
+                Bottle(5,    7,   2300,    700), \
+                Bottle(6,    8,   2300,    600)
 
 // ADC counts per milligram
 #define ADS1231_DIVISOR  1565.1671343537414
@@ -91,8 +91,8 @@
 // ADS1231_OFFSET  = weight1 - (raw1 * (weight1 - weight2)) / (raw1 - raw2)
 
 // Delay between single servo steps when turning bottle up/down, in milliseconds
-#define TURN_DOWN_DELAY        2
-#define TURN_UP_DELAY          4
+#define TURN_DOWN_DELAY        1
+#define TURN_UP_DELAY          2
 #define FAST_TURN_UP_DELAY     1  // used for abort and init
 #define CALIBRATION_TURN_DELAY 8  // used for calibrate_bottle_pos()
 #define DANCING_DELAY          3  // used for DANCING_BOTTLES

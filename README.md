@@ -1,4 +1,4 @@
-barwin-arduino
+barwin-arduino [![Build Status](https://travis-ci.org/rfjakob/barwin-arduino.svg?branch=master)](https://travis-ci.org/rfjakob/barwin-arduino)
 ==============
 Arduino code for Barwin (former codename evobot) - see http://barwin.suuf.cc/ for more info.
 This code controls the servos and the scale and communicates with the PC using a serial link.
@@ -6,22 +6,31 @@ This code controls the servos and the scale and communicates with the PC using a
 Dependencies
 ============
 Debian:
+
 ```
-sudo apt-get install arduino python-pip picocom
-sudo pip install ino pyserial
+sudo apt-get install make avrdude
 ```
 
-Fedora:
+See also .travis.yml:
+
 ```
-sudo yum install arduino python-pip picocom
-sudo pip install ino pyserial
+cd /tmp/
+wget https://downloads.arduino.cc/arduino-1.8.9-linux64.tar.xz
+tar xf arduino-1.8.9-linux64.tar.xz
+sudo mv arduino-1.8.9 /opt
 ```
-    
+
+(Arduino from apt is way too old, also 1.8.5 seems to make troubles for some
+reason.)
+
+
 Compile + Upload + Connect to serial
 ====================================
 	make
 
-See Makefile for details. Tested with Arduino Duemilanove and Arduino Leonardo.
+See Makefile for details. Currently mega2560 used, Makefile and upload.sh needs
+to be adapted (see 0721c72e).
+
 
 Serial Interface
 =====================

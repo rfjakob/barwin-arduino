@@ -3,3 +3,4 @@
 *.orig
 *.rej
 /log
+/arduino-builder
