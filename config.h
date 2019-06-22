@@ -19,16 +19,16 @@
 #define USE_TWO_PIN_BUTTONS  1
 
 // if USE_TWO_PIN_BUTTONS is set, set two values comma separated
-#define ABORT_BTN_PIN    39, 53
-#define RESUME_BTN_PIN   41, 53
+#define ABORT_BTN_PIN    A0, A7
+#define RESUME_BTN_PIN   A1, A7
 
 // Predefined drinks for hardware buttons (pin2 only used if USE_TWO_PIN_BUTTONS is set)
 // Note: Values not more than 255, because we use unsigned char!
 //
-// 39...row 1      47...column 1
-// 41...row 2      49...column 2
-// 43...row 3      51...column 3
-// 45...row 4      53...column 4
+// A0...row 1      A4...column 1
+// A1...row 2      A5...column 2
+// A2...row 3      A6...column 3
+// A3...row 4      A7...column 4
 //
 // Bottles: Vodka, Martini, Gin, Whisky, Tonic, Cola, Orange
 // Drinks:
@@ -65,16 +65,16 @@
 // }
 //
 //                   amount in g for each bottle           PIN1  PIN2
-#define DRINK_BTNS {{10,   0,   0,   0,   0,    0,    0,    45,   49      }, \
-                    {0,   10,   0,   0,   0,    0,    0,    39,   47      }, \
-                    {0,    0,  10,   0,   0,    0,    0,    39,   49      }, \
-                    {0,    0,   0,  10,   0,    0,    0,    39,   51      }, \
-                    {0,    0,   0,   0,  10,    0,    0,    41,   47      }, \
-                    {0,    0,   0,   0,   0,   10,    0,    41,   49      }, \
-                    {0,    0,   0,   0,   0,    0,   10,    41,   51      }, \
-                    {0,    0,   0,   0,   0,    0,    0,    43,   47      }, \
-                    {0,    0,  10,   0,   0,    0,    0,    43,   49      }, \
-                    {0,    0,   0,  10,   0,    0,    0,    43,   51      }, \
+#define DRINK_BTNS {{10,   0,   0,   0,   0,    0,    0,    A0,   A4      }, \
+                    {0,   10,   0,   0,   0,    0,    0,    A0,   A5      }, \
+                    {0,    0,  10,   0,   0,    0,    0,    A0,   A6      }, \
+                    {0,    0,   0,  10,   0,    0,    0,    A1,   A4      }, \
+                    {0,    0,   0,   0,  10,    0,    0,    A1,   A5      }, \
+                    {0,    0,   0,   0,   0,   10,    0,    A1,   A6      }, \
+                    {0,    0,   0,   0,   0,    0,   10,    A2,   A4      }, \
+                    {0,    0,   0,   0,   0,    0,    0,    A2,   A5      }, \
+                    {0,    0,  10,   0,   0,    0,    0,    A2,   A6      }, \
+                    {0,    0,   0,  10,   0,    0,    0,    A2,   0      }, \
                     {0,    0,   0,   0,  60,    0,    0,    A2,   0      }, \
                     {0,    0,   0,   0,   0,   70,    0,    A2,   0      }, \
                     {0,    0,   0,   0,   0,    0,   70,    A2,   0      }, \
