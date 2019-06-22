@@ -166,3 +166,11 @@ Useful links
 ============
 * ino quickstart http://inotool.org/quickstart
 * ADS1231 datasheet http://www.ti.com/lit/ds/symlink/ads1231.pdf
+
+Arduino IDE
+============
+Working version: 1.8.9
+Board: Arduino/Genuino Mega or Mega 2560
+Processor: AtMega 2560 (Mega 2560)
+Programmer: Atmel STK500 developer board
+Terminal: "Newline" / 9600 baud
