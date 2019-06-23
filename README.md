@@ -170,8 +170,8 @@ Useful links
 
 Arduino IDE
 ============
-Working version: 1.8.9
-Board: Arduino/Genuino Mega or Mega 2560
-Processor: AtMega 2560 (Mega 2560)
-Programmer: Atmel STK500 developer board
-Terminal: "Both Nl & CR" / 9600 baud
+* Working version: 1.8.9
+* Board: Arduino/Genuino Mega or Mega 2560
+* Processor: AtMega 2560 (Mega 2560)
+* Programmer: Atmel STK500 developer board
+* Terminal: "Both Nl & CR" / 9600 baud
