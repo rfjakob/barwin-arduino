@@ -73,6 +73,8 @@ errv_t check_aborted(bool receive_resume=false);
 errv_t delay_abortable(long max_delay);
 errv_t  crossfade(Bottle * b1, Bottle * b2, int delay_ms);
 
+void to_lcd(String msg, int line);
+
 /**
  * A quite dangerous macro, to simplify usage of has_time_passed().
  *

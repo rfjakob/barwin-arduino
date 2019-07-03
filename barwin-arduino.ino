@@ -20,7 +20,7 @@
 */
 
 #include <Arduino.h>
-#include <LiquidCrystal.h>
+// #include <LiquidCrystal.h>
 #include "ads1231.h"
 #include "bottle.h"
 #include "utils.h"
@@ -46,8 +46,9 @@ errv_t process_drink_btns();
 errv_t do_stuff();
 errv_t dancing_bottles();
 
-const int rs = 53, en = 52, d4 = 51, d5 = 50, d6 = 49, d7 = 48;
-LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
+// const int rs = 53, en = 52, d4 = 51, d5 = 50, d6 = 49, d7 = 48;
+// LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 void setup() {
 #ifdef USE_TWO_PIN_BUTTONS
@@ -82,11 +83,12 @@ void setup() {
 #endif
 
   //initialize display
-  lcd.begin(16, 2);
-  lcd.print("hello, world!");
-  lcd.setCursor(0, 1) ;
-  lcd.print("hello, world zwei");
+  // lcd.begin(16, 2);
+  // lcd.print("hello, world!");
+  // lcd.setCursor(0, 1) ;
+  // lcd.print("hello, world zwei");
   DEBUG_MSG_LN("setup() end");
+  // to_lcd("setup() end",2);
 }
 
 
@@ -112,7 +114,7 @@ errv_t do_stuff() {
                  + String(weight) + String(" ")
                  + String(weight > WEIGHT_EPSILON ? 1 : 0);
     MSG(msg);
-
+    to_lcd(msg,1);
     // XXX often used debugging code to get raw weight value:
     //long weight_raw;
     //ads1231_get_value(weight_raw);
