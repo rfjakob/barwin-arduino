@@ -209,9 +209,10 @@ errv_t crossfade(Bottle * b1, Bottle * b2, int delay_ms) {
     return 0;
 }
 
-void to_lcd(String msg,int line)
+void to_lcd(String msg, int line)
 {
     lcd.begin(16, 2);
-    if (line == 2) lcd.setCursor(0, 1) ;
+    if (line == 2)
+        lcd.setCursor(0, 1) ;
     lcd.print(msg);
 }
