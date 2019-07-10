@@ -105,7 +105,10 @@ errv_t do_stuff() {
                  + String(weight) + String(" ")
                  + String(weight > WEIGHT_EPSILON ? 1 : 0);
     MSG(msg);
-    to_lcd(msg,1);
+
+    String lcd_msg = String(weight) + String("g  Cup: ") 
+        + String(weight > WEIGHT_EPSILON ? 1 : 0);
+    to_lcd(lcd_msg, 1);
     // XXX often used debugging code to get raw weight value:
     //long weight_raw;
     //ads1231_get_value(weight_raw);
