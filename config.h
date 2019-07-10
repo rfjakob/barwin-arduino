@@ -88,7 +88,7 @@
                 Bottle(2,    4,   1000,    2400), \
                 Bottle(3,    5,    800,    2150), \
                 Bottle(4,    6,   2300,    700), \
-                Bottle(5,    7,   2300,    700), \
+                Bottle(5,    7,   2300,    701), \
                 Bottle(6,    8,   2300,    600)
 
 // ADC counts per milligram
@@ -137,7 +137,7 @@
 
 // Stop pouring early in grams to account for the liquid pouring out while turning
 // the bottle up
-#define UPGRIGHT_OFFSET  17
+#define UPGRIGHT_OFFSET  22
 
 // When waiting for changes of weight on scale, ignore changes less than... (in grams)
 #define WEIGHT_EPSILON  2
