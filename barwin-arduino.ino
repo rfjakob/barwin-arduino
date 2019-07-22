@@ -114,7 +114,7 @@ errv_t do_stuff() {
     if (weight > 100)
         sep = String(" ");
     String lcd_msg = String("Weight=")
-        + String(weight) + sep + String("Cup:")
+        + String(weight) + sep + String("Cup=")
         + String(weight > WEIGHT_EPSILON ? 1 : 0);
     print_lcd(lcd_msg, 1);
     print_lcd("READY", 2);

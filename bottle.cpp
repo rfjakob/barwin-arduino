@@ -238,12 +238,16 @@ errv_t Bottle::pour(int requested_amount, int& measured_amount) {
             // TODO other speed here? it is empty already!
             RETURN_IFN_0(turn_to(pos_up + BOTTLE_EMPTY_POS_OFFSET, TURN_UP_DELAY));
             RETURN_IFN_0(wait_for_resume()); // might return ABORTED
+	    print_lcd("", 2);  // clear error (writing POUR command again would 
+	                       // be nicer, but difficult...)
         }
         // Cup was removed early
         else if(ret == WHERE_THE_FUCK_IS_THE_CUP) {
             ERROR(c_strerror(WHERE_THE_FUCK_IS_THE_CUP));
             RETURN_IFN_0(turn_to_pause_pos(FAST_TURN_UP_DELAY));
             RETURN_IFN_0(wait_for_cup());
+	    print_lcd("", 2);  // clear error (writing POUR command again would 
+	                       // be nicer, but difficult...)
         }
         // other error - turn bottle up and return error code
         // includes: scale error, user abort, ...
