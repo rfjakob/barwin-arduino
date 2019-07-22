@@ -1,2 +1,2 @@
 #!/bin/bash
-printf "DANCING_BOTTLES\r\n" > /dev/ttyACM?
+printf "DANCE\r\n" > /dev/ttyACM?

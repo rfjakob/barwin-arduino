@@ -95,7 +95,7 @@
 #define TURN_UP_DELAY          2
 #define FAST_TURN_UP_DELAY     1  // used for abort and init
 #define CALIBRATION_TURN_DELAY 8  // used for calibrate_bottle_pos()
-#define DANCING_DELAY          3  // used for DANCING_BOTTLES
+#define DANCING_DELAY          3  // used for DANCE
 
 // Time to wait until cup is placed on scale (in seconds)
 #define CUP_TIMEOUT     180*1000
