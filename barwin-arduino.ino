@@ -46,13 +46,9 @@ errv_t process_drink_btns();
 errv_t do_stuff();
 errv_t dancing_bottles();
 
-// TODO move these pins to config!
-const int rs = 53, en = 52, d4 = 51, d5 = 50, d6 = 49, d7 = 48;
-Lcd lcd(rs, en, d4, d5, d6, d7);
-
 void setup() {
-  lcd.begin();
-  lcd.write("Starting...", 1);
+  start_lcd();
+  print_lcd("Starting...", 1);
 
 #ifdef USE_TWO_PIN_BUTTONS
   int abort_btn_pins[] = {ABORT_BTN_PIN};
@@ -112,7 +108,6 @@ errv_t do_stuff() {
                  + String(weight > WEIGHT_EPSILON ? 1 : 0);
     MSG(msg);
 
-
     String sep = String("   ");
     if (weight > 10)
         sep = String("  ");
@@ -121,8 +116,8 @@ errv_t do_stuff() {
     String lcd_msg = String("Weight=")
         + String(weight) + sep + String("Cup:")
         + String(weight > WEIGHT_EPSILON ? 1 : 0);
-    lcd.write(lcd_msg, 1);
-    lcd.write("READY", 2);
+    print_lcd(lcd_msg, 1);
+    print_lcd("READY", 2);
     // XXX often used debugging code to get raw weight value:
     //long weight_raw;
     //ads1231_get_value(weight_raw);
@@ -143,6 +138,8 @@ errv_t do_stuff() {
       return 255; // Can that even happen??
 
     String cmd_str = String(cmd);
+
+    print_lcd(cmd, 2);
 
     // Example: POUR 0 20 10 30 10 0 40\r\n
     if (cmd_str.equals("POUR")) {
@@ -172,7 +169,6 @@ errv_t do_stuff() {
       Serial.readBytesUntil('\r', cmd, MAX_COMMAND_LENGTH);
       // Print it out
       MSG(cmd);
-      lcd.write(cmd, 2);
     }
     // Example: TARE\r\n
     else if (cmd_str.equals("TARE\r\n")) {
@@ -194,7 +190,6 @@ errv_t do_stuff() {
     else if (cmd_str.equals("NOP\r\n")) {
       // dummy command, for testing
       MSG("NOP");
-      lcd.write("NOP", 2);
     }
     else {
       DEBUG_MSG_LN(String("Got '") + String(cmd) + String("'"));
@@ -284,6 +279,12 @@ void parse_int_params(int* params, int size) {
    each bottle(int array of size bottles_nr).
 */
 errv_t pour_cocktail(int* requested_amount) {
+  {
+    String msg = "POUR ";
+    for (int i = 0; i < bottles_nr; i++)
+      msg += String(requested_amount[i]) + String(" ");
+    print_lcd(msg, 2);
+  }
 
   // Sanity check: Never pour more than MAX_DRINK_GRAMS
   long sum = 0; // Use long to rule out overflow
@@ -366,7 +367,7 @@ errv_t pour_cocktail(int* requested_amount) {
   for (int i = 0; i < bottles_nr; i++)
     msg += String(measured_amount[i]) + String(" ");
   MSG(msg);
-  lcd.write(msg, 2);
+  print_lcd(msg, 2);
 
   return 0;
 }

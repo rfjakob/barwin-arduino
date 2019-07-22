@@ -284,7 +284,7 @@ errv_t wait_for_cup() {
     RETURN_IFN_0(ads1231_get_grams(weight));
     if (weight < WEIGHT_EPSILON) {
         MSG("WAITING_FOR_CUP");
-        //lcd.write("WAITING_FOR_CUP", 2);
+        print_lcd("WAITING_FOR_CUP", 2);
         errv_t ret = delay_until(CUP_TIMEOUT, 0, false);
         if (ret == DELAY_UNTIL_TIMEOUT) {
             return CUP_TIMEOUT_REACHED;

@@ -2,6 +2,7 @@
 #define UTILS_H
 
 #include "bottle.h"
+#include "lcd.h"
 
 #define DEBUG
 #ifdef DEBUG
@@ -52,6 +53,7 @@
 #define ERROR(msg) do { Serial.print("ERROR "); \
                         Serial.print(msg); \
                         Serial.println(" "); \
+                        print_lcd(msg, 2);\
                       } while (0)
 
 
