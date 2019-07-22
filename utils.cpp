@@ -166,7 +166,7 @@ errv_t crossfade(Bottle * b1, Bottle * b2, int delay_ms) {
     int b2_pos = b2->servo.readMicroseconds();
 
     // bottles 4,5,6 are mounted mirrored!
-    int b1_step = b1_pos >= b1->pos_up ? 1 : -1;
+    int b1_step = b1_pos < b1->pos_up ? 1 : -1;
     int b2_step = b2_pos >= b2->get_pause_pos() ? 1 : -1;
     bool done_something;
 
