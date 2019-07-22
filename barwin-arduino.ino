@@ -25,6 +25,7 @@
 #include "utils.h"
 #include "errors.h"
 #include "config.h"
+#include "lcd.h"
 
 
 
@@ -45,9 +46,14 @@ errv_t process_drink_btns();
 errv_t do_stuff();
 errv_t dancing_bottles();
 
-
+// TODO move these pins to config!
+const int rs = 53, en = 52, d4 = 51, d5 = 50, d6 = 49, d7 = 48;
+Lcd lcd(rs, en, d4, d5, d6, d7);
 
 void setup() {
+  lcd.begin();
+  lcd.write("Starting...", 1);
+
 #ifdef USE_TWO_PIN_BUTTONS
   int abort_btn_pins[] = {ABORT_BTN_PIN};
   int resume_btn_pins[] = {RESUME_BTN_PIN};
@@ -106,9 +112,17 @@ errv_t do_stuff() {
                  + String(weight > WEIGHT_EPSILON ? 1 : 0);
     MSG(msg);
 
-    String lcd_msg = String(weight) + String("g  Cup: ") 
+
+    String sep = String("   ");
+    if (weight > 10)
+        sep = String("  ");
+    if (weight > 100)
+        sep = String(" ");
+    String lcd_msg = String("Weight=")
+        + String(weight) + sep + String("Cup:")
         + String(weight > WEIGHT_EPSILON ? 1 : 0);
-    to_lcd(lcd_msg, 1);
+    lcd.write(lcd_msg, 1);
+    lcd.write("READY", 2);
     // XXX often used debugging code to get raw weight value:
     //long weight_raw;
     //ads1231_get_value(weight_raw);
@@ -158,6 +172,7 @@ errv_t do_stuff() {
       Serial.readBytesUntil('\r', cmd, MAX_COMMAND_LENGTH);
       // Print it out
       MSG(cmd);
+      lcd.write(cmd, 2);
     }
     // Example: TARE\r\n
     else if (cmd_str.equals("TARE\r\n")) {
@@ -179,6 +194,7 @@ errv_t do_stuff() {
     else if (cmd_str.equals("NOP\r\n")) {
       // dummy command, for testing
       MSG("NOP");
+      lcd.write("NOP", 2);
     }
     else {
       DEBUG_MSG_LN(String("Got '") + String(cmd) + String("'"));
@@ -350,6 +366,7 @@ errv_t pour_cocktail(int* requested_amount) {
   for (int i = 0; i < bottles_nr; i++)
     msg += String(measured_amount[i]) + String(" ");
   MSG(msg);
+  lcd.write(msg, 2);
 
   return 0;
 }

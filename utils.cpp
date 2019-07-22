@@ -4,10 +4,6 @@
 #include "bottle.h"
 #include "errors.h"
 #include "config.h"
-#include <LiquidCrystal.h>
-
-const int rs = 53, en = 52, d4 = 51, d5 = 50, d6 = 49, d7 = 48;
-LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 /**
  * Used to call something every 'time_period' milliseconds.
@@ -207,12 +203,4 @@ errv_t crossfade(Bottle * b1, Bottle * b2, int delay_ms) {
     }
 
     return 0;
-}
-
-void to_lcd(String msg, int line)
-{
-    lcd.begin(16, 2);
-    if (line == 2)
-        lcd.setCursor(0, 1) ;
-    lcd.print(msg);
 }
