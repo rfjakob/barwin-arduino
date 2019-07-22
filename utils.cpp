@@ -164,7 +164,10 @@ errv_t crossfade(Bottle * b1, Bottle * b2, int delay_ms) {
     int step = 1;
     int b1_pos = b1->servo.readMicroseconds();
     int b2_pos = b2->servo.readMicroseconds();
-    int new_pos=0;
+
+    // bottles 4,5,6 are mounted mirrored!
+    int b1_step = b1_pos >= b1->pos_up ? 1 : -1;
+    int b2_step = b2_pos >= b2->get_pause_pos() ? 1 : -1;
     bool done_something;
 
     DEBUG_MSG_LN("crossfade " + String(b1->number) + String(" ") + String(b2->number));
@@ -173,8 +176,8 @@ errv_t crossfade(Bottle * b1, Bottle * b2, int delay_ms) {
         done_something=false;
 
         // Turn bottle 1 up
-        b1_pos += step;
-        if(b1_pos < b1->pos_up) {
+        b1_pos += b1_step;
+        if(b1_step * b1_pos < b1_step * b1->pos_up) {
             b1->servo.writeMicroseconds(b1_pos);
             done_something=true;
         }
@@ -182,8 +185,8 @@ errv_t crossfade(Bottle * b1, Bottle * b2, int delay_ms) {
         delay(delay_ms/2); // Split delay in half so bottles move alternating
 
         // Turn bottle 2 down to pause position
-        b2_pos -= step;
-        if(b2_pos > b2->get_pause_pos() ) {
+        b2_pos -= b2_step;
+        if(b2_step * b2_pos > b2_step * b2->get_pause_pos()) {
             b2->servo.writeMicroseconds(b2_pos);
             done_something=true;
         }
