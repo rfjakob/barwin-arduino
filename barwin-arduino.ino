@@ -393,4 +393,6 @@ errv_t dancing_bottles() {
     last_bottle = cur_bottle;
   }
   RETURN_IFN_0(last_bottle->turn_up(DANCING_DELAY));
+
+  return 0;
 }
