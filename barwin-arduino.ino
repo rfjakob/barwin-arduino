@@ -157,6 +157,12 @@ errv_t do_stuff() {
       // as microseconds second parameter
       return bottles[params[0]].turn_to(params[1], TURN_DOWN_DELAY);
     }
+    // Example: NUDGE 3 8\r\n
+    else if (cmd_str.equals("NUDGE")) {
+      int params[2];
+      parse_int_params(params, 2);
+      return bottles[params[0]].nudge(params[1]);
+    }
     // Example: ECHO ENJOY\r\n
     // Arduino will then print "ENJOY"
     // This is a workaround to resend garbled messages manually.

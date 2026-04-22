@@ -167,6 +167,16 @@ errv_t Bottle::turn_to_pause_pos(int delay_ms) {
     return turn_to(get_pause_pos(), delay_ms);
 }
 
+/**
+ * Dip the bottle by `percent`% of the full down range and return to pos_up.
+ * No weight check, no abort check.
+ */
+errv_t Bottle::nudge(int percent) {
+    int nudge_pos = pos_up + (pos_down - pos_up) * percent / 100;
+    RETURN_IFN_0(turn_to(nudge_pos, TURN_UP_DELAY, false, NULL, false));
+    return turn_to(pos_up, TURN_UP_DELAY, false, NULL, false);
+}
+
 
 /**
  * Pour requested_amount grams from bottle..

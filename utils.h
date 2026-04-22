@@ -4,7 +4,7 @@
 #include "bottle.h"
 #include "lcd.h"
 
-#define DEBUG
+//#define DEBUG
 #ifdef DEBUG
     /**
      * This a bunch of macros as ugly work-a-round because there is no printf.

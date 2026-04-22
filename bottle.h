@@ -32,6 +32,7 @@ class Bottle {
         errv_t turn_down(int delay_ms, bool check_weight=false);
         int get_pause_pos();
         errv_t turn_to_pause_pos(int delay_ms);
+        errv_t nudge(int percent);
         errv_t pour(int requested_amount, int& measured_amount);
         Servo servo;          // servo used for turning the bottle
         const unsigned char number;     // all bottles have a unique number (0-n)

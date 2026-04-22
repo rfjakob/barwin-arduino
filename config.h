@@ -127,7 +127,7 @@
 #define WEIGHT_EPSILON  2
 
 // If ready, send READY message every x milliseconds
-#define SEND_READY_INTERVAL 2000
+#define SEND_READY_INTERVAL 400
 
 // Wait at least x milliseconds before calling ads1231_get_grams() again
 // when turning servo, because it takes to long to call it always. Increasing
